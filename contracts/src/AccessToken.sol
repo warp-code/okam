@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: GPL-3.0-only
 pragma solidity ^0.8.20;
 
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -13,21 +13,14 @@ contract AccessToken is ERC721 {
     mapping(uint256 => uint256) private _relatedOwnershipTokens;
     mapping(uint256 => uint256) private _supplyPerOwnershipToken;
 
-    constructor(
-        address ownerTokenContractAddress
-    ) ERC721("AccessToken", "ACC") {
+    constructor(address ownerTokenContractAddress) ERC721("AccessToken", "ACC") {
         _ownerTokenContractAddress = ownerTokenContractAddress;
     }
 
     function mint(uint256 ownershipTokenId, address to) external payable {
         uint256 tokenId = _nextTokenId++;
 
-        uint256 price = _currentPrice(
-            _supplyPerOwnershipToken[ownershipTokenId],
-            1,
-            1,
-            1
-        );
+        uint256 price = _currentPrice(_supplyPerOwnershipToken[ownershipTokenId], 1, 1, 1);
 
         // Revert if price mismatch
         if (price != msg.value) {
@@ -56,20 +49,14 @@ contract AccessToken is ERC721 {
     }
 
     function buyPrice(uint256 ownershipTokenId) public view returns (uint256) {
-        return
-            _currentPrice(_supplyPerOwnershipToken[ownershipTokenId], 1, 1, 1);
+        return _currentPrice(_supplyPerOwnershipToken[ownershipTokenId], 1, 1, 1);
     }
 
     function sellPrice(uint256 ownershipTokenId) public view returns (uint256) {
         return (buyPrice(ownershipTokenId) / 10) * 9;
     }
 
-    function _currentPrice(
-        uint256 supply,
-        uint256 quad,
-        uint256 lin,
-        uint256 const
-    ) internal pure returns (uint256) {
+    function _currentPrice(uint256 supply, uint256 quad, uint256 lin, uint256 const) internal pure returns (uint256) {
         return quad * (supply * supply) + lin * supply + const;
     }
 }
