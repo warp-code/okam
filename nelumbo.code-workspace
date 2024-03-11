@@ -12,6 +12,7 @@
     "settings": {
         "terminal.integrated.cwd": "./",
         "slither.solcPath": "",
-        "slither.hiddenDetectors": []
+        "slither.hiddenDetectors": [],
+        "solidity.compileUsingRemoteVersion": "v0.8.20+commit.a1b79de6"
     }
 }
