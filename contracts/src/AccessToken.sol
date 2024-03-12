@@ -40,7 +40,9 @@ contract AccessToken is ERC721, Security {
     }
 
     function burn(uint256 tokenId) external {
-        _requireOwned(tokenId);
+        if (!_isAuthorized(ownerOf(tokenId), msg.sender, tokenId)) {
+            revert ERC721IncorrectOwner(msg.sender, tokenId, ownerOf(tokenId));
+        }
 
         uint256 ownershipTokenId = _relatedOwnershipTokens[tokenId];
         uint256 price = sellPrice(ownershipTokenId);
