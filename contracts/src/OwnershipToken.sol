@@ -28,8 +28,6 @@ contract OwnershipToken is ERC721, Ownable {
     mapping(uint256 tokenId => address) _owners;
     mapping(uint256 tokenId => TokenDetails) _details;
 
-    constructor(address creator) ERC721("OwnerToken", "OWN") Ownable(creator) {}
-
     event GasConsumed(uint256);
 
     modifier measureGas() {
@@ -43,6 +41,8 @@ contract OwnershipToken is ERC721, Ownable {
         require(msg.sender == _owners[tokenId], "Unauthoritzed. Must be NFT owner.");
         _;
     }
+
+    constructor(address creator) ERC721("OwnerToken", "OWN") Ownable(creator) {}
 
     function registerOwner(uint256 quadraticParam, uint256 linearParam, uint256 constantParam) external measureGas {
         uint256 tokenId = _nextTokenId++;
