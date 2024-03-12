@@ -61,7 +61,7 @@ contract AccessToken is ERC721 {
     }
 
     function sellPrice(uint256 ownershipTokenId) public view returns (uint256) {
-        return (buyPrice(ownershipTokenId) / 10) * 9;
+        return (buyPrice(ownershipTokenId) * 9) / 10;
     }
 
     function earnings(uint256 ownershipTokenId) public view returns (uint256) {
