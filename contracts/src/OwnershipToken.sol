@@ -28,8 +28,6 @@ contract OwnershipToken is ERC721, Ownable {
     mapping(uint256 tokenId => address) _owners;
     mapping(uint256 tokenId => TokenDetails) _details;
 
-    constructor(address creator) ERC721("OwnerToken", "OWN") Ownable(creator) {}
-
     event GasConsumed(uint256);
 
     modifier measureGas() {
@@ -40,25 +38,16 @@ contract OwnershipToken is ERC721, Ownable {
     }
 
     modifier onlyNftOwner(uint256 tokenId) {
-        require(
-            msg.sender == _owners[tokenId],
-            "Unauthoritzed. Must be NFT owner."
-        );
+        require(msg.sender == _owners[tokenId], "Unauthoritzed. Must be NFT owner.");
         _;
     }
 
-    function registerOwner(
-        uint256 quadraticParam,
-        uint256 linearParam,
-        uint256 constantParam
-    ) external measureGas {
+    constructor(address creator) ERC721("OwnerToken", "OWN") Ownable(creator) {}
+
+    function registerOwner(uint256 quadraticParam, uint256 linearParam, uint256 constantParam) external measureGas {
         uint256 tokenId = _nextTokenId++;
 
-        CurveParams memory _params = CurveParams(
-            quadraticParam,
-            linearParam,
-            constantParam
-        );
+        CurveParams memory _params = CurveParams(quadraticParam, linearParam, constantParam);
 
         _details[tokenId] = TokenDetails(_params, 0);
 
@@ -70,9 +59,7 @@ contract OwnershipToken is ERC721, Ownable {
     /**
      * @dev Return a tuple of quadratic, linear and constant curve params
      */
-    function getCurveParams(
-        uint256 tokenId
-    ) external view returns (uint256, uint256, uint256) {
+    function getCurveParams(uint256 tokenId) external view returns (uint256, uint256, uint256) {
         return (
             _details[tokenId].curveParams.quadraticParam,
             _details[tokenId].curveParams.linearParam,

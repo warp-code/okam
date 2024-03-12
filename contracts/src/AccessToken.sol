@@ -15,9 +15,7 @@ contract AccessToken is ERC721 {
     mapping(uint256 => uint256) private _supplyPerOwnershipToken;
     mapping(uint256 => uint256) private _earningsPerOwnershipToken;
 
-    constructor(
-        address ownerTokenContractAddress
-    ) ERC721("AccessToken", "ACC") {
+    constructor(address ownerTokenContractAddress) ERC721("AccessToken", "ACC") {
         _ownerTokenContractAddress = ownerTokenContractAddress;
     }
 
@@ -56,33 +54,21 @@ contract AccessToken is ERC721 {
     }
 
     function buyPrice(uint256 ownershipTokenId) public view returns (uint256) {
-        (uint256 quadratic, uint256 linear, uint256 const) = OwnershipToken(
-            _ownerTokenContractAddress
-        ).getCurveParams(ownershipTokenId);
+        (uint256 quadratic, uint256 linear, uint256 const) =
+            OwnershipToken(_ownerTokenContractAddress).getCurveParams(ownershipTokenId);
 
-        return
-            _currentPrice(
-                _supplyPerOwnershipToken[ownershipTokenId],
-                quadratic,
-                linear,
-                const
-            );
+        return _currentPrice(_supplyPerOwnershipToken[ownershipTokenId], quadratic, linear, const);
     }
 
     function sellPrice(uint256 ownershipTokenId) public view returns (uint256) {
-        return (buyPrice(ownershipTokenId) / 10) * 9;
+        return (buyPrice(ownershipTokenId) * 9) / 10;
     }
 
     function earnings(uint256 ownershipTokenId) public view returns (uint256) {
         return _earningsPerOwnershipToken[ownershipTokenId];
     }
 
-    function _currentPrice(
-        uint256 supply,
-        uint256 quad,
-        uint256 lin,
-        uint256 const
-    ) internal pure returns (uint256) {
+    function _currentPrice(uint256 supply, uint256 quad, uint256 lin, uint256 const) internal pure returns (uint256) {
         return quad * (supply * supply) + lin * supply + const;
     }
 }
