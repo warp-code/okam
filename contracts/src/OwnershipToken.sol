@@ -26,7 +26,6 @@ contract OwnershipToken is ERC721, Ownable, Security {
 
     uint256 _nextTokenId = 0;
 
-    mapping(uint256 tokenId => address) _owners;
     mapping(uint256 tokenId => TokenDetails) _details;
 
     constructor(address creator) ERC721("OwnerToken", "OWN") Ownable(creator) {}
@@ -37,8 +36,6 @@ contract OwnershipToken is ERC721, Ownable, Security {
         CurveParams memory _params = CurveParams(quadraticParam, linearParam, constantParam);
 
         _details[tokenId] = TokenDetails(_params, 0);
-
-        _owners[tokenId] = _msgSender();
 
         _safeMint(_msgSender(), tokenId);
     }
@@ -54,7 +51,11 @@ contract OwnershipToken is ERC721, Ownable, Security {
         );
     }
 
-    function getFiles(uint256 tokenId) external view onlyTokenOwner(tokenId, _owners) returns (uint256) {
+    function getFiles(uint256 tokenId) external view returns (uint256) {
+        if (!_isAuthorized(ownerOf(tokenId), msg.sender, tokenId)) {
+            revert ERC721IncorrectOwner(msg.sender, tokenId, ownerOf(tokenId));
+        }
+
         return _details[tokenId].files;
     }
 
