@@ -5,6 +5,10 @@
             "name": "Root"
         },
         {
+            "path": "./frontend",
+            "name": "Frontend"
+        },
+        {
             "path": "./contracts",
             "name": "Contracts"
         }
