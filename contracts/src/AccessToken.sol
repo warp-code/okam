@@ -3,10 +3,11 @@ pragma solidity ^0.8.20;
 
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {OwnershipToken} from "./OwnershipToken.sol";
+import {Security} from "utils/Security.sol";
 
 error PriceMismatch(uint256 received, uint256 expected);
 
-contract AccessToken is ERC721 {
+contract AccessToken is ERC721, Security {
     address private immutable _ownerTokenContractAddress;
 
     uint256 private _nextTokenId;
