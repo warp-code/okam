@@ -28,9 +28,7 @@ contract OwnershipToken is ERC721, Ownable {
     {
         uint256 tokenId = _nextTokenId++;
 
-        CurveParams memory _params = CurveParams(quadraticParam, linearParam, constantParam);
-
-        _details[tokenId] = TokenDetails(_params, fileCid);
+        _details[tokenId] = TokenDetails(CurveParams(quadraticParam, linearParam, constantParam), fileCid);
 
         _safeMint(_msgSender(), tokenId);
 
