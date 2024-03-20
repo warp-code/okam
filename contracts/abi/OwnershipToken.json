@@ -12,13 +12,6 @@
   },
   {
     "type": "function",
-    "name": "appendFiles",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "approve",
     "inputs": [
       {
@@ -104,7 +97,7 @@
   },
   {
     "type": "function",
-    "name": "getFiles",
+    "name": "getFileCid",
     "inputs": [
       {
         "name": "tokenId",
@@ -115,8 +108,8 @@
     "outputs": [
       {
         "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
+        "type": "string",
+        "internalType": "string"
       }
     ],
     "stateMutability": "view"
@@ -144,13 +137,6 @@
       }
     ],
     "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "mintOwnershipToken",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
   },
   {
     "type": "function",
@@ -215,9 +201,20 @@
         "name": "constantParam",
         "type": "uint256",
         "internalType": "uint256"
+      },
+      {
+        "name": "fileCid",
+        "type": "string",
+        "internalType": "string"
       }
     ],
-    "outputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
     "stateMutability": "nonpayable"
   },
   {
