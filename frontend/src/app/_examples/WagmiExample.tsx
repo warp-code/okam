@@ -1,7 +1,7 @@
 "use client";
 
 // WAGMI
-import { sepolia } from "viem/chains";
+import { anvil, sepolia } from "viem/chains";
 import { useConnect, useChainId, useBalance, useAccount } from "wagmi";
 import { injected } from "wagmi/connectors";
 
@@ -13,7 +13,7 @@ export default function WagmiExample() {
   const { data: balance } = useBalance({ address: address });
 
   const connectWallet = () => {
-    connect({ connector: injected(), chainId: sepolia.id });
+    connect({ connector: injected(), chainId: anvil.id });
   };
 
   return (

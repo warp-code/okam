@@ -1,3 +1,4 @@
+import WriteContract from "./_examples/CallContract";
 import LitExample from "./_examples/LitExample";
 import ReadContract from "./_examples/ReadContract";
 import WagmiExample from "./_examples/WagmiExample";
@@ -8,6 +9,7 @@ export default function Home() {
       <div>
         <WagmiExample></WagmiExample>
         <ReadContract></ReadContract>
+        <WriteContract></WriteContract>
         <LitExample></LitExample>
       </div>
     </main>
