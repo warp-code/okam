@@ -1,10 +1,11 @@
 import { http, createConfig } from "wagmi";
-import { sepolia } from "wagmi/chains";
+import { sepolia, localhost } from "wagmi/chains";
 
 export const wagmiConfig = createConfig({
-  chains: [sepolia],
+  chains: [sepolia, localhost],
   transports: {
     [sepolia.id]: http(),
+    [localhost.id]: http(),
   },
   ssr: true,
 });
