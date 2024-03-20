@@ -30,7 +30,7 @@ contract OwnershipToken is ERC721, Ownable, Security {
 
     constructor(address creator) ERC721("OwnerToken", "OWN") Ownable(creator) {}
 
-    function registerOwner(uint256 quadraticParam, uint256 linearParam, uint256 constantParam) external {
+    function registerOwner(uint256 quadraticParam, uint256 linearParam, uint256 constantParam) external returns (uint256) {
         uint256 tokenId = _nextTokenId++;
 
         CurveParams memory _params = CurveParams(quadraticParam, linearParam, constantParam);
@@ -38,6 +38,8 @@ contract OwnershipToken is ERC721, Ownable, Security {
         _details[tokenId] = TokenDetails(_params, 0);
 
         _safeMint(_msgSender(), tokenId);
+
+        return tokenId;
     }
 
     /**
