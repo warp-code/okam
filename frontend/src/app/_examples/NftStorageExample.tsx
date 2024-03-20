@@ -5,7 +5,9 @@ import { useState } from 'react';
 
 export default function NftStorageExample(props: { token: string; }) {
   const [file, setFile] = useState<File>();
+  const [downloadLink, setDownloadLink] = useState<string>();
 
+  const protocol = "https://nftstorage.link/ipfs/";
   const client = new NFTStorage({ token: props.token });
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -20,6 +22,8 @@ export default function NftStorageExample(props: { token: string; }) {
 
       console.log("cid: ", cid);
 
+      setDownloadLink(protocol + cid);
+
     } catch (e: any) {
       // Handle errors here
       console.error(e);
@@ -27,13 +31,26 @@ export default function NftStorageExample(props: { token: string; }) {
   };
 
   return (
-    <form onSubmit={onSubmit}>
-      <input
-        type="file"
-        name="file"
-        onChange={(e) => setFile(e.target.files?.[0])}
-      />
-      <input type="submit" value="Upload" />
-    </form>
+    <>
+      <form onSubmit={onSubmit}>
+        <input
+          type="file"
+          name="file"
+          onChange={(e) => setFile(e.target.files?.[0])}
+        />
+        <input type="submit" value="Upload" />
+      </form>
+      {
+        downloadLink &&
+        <a
+          href={downloadLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          download="something"
+        >
+          Download
+        </a>
+      }
+    </>
   );
 };
