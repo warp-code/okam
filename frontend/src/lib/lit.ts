@@ -1,10 +1,10 @@
-import { ethChain, litNetwork } from "@/constants";
+import { litConfig } from "@/lib/config";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 
 const client = new LitJsSdk.LitNodeClient({
-  litNetwork: litNetwork,
+  litNetwork: litConfig.litNetwork,
 });
-const chain = ethChain;
+const chain = litConfig.ethChain;
 
 class Lit {
   private litNodeClient: any;
