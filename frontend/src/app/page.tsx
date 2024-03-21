@@ -43,6 +43,11 @@ export default function Home() {
             })
           }
         </div>
+
+        {/* Pagination */}
+        <div className="py-8">
+
+        </div>
       </div>
     </div >
   );
