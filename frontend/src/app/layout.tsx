@@ -23,7 +23,7 @@ export default function RootLayout({
             <span className="text-lg font-bold text-green-500">OKAM</span>
           </header>
 
-          <main className="w-full flex-grow px-16 py-8 overflow-y-auto">
+          <main className="w-full flex-grow px-16 py-8">
             {children}
           </main>
 
