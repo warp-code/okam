@@ -1,6 +1,8 @@
+import Card from '@/app/_components/Card';
 import Category from '@/app/_components/Category';
 import SearchBar from '@/app/_components/SearchBar';
 import { categories } from '@/app/_constants/categories';
+import { datasets } from '@/app/_constants/datasets';
 
 export default function Home() {
   return (
@@ -16,14 +18,30 @@ export default function Home() {
           {
             categories.map(category => {
               return (
-                <Category key={category.id} name={category.text} />
+                <Category
+                  key={category.id}
+                  name={category.text}
+                />
               );
             })
           }
         </div>
 
-        <div className="py-8">
-
+        <div className="flex flex-row flex-wrap py-8 gap-3">
+          {
+            datasets.map(dataset => {
+              return (
+                <Card
+                  key={dataset.id}
+                  id={dataset.id}
+                  image={dataset.image}
+                  title={dataset.title}
+                  description={dataset.description}
+                  price={dataset.price}
+                />
+              );
+            })
+          }
         </div>
       </div>
     </div >
