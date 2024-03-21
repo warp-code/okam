@@ -18,6 +18,20 @@ const config: Config = {
       },
       colors: {
         current: "currentColor",
+        gray: {
+          '25': '#FAFAFA',
+          '50': '#F5F5F6',
+          '100': '#F0F1F1',
+          '200': '#ECECED',
+          '300': '#CECFD2',
+          '400': '#94969C',
+          '500': '#85888E',
+          '600': '#61646C',
+          '700': '#333741',
+          '800': '#1F242F',
+          '900': '#161B26',
+          '950': '#0C111D'
+        },
         green: {
           '25': '#F6FEFC',
           '50': '#F0FDF9',
@@ -32,6 +46,8 @@ const config: Config = {
           '900': '#134E48',
           '950': '#0A2926'
         },
+        "okam-black": "#191919",
+        "okam-dark-green": "#1C2120"
       }
     },
   },
