@@ -14,21 +14,21 @@ export const datasets = [
   },
   {
     id: 2,
-    image: placeholderGreen2,
+    image: placeholderPink,
     title: "Title training data",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
     price: 2300
   },
   {
     id: 3,
-    image: placeholderMix,
+    image: placeholderGreen2,
     title: "Title training data",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
     price: 2300
   },
   {
     id: 4,
-    image: placeholderPink,
+    image: placeholderMix,
     title: "Title training data",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
     price: 2300

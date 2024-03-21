@@ -13,7 +13,7 @@ export default function Card({ id, image, title, description, price }: { id: num
   }, [id]);
 
   return (
-    <div className="h-98 w-88 rounded-lg flex flex-col">
+    <div className="h-98 max-w-88 rounded-lg flex flex-col">
       <Image
         alt={title}
         src={image}
@@ -21,7 +21,7 @@ export default function Card({ id, image, title, description, price }: { id: num
         height={160}
         className="rounded-t-lg"
       />
-      <div className="h-58 w-88 rounded-b-lg p-6 flex flex-col gap-y-4 bg-okam-dark-green">
+      <div className="h-58 max-w-88 rounded-b-lg p-6 flex flex-col gap-y-4 bg-okam-dark-green">
         <div className="text-gray-50 text-lg font-semibold text-left">
           {title}
         </div>
