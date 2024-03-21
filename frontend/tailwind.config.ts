@@ -15,6 +15,7 @@ const config: Config = {
       },
       spacing: {
         "18": "72px",
+        "45": "180px"
       },
       colors: {
         current: "currentColor",
