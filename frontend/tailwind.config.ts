@@ -15,7 +15,14 @@ const config: Config = {
       },
       spacing: {
         "18": "72px",
-        "45": "180px"
+        "45": "180px",
+        "58": "232px",
+        "88": "352px",
+        "98": "392px",
+        "270": "1080px",
+      },
+      lineHeight: {
+        "11": "2.75rem"
       },
       colors: {
         current: "currentColor",
