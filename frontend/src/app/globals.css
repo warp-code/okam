@@ -2,32 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 25, 25, 25;
-    --background-end-rgb: 25, 25, 25;
-  }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+body {
+  @apply bg-okam-black;
+}
+
+.btn {
+  @apply items-center border border-transparent font-medium focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.btn-sm {
+  @apply px-2.5 py-1 text-sm rounded-lg;
+}
+
+.btn-md {
+  @apply px-4 py-2.5 text-base rounded-lg;
+}
+
+.btn-primary {
+  @apply text-okam-dark-green bg-green-400 hover:bg-green-300 focus:ring-green-500;
+}
+
+.btn-secondary {
+  @apply text-green-300 border-green-800 bg-okam-dark-green hover:text-green-200 hover:bg-green-900 focus:ring-green-500;
+}
+
+.btn-tertiary {
+  @apply text-okam-dark-green bg-gray-300 hover:bg-gray-200 focus:ring-gray-400;
 }
