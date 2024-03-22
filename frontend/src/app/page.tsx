@@ -1,8 +1,9 @@
-import Card from '@/app/_components/Card';
-import Category from '@/app/_components/Category';
-import SearchBar from '@/app/_components/SearchBar';
-import { categories } from '@/app/_examples/categories';
-import { datasets } from '@/app/_examples/datasets';
+import Card from "@/app/_components/Card";
+import Category from "@/app/_components/Category";
+import Pagination from "@/app/_components/Pagination";
+import SearchBar from "@/app/_components/SearchBar";
+import { categories } from "@/app/_examples/categories";
+import { datasets } from "@/app/_examples/datasets";
 
 export default function Home() {
   return (
@@ -15,43 +16,36 @@ export default function Home() {
         <SearchBar name="search" placeholder="I am searching for..." />
 
         <div className="flex flex-row flex-wrap py-4 gap-3">
-          {
-            categories.map(category => {
-              return (
-                <Category
-                  key={category.id}
-                  name={category.text}
-                />
-              );
-            })
-          }
+          {categories.map((category) => {
+            return <Category key={category.id} name={category.text} />;
+          })}
         </div>
 
         {/* Cards */}
         <div className="flex flex-row flex-wrap py-8 sm:gap-3 gap-y-3">
-          {
-            datasets.map(dataset => {
-              return (
-                <Card
-                  key={dataset.id}
-                  id={dataset.id}
-                  image={dataset.image}
-                  title={dataset.title}
-                  description={dataset.description}
-                  price={dataset.price}
-                />
-              );
-            })
-          }
+          {datasets.map((dataset) => {
+            return (
+              <Card
+                key={dataset.id}
+                id={dataset.id}
+                image={dataset.image}
+                title={dataset.title}
+                description={dataset.description}
+                price={dataset.price}
+              />
+            );
+          })}
         </div>
 
         {/* Pagination */}
         <div className="flex flex-row justify-between py-8">
-          <div></div>
-          <div></div>
-          <div></div>
+          <button type="button"></button>
+
+          <Pagination />
+
+          <button type="button"></button>
         </div>
       </div>
-    </div >
+    </div>
   );
 }

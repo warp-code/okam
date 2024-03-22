@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
-export default function Category({ name }: { name: string; }) {
+export default function Category({ name }: { name: string }) {
   const [innerId, setInnerId] = useState("");
 
   useEffect(() => {
@@ -12,15 +12,13 @@ export default function Category({ name }: { name: string; }) {
   }, [name]);
 
   return (
-    <label
-      htmlFor={innerId}
-      className="btn btn-xs btn-secondary">
+    <label htmlFor={innerId} className="btn btn-xs btn-secondary">
       {name}
       <input
         type="checkbox"
         id={innerId}
         name={name}
-        className='absolute inset-0 invisible'
+        className="absolute inset-0 invisible"
       />
     </label>
   );

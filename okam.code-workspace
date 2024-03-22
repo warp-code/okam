@@ -30,5 +30,8 @@
         "solidity.packageDefaultDependenciesDirectory": "lib",
         "slither.solcPath": "",
         "slither.hiddenDetectors": [],
+        "[typescriptreact]": {
+            "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
     }
 }

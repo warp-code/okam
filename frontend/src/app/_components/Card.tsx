@@ -1,9 +1,21 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import Image from 'next/image';
+import { useState, useEffect } from "react";
+import Image from "next/image";
 
-export default function Card({ id, image, title, description, price }: { id: number, image: any, title: string, description: string, price: number; }) {
+export default function Card({
+  id,
+  image,
+  title,
+  description,
+  price,
+}: {
+  id: number;
+  image: any;
+  title: string;
+  description: string;
+  price: number;
+}) {
   const [innerId, setInnerId] = useState("");
 
   useEffect(() => {
@@ -26,18 +38,12 @@ export default function Card({ id, image, title, description, price }: { id: num
           {title}
         </div>
 
-        <div className="text-gray-400 text-sm text-left">
-          {description}
-        </div>
+        <div className="text-gray-400 text-sm text-left">{description}</div>
 
         <div className="flex flex-row justify-between">
-          <span className="text-gray-50 font-medium py-4">
-            {price} FIL
-          </span>
+          <span className="text-gray-50 font-medium py-4">{price} FIL</span>
 
-          <button className="btn btn-md btn-secondary">
-            View details
-          </button>
+          <button className="btn btn-md btn-secondary">View details</button>
         </div>
       </div>
     </div>

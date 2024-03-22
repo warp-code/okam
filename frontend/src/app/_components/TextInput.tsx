@@ -1,8 +1,14 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
-export default function TextInput({ name, placeholder }: { name: string, placeholder: string; }) {
+export default function TextInput({
+  name,
+  placeholder,
+}: {
+  name: string;
+  placeholder: string;
+}) {
   const [innerId, setInnerId] = useState("");
 
   useEffect(() => {
@@ -12,7 +18,8 @@ export default function TextInput({ name, placeholder }: { name: string, placeho
   }, [name]);
 
   return (
-    <input type="text"
+    <input
+      type="text"
       id={innerId}
       name={name}
       placeholder={placeholder}
