@@ -33,6 +33,10 @@ body {
   @apply px-2.5 py-1 text-sm rounded-lg;
 }
 
+.btn-sm {
+  @apply p-3 text-sm rounded-lg
+}
+
 .btn-md {
   @apply px-4 py-2.5 text-base rounded-lg;
 }
@@ -47,4 +51,8 @@ body {
 
 .btn-tertiary {
   @apply text-okam-dark-green bg-gray-300 hover:bg-gray-200 focus:ring-gray-400;
+}
+
+.btn-quaternary {
+  @apply text-sm text-gray-600 rounded-lg focus:bg-green-800 focus:text-gray-50
 }

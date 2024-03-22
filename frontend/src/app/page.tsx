@@ -39,7 +39,7 @@ export default function Home() {
 
         {/* Pagination */}
         <div className="py-8">
-          <Pagination />
+          <Pagination elementsNum={90} />
         </div>
       </div>
     </div>

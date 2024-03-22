@@ -7,12 +7,52 @@ type PageModel = {
   isEllipsis: boolean;
 };
 
-export default function Pagination() {
+export default function Pagination({ elementsNum }: { elementsNum: number }) {
   const maxPageNumbers = 7;
+
+  const [pages, setPages] = useState<PageModel[]>([]);
+
+  useEffect(() => {
+    const maxPages = Math.ceil(elementsNum / 6);
+
+    let pageModels = new Array<PageModel>();
+
+    if (maxPages <= maxPageNumbers) {
+      for (let i = 1; i <= maxPages; i++) {
+        pageModels.push({
+          number: i,
+          isEllipsis: false,
+        });
+      }
+    } else {
+      const x = maxPages - 2;
+
+      for (let i = 1; i <= maxPages; i++) {
+        if (i <= 3 || i >= x) {
+          pageModels.push({
+            number: i,
+            isEllipsis: false,
+          });
+        } else if (!pageModels.some((x) => x.isEllipsis)) {
+          pageModels.push({
+            number: i,
+            isEllipsis: true,
+          });
+        }
+      }
+
+      pageModels = Array.from(new Set([...pageModels]));
+    }
+
+    setPages(pageModels);
+  }, [elementsNum]);
 
   return (
     <div className="flex flex-row justify-between">
-      <button type="button" className="btn text-gray-400 flex flex-row gap-x-2">
+      <button
+        type="button"
+        className="btn text-sm text-gray-400 flex flex-row gap-x-2"
+      >
         <svg
           width="20"
           height="20"
@@ -33,11 +73,33 @@ export default function Pagination() {
       </button>
 
       <nav
-        className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+        className="sm:inline-flex hidden rounded-lg gap-x-0.5"
         aria-label="Pagination"
-      ></nav>
+      >
+        {pages.map((page) => {
+          if (page.isEllipsis) {
+            return (
+              <span key={page.number} className="btn btn-sm btn-quaternary">
+                ...
+              </span>
+            );
+          }
+          return (
+            <button
+              key={page.number}
+              type="button"
+              className="btn btn-sm btn-quaternary"
+            >
+              {page.number}
+            </button>
+          );
+        })}
+      </nav>
 
-      <button type="button" className="btn text-gray-400 flex flex-row gap-x-2">
+      <button
+        type="button"
+        className="btn text-sm text-gray-400 flex flex-row gap-x-2"
+      >
         Next
         <svg
           width="20"
