@@ -1,8 +1,8 @@
 import Card from '@/app/_components/Card';
 import Category from '@/app/_components/Category';
 import SearchBar from '@/app/_components/SearchBar';
-import { categories } from '@/app/_constants/categories';
-import { datasets } from '@/app/_constants/datasets';
+import { categories } from '@/app/_examples/categories';
+import { datasets } from '@/app/_examples/datasets';
 
 export default function Home() {
   return (
