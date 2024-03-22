@@ -38,12 +38,8 @@ export default function Home() {
         </div>
 
         {/* Pagination */}
-        <div className="flex flex-row justify-between py-8">
-          <button type="button"></button>
-
+        <div className="py-8">
           <Pagination />
-
-          <button type="button"></button>
         </div>
       </div>
     </div>
