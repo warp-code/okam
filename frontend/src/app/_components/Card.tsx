@@ -38,7 +38,9 @@ export default function Card({
           {title}
         </div>
 
-        <div className="text-gray-400 text-sm text-left">{description}</div>
+        <div className="text-gray-400 text-sm text-left overflow-auto no-scrollbar">
+          {description}
+        </div>
 
         <div className="flex flex-row justify-between">
           <span className="text-gray-50 font-medium py-4">{price} FIL</span>
