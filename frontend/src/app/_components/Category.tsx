@@ -14,7 +14,7 @@ export default function Category({ name }: { name: string; }) {
   return (
     <label
       htmlFor={innerId}
-      className="btn btn-sm btn-secondary">
+      className="btn btn-xs btn-secondary">
       {name}
       <input
         type="checkbox"

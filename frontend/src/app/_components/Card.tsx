@@ -21,7 +21,7 @@ export default function Card({ id, image, title, description, price }: { id: num
         height={160}
         className="rounded-t-lg"
       />
-      <div className="max-h-58 max-w-88 rounded-b-lg p-6 flex flex-col gap-y-4 bg-okam-dark-green overflow-auto no-scrollbar">
+      <div className="max-h-58 max-w-88 rounded-b-lg p-6 flex flex-col gap-y-4 bg-okam-dark-green">
         <div className="text-gray-50 text-lg font-semibold text-left">
           {title}
         </div>

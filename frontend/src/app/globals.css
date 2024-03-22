@@ -29,7 +29,7 @@ body {
   @apply items-center border border-transparent font-medium focus:outline-none;
 }
 
-.btn-sm {
+.btn-xs {
   @apply px-2.5 py-1 text-sm rounded-lg;
 }
 
