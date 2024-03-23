@@ -19,6 +19,7 @@ const config: Config = {
         "58": "232px",
         "88": "352px",
         "98": "392px",
+        "131": "524px",
         "270": "1080px",
       },
       lineHeight: {
