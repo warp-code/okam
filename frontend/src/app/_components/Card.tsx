@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Card({
   id,
@@ -16,13 +16,7 @@ export default function Card({
   description: string;
   price: number;
 }) {
-  const [innerId, setInnerId] = useState("");
-
-  useEffect(() => {
-    const x = `${id}-inner`;
-
-    setInnerId(x);
-  }, [id]);
+  const router = useRouter();
 
   return (
     <div className="max-h-98 max-w-88 rounded-lg flex flex-col">
@@ -45,7 +39,12 @@ export default function Card({
         <div className="flex flex-row justify-between">
           <span className="text-gray-50 font-medium py-4">{price} FIL</span>
 
-          <button className="btn btn-md btn-secondary">View details</button>
+          <button
+            className="btn btn-md btn-secondary"
+            onClick={() => router.push(`/details/${id}`)}
+          >
+            View details
+          </button>
         </div>
       </div>
     </div>
