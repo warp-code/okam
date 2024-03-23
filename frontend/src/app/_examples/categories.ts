@@ -1,3 +1,8 @@
+export type Category = {
+  id: number;
+  text: string;
+};
+
 export const categories = [
   {
     id: 1,
@@ -31,4 +36,4 @@ export const categories = [
     id: 8,
     text: "Audio generation"
   },
-] as const;
+] as Category[];

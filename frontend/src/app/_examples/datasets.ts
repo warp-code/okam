@@ -3,6 +3,15 @@ import placeholderGreen2 from '@/assets/images/placeholder_green_2.png';
 import placeholderMix from '@/assets/images/placeholder_mix.png';
 import placeholderPink from '@/assets/images/placeholder_pink.png';
 import placeholderViolet from '@/assets/images/placeholder_violet.png';
+import { StaticImageData } from 'next/image';
+
+export type Dataset = {
+  id: number;
+  image: string | StaticImageData;
+  title: string;
+  description: string;
+  price: number;
+};
 
 export const datasets = [
   {
@@ -40,4 +49,4 @@ export const datasets = [
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
     price: 2300
   },
-] as const;
+] as Dataset[];
