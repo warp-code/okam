@@ -38,7 +38,9 @@ export default function Create() {
 
         <div className="flex sm:flex-row flex-col justify-between">
           <div className="flex flex-row gap-x-2.5">
-            <span className="btn btn-xs btn-secondary my-auto">IPFS</span>
+            <span className="btn btn-xs btn-secondary my-auto select-none">
+              IPFS
+            </span>
 
             <span className="text-gray-50 break-all my-auto">
               QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR
