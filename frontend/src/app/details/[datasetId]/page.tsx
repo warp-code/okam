@@ -1,6 +1,6 @@
 "use client";
 
-import { Dataset, datasets } from "@/app/_examples/datasets";
+import { datasets } from "@/app/_examples/datasets";
 import Image, { StaticImageData } from "next/image";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -9,15 +9,12 @@ export default function Details() {
   const params = useParams();
 
   const { isPending, error, data } = useQuery({
-    queryKey: ["datasets"],
-    queryFn: findDataset,
+    queryKey: ["datasets", params.datasetId],
+    queryFn: () =>
+      datasets.find(
+        (x) => x.id === Number.parseInt(params.datasetId as string)
+      ),
   });
-
-  function findDataset(): Dataset | undefined {
-    return datasets.find(
-      (x) => x.id === Number.parseInt(params.datasetId as string)
-    );
-  }
 
   if (error) {
     return console.error(error);
