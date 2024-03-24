@@ -51,23 +51,18 @@ export default function Details() {
                 <h4 className="text-gray-50 font-semibold text-2xl">Files</h4>
 
                 <div className="flex flex-col gap-y-3">
-                  <div className="flex flex-row gap-x-2.5">
-                    <span className="btn btn-xs btn-secondary my-auto">
-                      IPFS
-                    </span>
-                    <span className="text-gray-400 break-all my-auto">
-                      QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR
-                    </span>
-                  </div>
-
-                  <div className="flex flex-row gap-x-2.5">
-                    <span className="btn btn-xs btn-secondary my-auto">
-                      IPFS
-                    </span>
-                    <span className="text-gray-400 break-all my-auto">
-                      QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR
-                    </span>
-                  </div>
+                  {data?.fileCids.map((fileCid) => {
+                    return (
+                      <div key={fileCid} className="flex flex-row gap-x-2.5">
+                        <span className="btn btn-xs btn-secondary my-auto">
+                          IPFS
+                        </span>
+                        <span className="text-sm font-medium text-gray-400 break-all my-auto">
+                          {fileCid}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
 
                 <h4 className="text-gray-50 font-semibold text-2xl">Author</h4>
@@ -102,13 +97,14 @@ export default function Details() {
                       />
                     </svg>
                   </span>
-                  <span className="text-gray-400 break-all my-auto">
-                    0x1c35d2C91E1F2Dc3BA949De78Da32f3FdA5c9863
+                  <span className="text-gray-400 font-semibold break-all my-auto ">
+                    {data?.author}
                   </span>
                 </div>
               </div>
 
               <div className="max-h-115 max-w-131 rounded-lg flex flex-col">
+                {/* chart goes here instead of the image */}
                 <Image
                   alt={data?.title as string}
                   src={data?.image as StaticImageData}

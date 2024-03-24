@@ -30,7 +30,7 @@ export default function Home() {
                 image={dataset.image}
                 title={dataset.title}
                 description={dataset.description}
-                price={dataset.price}
+                buyPrice={dataset.buyPrice}
               />
             );
           })}

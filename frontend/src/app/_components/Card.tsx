@@ -8,13 +8,13 @@ export default function Card({
   image,
   title,
   description,
-  price,
+  buyPrice,
 }: {
   id: number;
   image: any;
   title: string;
   description: string;
-  price: number;
+  buyPrice: number;
 }) {
   const router = useRouter();
 
@@ -37,7 +37,7 @@ export default function Card({
         </div>
 
         <div className="flex flex-row justify-between">
-          <span className="text-gray-50 font-medium py-4">{price} FIL</span>
+          <span className="text-gray-50 font-medium py-4">{buyPrice} FIL</span>
 
           <button
             type="button"
