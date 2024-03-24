@@ -74,7 +74,7 @@ export default function Create() {
           </div>
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-end py-2.5">
           <button type="submit" className="btn btn-primary btn-sm">
             Create
           </button>
