@@ -36,20 +36,36 @@ export default function Create() {
 
         <Uploader id="file" />
 
-        <div className="flex sm:flex-row flex-col justify-between">
-          <div className="flex flex-row gap-x-2.5">
-            <span className="btn btn-xs btn-secondary my-auto select-none">
-              IPFS
-            </span>
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-row  justify-between">
+            <div className="flex flex-row gap-x-2.5">
+              <span className="btn btn-xs btn-secondary my-auto select-none">
+                IPFS
+              </span>
+              <span className="text-gray-50 break-all my-auto">
+                QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR
+              </span>
+            </div>
 
-            <span className="text-gray-50 break-all my-auto">
-              QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR
-            </span>
+            <button type="button" className="text-gray-400 text-sm">
+              Delete
+            </button>
           </div>
 
-          <button type="button" className="text-gray-400 text-sm">
-            Delete
-          </button>
+          <div className="flex flex-row  justify-between">
+            <div className="flex flex-row gap-x-2.5">
+              <span className="btn btn-xs btn-secondary my-auto select-none">
+                IPFS
+              </span>
+              <span className="text-gray-50 break-all my-auto">
+                QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR
+              </span>
+            </div>
+
+            <button type="button" className="text-gray-400 text-sm">
+              Delete
+            </button>
+          </div>
         </div>
 
         <div className="flex justify-end p-2.5">
