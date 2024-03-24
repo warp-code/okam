@@ -19,6 +19,11 @@
     scrollbar-width: none;
     /* Firefox */
   }
+
+  /* Hide textarea resizer */
+  .no-resizer::-webkit-resizer {
+    display: none
+  }
 }
 
 body {
