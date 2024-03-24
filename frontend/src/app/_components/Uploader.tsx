@@ -23,7 +23,7 @@ export default function Uploader({
       <div className="flex flex-col relative border border-green-800 rounded-lg w-full px-6 py-4 gap-y-3 items-center">
         <label
           htmlFor={id}
-          className="items-center border border-green-800 rounded-lg p-2.5 max-w-10 max-h-10"
+          className="items-center border border-green-800 rounded-lg p-2.5 max-w-10 max-h-10 cursor-pointer"
         >
           <svg
             width="20"
@@ -43,7 +43,7 @@ export default function Uploader({
           </svg>
         </label>
 
-        <label htmlFor={id}>
+        <label htmlFor={id} className="cursor-pointer">
           <span className="text-green-300">Click to upload</span>
           &nbsp;
           <span className="text-gray-600">or drag and drop</span>
