@@ -74,7 +74,7 @@ export default function Create() {
           </div>
         </div>
 
-        <div className="flex justify-end p-2.5">
+        <div className="flex justify-end">
           <button type="submit" className="btn btn-primary btn-sm">
             Create
           </button>
