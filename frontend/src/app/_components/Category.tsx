@@ -15,7 +15,7 @@ export default function Category({ name }: { name: string }) {
   return (
     <label
       htmlFor={innerId}
-      className="btn btn-xs btn-secondary cursor-pointer"
+      className="btn btn-xs btn-secondary cursor-pointer select-none"
       onClick={() => {
         setChecked(!!checked);
       }}
