@@ -89,8 +89,8 @@ export default function Pagination({ elementsNum }: { elementsNum: number }) {
           }
           return (
             <button
-              key={page.number}
               type="button"
+              key={page.number}
               className="btn btn-sm btn-quaternary min-w-10"
             >
               {page.number}

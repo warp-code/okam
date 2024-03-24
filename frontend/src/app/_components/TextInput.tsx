@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function TextInput({
   id,
@@ -8,8 +8,8 @@ export default function TextInput({
   placeholder,
 }: {
   id: string;
-  label?: string;
-  placeholder?: string;
+  label?: string | undefined;
+  placeholder?: string | undefined;
 }) {
   return (
     <>
