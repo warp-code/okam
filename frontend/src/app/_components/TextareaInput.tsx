@@ -29,6 +29,8 @@ export default function TextareaInput({
         rows={5}
         className="block w-full border border-green-700 focus:border-green-400 focus:outline-none rounded-2xl px-6 py-4 bg-okam-dark-green placeholder:text-gray-400 text-gray-50"
       />
+
+      <div className="text-left text-gray-600 text-sm">275 characters left</div>
     </>
   );
 }
