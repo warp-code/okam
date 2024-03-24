@@ -1,33 +1,26 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
-export default function Category({ name }: { name: string }) {
-  const [innerId, setInnerId] = useState("");
+export default function Category({ id, label }: { id: string; label: string }) {
   const [checked, setChecked] = useState(false);
-
-  useEffect(() => {
-    const x = `${name}-inner`;
-
-    setInnerId(x);
-  }, [name]);
 
   return (
     <label
-      htmlFor={innerId}
+      htmlFor={id}
       className="btn btn-xs btn-secondary cursor-pointer select-none"
       onClick={() => {
         setChecked(!!checked);
       }}
     >
-      {name}
+      {label}
       <input
         type="checkbox"
-        id={innerId}
-        name={innerId}
+        id={id}
+        name={id}
         className="sr-only"
         checked={checked}
-        defaultChecked={false}
+        onChange={() => setChecked((prev) => !prev)}
       />
     </label>
   );

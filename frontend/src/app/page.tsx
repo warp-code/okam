@@ -17,7 +17,13 @@ export default function Home() {
 
         <div className="flex flex-row flex-wrap py-4 gap-3">
           {categories.map((category) => {
-            return <Category key={category.id} name={category.text} />;
+            return (
+              <Category
+                key={category.id}
+                id={category.id.toString()}
+                label={category.text}
+              />
+            );
           })}
         </div>
 
