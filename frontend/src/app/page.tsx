@@ -1,7 +1,7 @@
 import Card from "@/app/_components/Card";
 import Category from "@/app/_components/Category";
 import Pagination from "@/app/_components/Pagination";
-import SearchBar from "@/app/_components/SearchBar";
+import TextInput from "@/app/_components/TextInput";
 import { categories } from "@/app/_examples/categories";
 import { datasets } from "@/app/_examples/datasets";
 
@@ -13,7 +13,7 @@ export default function Home() {
           Find ML training data
         </h1>
 
-        <SearchBar name="search" placeholder="I am searching for..." />
+        <TextInput id="searchBar" placeholder="I am searching for..." />
 
         <div className="flex flex-row flex-wrap py-4 gap-3">
           {categories.map((category) => {
