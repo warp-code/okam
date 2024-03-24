@@ -79,7 +79,10 @@ export default function Pagination({ elementsNum }: { elementsNum: number }) {
         {pages.map((page) => {
           if (page.isEllipsis) {
             return (
-              <span key={page.number} className="btn btn-sm btn-quaternary">
+              <span
+                key={page.number}
+                className="btn btn-sm btn-quaternary min-w-10"
+              >
                 ...
               </span>
             );
@@ -88,7 +91,7 @@ export default function Pagination({ elementsNum }: { elementsNum: number }) {
             <button
               key={page.number}
               type="button"
-              className="btn btn-sm btn-quaternary"
+              className="btn btn-sm btn-quaternary min-w-10"
             >
               {page.number}
             </button>
