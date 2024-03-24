@@ -11,7 +11,7 @@ export default function Create() {
   const [files, setFiles] = useState([]);
 
   return (
-    <div className="h-full max-w-270 flex flex-col mx-auto">
+    <div className="h-full max-w-192 flex flex-col mx-auto">
       <form className="flex flex-col min-w-full text-center gap-y-6">
         <h2 className="text-gray-50 font-semibold text-3xl/9.5 pb-6 text-left">
           Create dataset
