@@ -32,7 +32,7 @@ export default function Details() {
               {data?.title}
             </h2>
 
-            <div className="flex md:flex-row flex-col md:gap-x-8 gap-y-8">
+            <div className="flex sm:flex-row sm:flex-wrap flex-col sm:gap-x-8 gap-y-8">
               <div className="max-w-131 rounded-lg flex flex-col gap-y-4">
                 <Image
                   alt={data?.title as string}
@@ -124,7 +124,7 @@ export default function Details() {
 
                     <button
                       type="button"
-                      className="btn btn-md btn-primary my-auto min-w-25"
+                      className="btn btn-primary my-auto min-w-25 py-2 text-lg font-semibold rounded-lg"
                     >
                       Buy
                     </button>
@@ -137,7 +137,7 @@ export default function Details() {
 
                     <button
                       type="button"
-                      className="btn btn-md btn-tertiary my-auto min-w-25"
+                      className="btn btn-tertiary my-auto min-w-25 py-2 text-lg font-semibold rounded-lg"
                     >
                       Sell
                     </button>
