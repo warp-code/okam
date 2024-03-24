@@ -25,7 +25,7 @@ export default function Category({ name }: { name: string }) {
         type="checkbox"
         id={innerId}
         name={innerId}
-        className="absolute invisible"
+        className="sr-only"
         checked={checked}
         defaultChecked={false}
       />
