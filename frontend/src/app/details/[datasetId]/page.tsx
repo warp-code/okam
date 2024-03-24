@@ -120,7 +120,10 @@ export default function Details() {
                       Buy price: {dataset?.price} FIL
                     </span>
 
-                    <button className="btn btn-md btn-primary my-auto min-w-25">
+                    <button
+                      type="button"
+                      className="btn btn-md btn-primary my-auto min-w-25"
+                    >
                       Buy
                     </button>
                   </div>
@@ -130,7 +133,10 @@ export default function Details() {
                       Sell price: {dataset?.price} FIL
                     </span>
 
-                    <button className="btn btn-md btn-tertiary my-auto min-w-25">
+                    <button
+                      type="button"
+                      className="btn btn-md btn-tertiary my-auto min-w-25"
+                    >
                       Sell
                     </button>
                   </div>

@@ -40,6 +40,7 @@ export default function Card({
           <span className="text-gray-50 font-medium py-4">{price} FIL</span>
 
           <button
+            type="button"
             className="btn btn-md btn-secondary"
             onClick={() => router.push(`/details/${id}`)}
           >
