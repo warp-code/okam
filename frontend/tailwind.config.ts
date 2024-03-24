@@ -26,6 +26,7 @@ const config: Config = {
         "270": "1080px",
       },
       lineHeight: {
+        "9.5": "2.375rem",
         "11": "2.75rem"
       },
       colors: {
