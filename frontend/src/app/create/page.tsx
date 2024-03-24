@@ -36,12 +36,24 @@ export default function Create() {
 
         <Uploader id="file" />
 
-        <div className="flex flex-row">
-          <div>
-            <span></span>
-            <span></span>
+        <div className="flex sm:flex-row flex-col justify-between">
+          <div className="flex flex-row gap-x-2.5">
+            <span className="btn btn-xs btn-secondary my-auto">IPFS</span>
+
+            <span className="text-gray-50 break-all my-auto">
+              QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR
+            </span>
           </div>
-          <button type="button"></button>
+
+          <button type="button" className="text-gray-400 text-sm">
+            Delete
+          </button>
+        </div>
+
+        <div className="flex justify-end p-2.5">
+          <button type="submit" className="btn btn-primary btn-sm">
+            Create
+          </button>
         </div>
       </form>
     </div>

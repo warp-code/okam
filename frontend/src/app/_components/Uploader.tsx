@@ -46,7 +46,7 @@ export default function Uploader({
         <label htmlFor={id} className="cursor-pointer">
           <span className="text-green-300">Click to upload</span>
           &nbsp;
-          <span className="text-gray-600">or drag and drop</span>
+          <span className="text-gray-400">or drag and drop</span>
         </label>
 
         <input type="file" id={id} name={id} className="sr-only" />
