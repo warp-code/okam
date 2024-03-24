@@ -8,10 +8,10 @@ export default function Category({ id, label }: { id: string; label: string }) {
   return (
     <label
       htmlFor={id}
-      className="btn btn-xs btn-secondary cursor-pointer select-none"
-      onClick={() => {
-        setChecked(!!checked);
-      }}
+      className={`btn btn-xs btn-secondary cursor-pointer select-none ${
+        checked ? "!bg-green-900" : ""
+      }`}
+      onClick={() => setChecked((prev) => !prev)}
     >
       {label}
       <input
