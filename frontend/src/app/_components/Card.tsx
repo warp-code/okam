@@ -32,7 +32,7 @@ export default function Card({
           {title}
         </div>
 
-        <div className="text-gray-400 text-sm text-left overflow-auto no-scrollbar">
+        <div className="max-h-20 text-gray-400 text-sm text-left overflow-auto no-scrollbar">
           {description}
         </div>
 
