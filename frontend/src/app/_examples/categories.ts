@@ -34,6 +34,6 @@ export const categories = [
   },
   {
     id: 8,
-    text: "Audio generation"
+    text: "Text-to-Image"
   },
 ] as Category[];
