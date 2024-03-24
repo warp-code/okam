@@ -21,7 +21,6 @@ export default function Home() {
           })}
         </div>
 
-        {/* Cards */}
         <div className="flex flex-row flex-wrap py-8 sm:gap-3 gap-y-3">
           {datasets.map((dataset) => {
             return (
@@ -37,7 +36,6 @@ export default function Home() {
           })}
         </div>
 
-        {/* Pagination */}
         <div className="py-8">
           <Pagination elementsNum={90} />
         </div>
