@@ -86,7 +86,7 @@ export default function Home() {
                     name={field.name}
                     value={field.state.value}
                     placeholder="I am searching for..."
-                    handleOnChange={async (event) =>
+                    handleOnChange={(event) =>
                       field.handleChange(event.target.value)
                     }
                   />
