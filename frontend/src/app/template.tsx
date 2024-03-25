@@ -3,14 +3,14 @@
 import { useRouter } from "next/navigation";
 
 export default function Template({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
+  const { push } = useRouter();
 
   return (
     <>
       <header className="flex h-18 w-full sm:px-16 px-8 items-center">
         <span
           className="text-lg font-bold text-green-500 cursor-pointer"
-          onClick={() => router.push("/")}
+          onClick={() => push("/")}
         >
           OKAM
         </span>
