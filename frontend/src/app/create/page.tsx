@@ -26,7 +26,12 @@ export default function Create() {
 
         <Uploader label="Cover image" id="coverImage" />
 
-        <TextareaInput label="Description" id="description" />
+        <TextareaInput
+          label="Description"
+          name="description"
+          value=""
+          handleOnChange={() => {}}
+        />
 
         <h4 className="text-gray-50 text-lg text-left">Tags</h4>
         {
