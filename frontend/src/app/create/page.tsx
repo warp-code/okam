@@ -17,7 +17,12 @@ export default function Create() {
           Create dataset
         </h2>
 
-        <TextInput label="Name" id="name" />
+        <TextInput
+          label="Name"
+          name="name"
+          value=""
+          handleOnChange={() => {}}
+        />
 
         <Uploader label="Cover image" id="coverImage" />
 
