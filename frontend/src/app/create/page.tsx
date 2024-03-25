@@ -1,6 +1,6 @@
 "use client";
 
-import Category from "@/app/_components/Category";
+import CategoryCheckbox from "@/app/_components/CategoryCheckbox";
 import TextInput from "@/app/_components/TextInput";
 import TextareaInput from "@/app/_components/TextareaInput";
 import Uploader from "@/app/_components/Uploader";
@@ -33,10 +33,12 @@ export default function Create() {
           <div className="flex flex-row flex-wrap py-4 gap-3">
             {categories.map((category) => {
               return (
-                <Category
+                <CategoryCheckbox
                   key={category.id}
-                  id={category.id.toString()}
+                  name={category.id.toString()}
                   label={category.text}
+                  value={false}
+                  handleOnChange={(e) => {}}
                 />
               );
             })}
