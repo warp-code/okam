@@ -5,9 +5,11 @@ import TextInput from "@/app/_components/TextInput";
 import TextareaInput from "@/app/_components/TextareaInput";
 import Uploader from "@/app/_components/Uploader";
 import { categories } from "@/app/_examples/categories";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function Create() {
+  const { push } = useRouter();
   const [files, setFiles] = useState([]);
 
   return (
@@ -86,8 +88,15 @@ export default function Create() {
           </div>
         </div>
 
-        <div className="flex justify-end py-2.5">
-          <button type="submit" className="btn btn-primary btn-sm">
+        <div className="flex justify-end gap-x-2.5 py-2.5">
+          <button
+            type="button"
+            className="btn btn-sm btn-secondary"
+            onClick={() => push("/")}
+          >
+            Cancel
+          </button>
+          <button type="submit" className="btn btn-sm btn-primary">
             Create
           </button>
         </div>
