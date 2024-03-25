@@ -4,6 +4,7 @@ import { datasets } from "@/app/_examples/datasets";
 import Image, { StaticImageData } from "next/image";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
+import LoadingIndicator from "@/app/_components/LoadingIndicator";
 
 export default function Details() {
   const params = useParams();
@@ -23,6 +24,12 @@ export default function Details() {
   return (
     <div className="h-full max-w-270 flex flex-col gap-y-12 mx-auto">
       <div className="min-w-full">
+        {isPending && (
+          <div className="h-24 w-24 mx-auto mt-40">
+            <LoadingIndicator />
+          </div>
+        )}
+
         {!isPending && (
           <>
             <h2 className="text-gray-50 font-semibold text-3xl pb-6">
