@@ -24,6 +24,21 @@
   .no-resizer::-webkit-resizer {
     display: none
   }
+
+  /* https://stackoverflow.com/a/42833858 */
+  .multiline-elipsis {
+    @apply overflow-hidden relative
+  }
+
+  .multiline-elipsis:before {
+    content: '';
+    @apply absolute bottom-0;
+  }
+
+  .multiline-elipsis:after {
+    content: '';
+    @apply absolute right-0;
+  }
 }
 
 body {
