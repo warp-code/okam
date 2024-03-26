@@ -10,7 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useAccount } from "wagmi";
 import { create, getAll } from "@/app/actions";
-import { Category, Dataset, DatasetCategory, File } from "@/app/types";
+import { Category, Dataset, DatasetCategory, OkamFile } from "@/app/types";
 
 export default function Create() {
   const { push } = useRouter();
@@ -29,7 +29,7 @@ export default function Create() {
     } as Dataset;
 
     const { data: datasetData, error: datasetError } = await create<Dataset>(
-      "dataset_categories",
+      "datasets",
       [dataset]
     );
 
@@ -82,7 +82,7 @@ export default function Create() {
         name: null,
         mimeType: null,
         cid: null,
-      } as File,
+      } as OkamFile,
       description: "",
       categories: categoriesQuery.isFetching
         ? []
@@ -93,7 +93,7 @@ export default function Create() {
         name: null,
         mimeType: null,
         cid: "",
-      } as File,
+      } as OkamFile,
     },
     onSubmit: (e) => handleSubmit(e.value),
   });
@@ -129,7 +129,7 @@ export default function Create() {
             label="Cover image"
             name={field.name}
             value={field.state.value}
-            handleOnChange={(file: File) => field.handleChange(file)}
+            handleOnChange={(file: OkamFile) => field.handleChange(file)}
           />
         )}
       </form.Field>
@@ -176,9 +176,13 @@ export default function Create() {
             label="File"
             name={field.name}
             value={field.state.value}
-            handleOnChange={(file: File) => field.handleChange(file)}
+            handleOnChange={(file: OkamFile) => field.handleChange(file)}
             handleClear={() =>
-              field.setValue({ name: null, cid: null, mimeType: null } as File)
+              field.setValue({
+                name: null,
+                cid: null,
+                mimeType: null,
+              } as OkamFile)
             }
           />
         )}

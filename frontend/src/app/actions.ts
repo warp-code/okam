@@ -1,10 +1,11 @@
 "use server";
 
+import { OkamFile } from '@/app/types';
 import { createClient } from '@/utils/supabase/server';
 import { PostgrestSingleResponse } from '@supabase/supabase-js';
 import { NFTStorage } from 'nft.storage';
 
-export async function uploadFile(formData: FormData) {
+export async function uploadFile(formData: FormData): Promise<OkamFile | undefined> {
   const file = formData.get("file") as File;
 
   if (!file) {
@@ -16,7 +17,7 @@ export async function uploadFile(formData: FormData) {
   try {
     const cid = await client.storeBlob(new Blob([file], { type: file.type }));
 
-    return { name: file.name, mimeType: file.type, cid: cid };
+    return { name: file.name, mimeType: file.type, cid: cid } as OkamFile;
   } catch (e: any) {
     console.error("An error occured while uploading the file: ", e);
 

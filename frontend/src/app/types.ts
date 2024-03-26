@@ -1,4 +1,4 @@
-export type File = {
+export type OkamFile = {
   name: string | null;
   mimeType: string | null;
   cid: string | null;

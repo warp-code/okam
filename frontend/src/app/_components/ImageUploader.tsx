@@ -1,6 +1,7 @@
 "use client";
 
 import { uploadFile } from "@/app/actions";
+import { OkamFile } from "@/app/types";
 import Image from "next/image";
 
 export default function ImageUploader({
@@ -11,20 +12,14 @@ export default function ImageUploader({
   errors,
 }: {
   name: string;
-  value?:
-    | {
-        name: string | null;
-        mimeType: string | null;
-        cid: string | null;
-      }
-    | undefined;
+  value?: OkamFile | undefined;
   label?: string | undefined;
   errors?: string[];
   handleOnChange: Function;
 }) {
   const protocol = "https://nftstorage.link/ipfs/";
 
-  const uploadFormData = async (file: any) => {
+  const uploadFormData = async (file: any): Promise<OkamFile | undefined> => {
     const formData = new FormData();
 
     formData.append("file", file);
