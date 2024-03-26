@@ -8,7 +8,8 @@ import TextInput from "@/app/_components/TextInput";
 import { categories } from "@/app/_examples/categories";
 import { datasets } from "@/app/_examples/datasets";
 import { useForm } from "@tanstack/react-form";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 export default function Home() {
   const handleSubmit = (e: any) => {
@@ -30,11 +31,28 @@ export default function Home() {
             return { id: x.id, text: x.text, checked: false };
           }) as Array<{ id: number; text: string; checked: boolean }>),
     },
-    onSubmit: (e) => handleSubmit(e),
+    onSubmit: (e) => handleSubmit(e.value),
   });
 
+  const selectDatasets = (array: any[], page: number) => {
+    // Calculate the starting index of the section
+    const startIndex = (page - 1) * 6;
+
+    // Check if the starting index is within the array bounds
+    if (startIndex < array.length) {
+      // Slice the array to get the section of 6 elements
+      return array.slice(startIndex, startIndex + 6);
+    } else {
+      // If the starting index is out of bounds, return an empty array
+      return [];
+    }
+  };
+
+  const [page, setPage] = useState(1);
+  const [resultsLength, setResultsLength] = useState(0);
+
   const datasetQuery = useQuery({
-    queryKey: ["datasets", form.state.values],
+    queryKey: ["datasets", form.state.values, page],
     queryFn: () => {
       const params = form.state.values;
 
@@ -54,8 +72,11 @@ export default function Home() {
         );
       }
 
-      return datasetsToReturn;
+      const x = selectDatasets(datasetsToReturn, page);
+
+      return x;
     },
+    placeholderData: keepPreviousData,
   });
 
   return (
@@ -141,7 +162,7 @@ export default function Home() {
             </div>
 
             <div className="py-8">
-              <Pagination elementsNum={90} />
+              <Pagination elementsNum={90} setPage={setPage} />
             </div>
           </>
         )}

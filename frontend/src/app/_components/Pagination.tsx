@@ -1,13 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction, Dispatch } from "react";
 
 type PageModel = {
   number?: number;
   isEllipsis: boolean;
 };
 
-export default function Pagination({ elementsNum }: { elementsNum: number }) {
+export default function Pagination({
+  elementsNum,
+  page,
+  setPage,
+}: {
+  elementsNum: number;
+  page?: number;
+  setPage: Dispatch<SetStateAction<number>>;
+}) {
   const maxPageNumbers = 7;
 
   const [pages, setPages] = useState<PageModel[]>([]);
@@ -52,6 +60,7 @@ export default function Pagination({ elementsNum }: { elementsNum: number }) {
       <button
         type="button"
         className="btn text-sm text-gray-400 flex flex-row gap-x-2"
+        onClick={() => setPage((prev) => prev - 1)}
       >
         <svg
           width="20"
@@ -102,6 +111,7 @@ export default function Pagination({ elementsNum }: { elementsNum: number }) {
       <button
         type="button"
         className="btn text-sm text-gray-400 flex flex-row gap-x-2"
+        onClick={() => setPage((prev) => prev + 1)}
       >
         Next
         <svg
