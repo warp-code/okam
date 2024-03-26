@@ -88,9 +88,13 @@ export default function ImageUploader({
             </label>
 
             <label htmlFor={name} className="cursor-pointer">
-              <span className="text-green-300">Click to upload</span>
+              <span className="text-green-300 select-none">
+                Click to upload
+              </span>
               &nbsp;
-              <span className="text-gray-400">or drag and drop</span>
+              <span className="text-gray-400 select-none">
+                or drag and drop
+              </span>
             </label>
 
             <input
