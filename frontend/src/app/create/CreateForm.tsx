@@ -109,24 +109,22 @@ export default function CreateForm({
         <div className="flex flex-row flex-wrap py-4 gap-3">
           <form.Field name="categories" mode="array">
             {(field) =>
-              field.state.value.map((category, i) => {
-                return (
-                  <form.Field key={i} name={`categories[${i}].checked`}>
-                    {(subField) => {
-                      return (
-                        <CategoryCheckbox
-                          name={subField.name}
-                          label={category.text}
-                          value={subField.state.value}
-                          handleOnChange={(event) =>
-                            subField.handleChange(event.target.checked)
-                          }
-                        />
-                      );
-                    }}
-                  </form.Field>
-                );
-              })
+              field.state.value.map((category, i) => (
+                <form.Field key={i} name={`categories[${i}].checked`}>
+                  {(subField) => {
+                    return (
+                      <CategoryCheckbox
+                        name={subField.name}
+                        label={category.text}
+                        value={subField.state.value}
+                        handleOnChange={(event) =>
+                          subField.handleChange(event.target.checked)
+                        }
+                      />
+                    );
+                  }}
+                </form.Field>
+              ))
             }
           </form.Field>
         </div>
@@ -136,18 +134,18 @@ export default function CreateForm({
         <div className="flex flex-col gap-y-6">
           <form.Field name="files" mode="array">
             {(field) =>
-              field.state.value.map((file, i) => {
-                <form.Field key={i} name={`files[${i}].cid`}>
+              field.state.value.map((file, i) => (
+                <form.Field key={i} name={"files"}>
                   {(subField) => (
                     <FileUploader
-                      name={subField.name}
-                      value={file}
+                      name={`${subField.name}-${i}`}
+                      value={subField.state.value[i]}
                       nftStorageApiKey={nftStorageApiKey}
                       handleOnChange={(event: any) => field.handleChange(event)}
                     />
                   )}
-                </form.Field>;
-              })
+                </form.Field>
+              ))
             }
           </form.Field>
 
