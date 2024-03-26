@@ -10,6 +10,18 @@ import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
+type File = {
+  name: string | null;
+  mimeType: string | null;
+  cid: string | null;
+};
+
+type Category = {
+  id: number;
+  text: string;
+  checked: boolean;
+};
+
 export default function CreateForm({
   nftStorageApiKey,
 }: {
@@ -33,22 +45,18 @@ export default function CreateForm({
         name: null,
         mimeType: null,
         cid: null,
-      } as { name: string | null; mimeType: string | null; cid: string | null },
+      } as File,
       description: "",
       categories: categoriesQuery.isFetching
         ? []
         : (categoriesQuery.data?.map((x) => {
             return { id: x.id, text: x.text, checked: false };
-          }) as Array<{ id: number; text: string; checked: boolean }>),
+          }) as Array<Category>),
       file: {
         name: null,
         mimeType: null,
         cid: "",
-      } as {
-        name: string | null;
-        mimeType: string | null;
-        cid: string | null;
-      },
+      } as File,
     },
     onSubmit: (e) => handleSubmit(e),
   });
@@ -126,33 +134,20 @@ export default function CreateForm({
         </form.Field>
       </div>
 
-      <div className="flex flex-col gap-y-6">
-        <form.Field name="file">
-          {(field) => (
-            <>
-              <FileUploader
-                label="File"
-                name={field.name}
-                value={field.state.value}
-                nftStorageApiKey={nftStorageApiKey}
-                handleOnChange={(file: any) => field.handleChange(file)}
-              />
-
-              {field.state.value.name && (
-                <button
-                  type="button"
-                  className="text-gray-400 text-sm"
-                  onClick={() =>
-                    field.setValue({ name: null, cid: null, mimeType: null })
-                  }
-                >
-                  Delete
-                </button>
-              )}
-            </>
-          )}
-        </form.Field>
-      </div>
+      <form.Field name="file">
+        {(field) => (
+          <FileUploader
+            label="File"
+            name={field.name}
+            value={field.state.value}
+            nftStorageApiKey={nftStorageApiKey}
+            handleOnChange={(file: any) => field.handleChange(file)}
+            handleClear={() =>
+              field.setValue({ name: null, cid: null, mimeType: null })
+            }
+          />
+        )}
+      </form.Field>
 
       <div className="flex justify-end gap-x-2.5 py-2.5">
         <button

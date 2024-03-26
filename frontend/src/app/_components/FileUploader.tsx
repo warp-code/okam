@@ -1,6 +1,7 @@
 "use client";
 
 import { NFTStorage } from "nft.storage";
+import { MouseEventHandler } from "react";
 
 export default function FileUploader({
   name,
@@ -8,6 +9,8 @@ export default function FileUploader({
   value,
   label,
   handleOnChange,
+  handleClear,
+  errors,
 }: {
   name: string;
   nftStorageApiKey: string;
@@ -20,6 +23,8 @@ export default function FileUploader({
     | undefined;
   label?: string | undefined;
   handleOnChange: Function;
+  handleClear: MouseEventHandler<HTMLButtonElement>;
+  errors?: string[];
 }) {
   const client = new NFTStorage({ token: nftStorageApiKey });
 
@@ -40,26 +45,36 @@ export default function FileUploader({
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-y-6">
       {label && (
         <label
           htmlFor={name}
-          className="text-gray-50 text-lg text-left cursor-pointer"
+          className="text-gray-50 text-lg text-left cursor-pointer mr-auto"
         >
           {label}
         </label>
       )}
 
-      <div className="flex flex-col relative border border-green-800 rounded-lg w-full px-6 py-4 gap-y-3 items-center">
-        {value?.name ? (
+      {value?.name ? (
+        <div className="flex flex-row justify-between gap-x-2.5">
           <div className="flex flex-row gap-x-2.5">
             <span className="btn btn-xs btn-secondary my-auto select-none">
               IPFS
             </span>
             <span className="text-gray-50 break-all my-auto">{value.cid}</span>
           </div>
-        ) : (
-          <>
+
+          <button
+            type="button"
+            className="text-gray-400 text-sm"
+            onClick={handleClear}
+          >
+            Delete
+          </button>
+        </div>
+      ) : (
+        <>
+          <div className="flex flex-col relative border border-green-800 rounded-lg w-full px-6 py-4 gap-y-3 items-center">
             <label
               htmlFor={name}
               className="items-center border border-green-800 rounded-lg p-2.5 max-w-10 max-h-10 cursor-pointer"
@@ -100,9 +115,15 @@ export default function FileUploader({
               }}
               className="sr-only"
             />
-          </>
-        )}
-      </div>
-    </>
+          </div>
+
+          {errors?.length && (
+            <div className="text-left text-gray-400 text-sm">
+              {errors.join(", ")}
+            </div>
+          )}
+        </>
+      )}
+    </div>
   );
 }

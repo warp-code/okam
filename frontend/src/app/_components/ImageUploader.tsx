@@ -9,6 +9,7 @@ export default function ImageUploader({
   value,
   label,
   handleOnChange,
+  errors,
 }: {
   name: string;
   nftStorageApiKey: string;
@@ -20,6 +21,7 @@ export default function ImageUploader({
       }
     | undefined;
   label?: string | undefined;
+  errors?: string[];
   handleOnChange: Function;
 }) {
   const protocol = "https://nftstorage.link/ipfs/";
@@ -42,11 +44,11 @@ export default function ImageUploader({
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-y-6 min-w-full">
       {label && (
         <label
           htmlFor={name}
-          className="text-gray-50 text-lg text-left cursor-pointer"
+          className="text-gray-50 text-lg text-left cursor-pointer mr-auto"
         >
           {label}
         </label>
@@ -106,6 +108,12 @@ export default function ImageUploader({
           </>
         )}
       </div>
-    </>
+
+      {errors?.length && (
+        <div className="text-left text-gray-400 text-sm">
+          {errors.join(", ")}
+        </div>
+      )}
+    </div>
   );
 }
