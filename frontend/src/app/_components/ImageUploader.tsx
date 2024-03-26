@@ -8,7 +8,6 @@ export default function ImageUploader({
   nftStorageApiKey,
   value,
   label,
-  placeholder,
   handleOnChange,
 }: {
   name: string;
@@ -21,7 +20,6 @@ export default function ImageUploader({
       }
     | undefined;
   label?: string | undefined;
-  placeholder?: string | undefined;
   handleOnChange: Function;
 }) {
   const protocol = "https://nftstorage.link/ipfs/";
@@ -98,7 +96,6 @@ export default function ImageUploader({
               id={name}
               name={name}
               value={value?.name ?? ""}
-              placeholder={placeholder}
               onChange={async (e) => {
                 const fileInfo = await uploadFile(e.target.files?.[0]);
 

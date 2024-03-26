@@ -7,7 +7,6 @@ export default function FileUploader({
   nftStorageApiKey,
   value,
   label,
-  placeholder,
   handleOnChange,
 }: {
   name: string;
@@ -20,7 +19,6 @@ export default function FileUploader({
       }
     | undefined;
   label?: string | undefined;
-  placeholder?: string | undefined;
   handleOnChange: Function;
 }) {
   const client = new NFTStorage({ token: nftStorageApiKey });
@@ -95,7 +93,6 @@ export default function FileUploader({
               id={name}
               name={name}
               value={value?.name ?? ""}
-              placeholder={placeholder}
               onChange={async (e) => {
                 const fileInfo = await uploadFile(e.target.files?.[0]);
 
