@@ -24,6 +24,14 @@ export default function ImageUploader({
 }) {
   const protocol = "https://nftstorage.link/ipfs/";
 
+  const uploadFormData = async (file: any) => {
+    const formData = new FormData();
+
+    formData.append("file", file);
+
+    return await uploadFile(formData);
+  };
+
   return (
     <div className="flex flex-col gap-y-6 min-w-full">
       {label && (
@@ -84,7 +92,7 @@ export default function ImageUploader({
               name={name}
               value={value?.name ?? ""}
               onChange={async (e) => {
-                const fileInfo = await uploadFile(e.target.files?.[0]);
+                const fileInfo = await uploadFormData(e.target.files?.[0]);
 
                 return await handleOnChange(fileInfo);
               }}

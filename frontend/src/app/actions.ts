@@ -4,12 +4,12 @@ import { createClient } from '@/utils/supabase/server';
 import { PostgrestSingleResponse } from '@supabase/supabase-js';
 import { NFTStorage } from 'nft.storage';
 
-export async function uploadFile(file: File | undefined) {
-  console.log("called");
+export async function uploadFile(formData: FormData) {
+  const file = formData.get("file") as File;
+
   if (!file) {
     return;
   }
-
 
   const client = new NFTStorage({ token: process.env.NFT_STORAGE_API_KEY });
 
