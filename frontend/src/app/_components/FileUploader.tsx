@@ -1,11 +1,10 @@
 "use client";
 
-import { NFTStorage } from "nft.storage";
+import { uploadFile } from "@/app/actions";
 import { MouseEventHandler } from "react";
 
 export default function FileUploader({
   name,
-  nftStorageApiKey,
   value,
   label,
   handleOnChange,
@@ -13,7 +12,6 @@ export default function FileUploader({
   errors,
 }: {
   name: string;
-  nftStorageApiKey: string;
   value?:
     | {
         name: string | null;
@@ -26,24 +24,6 @@ export default function FileUploader({
   handleClear: MouseEventHandler<HTMLButtonElement>;
   errors?: string[];
 }) {
-  const client = new NFTStorage({ token: nftStorageApiKey });
-
-  const uploadFile = async (file: File | undefined) => {
-    if (!file) {
-      return;
-    }
-
-    try {
-      const cid = await client.storeBlob(new Blob([file], { type: file.type }));
-
-      return { name: file.name, mimeType: file.type, cid: cid };
-    } catch (e: any) {
-      console.error("An error occured while uploading the file: ", e);
-
-      return;
-    }
-  };
-
   return (
     <div className="flex flex-col gap-y-6">
       {label && (
