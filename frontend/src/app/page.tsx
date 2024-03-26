@@ -116,26 +116,22 @@ export default function Home() {
 
               <div className="flex flex-row flex-wrap py-4 gap-3">
                 <form.Field name="categories" mode="array">
-                  {(field) => {
-                    return field.state.value.map((category, i) => {
-                      return (
-                        <form.Field key={i} name={`categories[${i}].checked`}>
-                          {(subField) => {
-                            return (
-                              <CategoryCheckbox
-                                name={subField.name}
-                                label={category.text}
-                                value={subField.state.value}
-                                handleOnChange={(event) =>
-                                  subField.handleChange(event.target.checked)
-                                }
-                              />
-                            );
-                          }}
-                        </form.Field>
-                      );
-                    });
-                  }}
+                  {(field) =>
+                    field.state.value.map((category, i) => (
+                      <form.Field key={i} name={`categories[${i}].checked`}>
+                        {(subField) => (
+                          <CategoryCheckbox
+                            name={subField.name}
+                            label={category.text}
+                            value={subField.state.value}
+                            handleOnChange={(event) =>
+                              subField.handleChange(event.target.checked)
+                            }
+                          />
+                        )}
+                      </form.Field>
+                    ))
+                  }
                 </form.Field>
               </div>
             </form>
