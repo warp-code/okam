@@ -8,8 +8,9 @@ import { categories } from "@/app/_examples/categories";
 import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import FileUploader from "@/app/_components/FileUploader";
 
-export default function CreateDatasetForm({
+export default function CreateForm({
   nftStorageApiKey,
 }: {
   nftStorageApiKey: string;
@@ -40,7 +41,17 @@ export default function CreateDatasetForm({
         : (categoriesQuery.data?.map((x) => {
             return { id: x.id, text: x.text, checked: false };
           }) as Array<{ id: number; text: string; checked: boolean }>),
-      files: [],
+      files: [
+        {
+          name: null,
+          mimeType: null,
+          cid: "",
+        },
+      ] as Array<{
+        name: string | null;
+        mimeType: string | null;
+        cid: string | null;
+      }>,
     },
     onSubmit: (e) => handleSubmit(e),
   });
@@ -98,8 +109,8 @@ export default function CreateDatasetForm({
 
         <div className="flex flex-row flex-wrap py-4 gap-3">
           <form.Field name="categories" mode="array">
-            {(field) => {
-              return field.state.value.map((category, i) => {
+            {(field) =>
+              field.state.value.map((category, i) => {
                 return (
                   <form.Field key={i} name={`categories[${i}].checked`}>
                     {(subField) => {
@@ -116,17 +127,32 @@ export default function CreateDatasetForm({
                     }}
                   </form.Field>
                 );
-              });
-            }}
+              })
+            }
           </form.Field>
         </div>
 
         <h4 className="text-gray-50 text-lg text-left">Files</h4>
 
-        {/* <Uploader id="file" /> */}
+        <div className="flex flex-col gap-y-6">
+          <form.Field name="files" mode="array">
+            {(field) =>
+              field.state.value.map((file, i) => {
+                <form.Field key={i} name={`files[${i}].cid`}>
+                  {(subField) => (
+                    <FileUploader
+                      name={subField.name}
+                      value={file}
+                      nftStorageApiKey={nftStorageApiKey}
+                      handleOnChange={(event: any) => field.handleChange(event)}
+                    />
+                  )}
+                </form.Field>;
+              })
+            }
+          </form.Field>
 
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-row  justify-between">
+          <div className="flex flex-row justify-between">
             <div className="flex flex-row gap-x-2.5">
               <span className="btn btn-xs btn-secondary my-auto select-none">
                 IPFS
@@ -135,7 +161,6 @@ export default function CreateDatasetForm({
                 QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR
               </span>
             </div>
-
             <button type="button" className="text-gray-400 text-sm">
               Delete
             </button>
