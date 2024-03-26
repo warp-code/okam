@@ -4,11 +4,11 @@ import CategoryCheckbox from "@/app/_components/CategoryCheckbox";
 import TextInput from "@/app/_components/TextInput";
 import TextareaInput from "@/app/_components/TextareaInput";
 import ImageUploader from "@/app/_components/ImageUploader";
+import FileUploader from "@/app/_components/FileUploader";
 import { categories } from "@/app/_examples/categories";
 import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import FileUploader from "@/app/_components/FileUploader";
 
 export default function CreateForm({
   nftStorageApiKey,
@@ -19,7 +19,6 @@ export default function CreateForm({
 
   const handleSubmit = (e: any) => {
     console.log(e);
-    console.log(nftStorageApiKey);
   };
 
   const categoriesQuery = useQuery({
@@ -201,18 +200,7 @@ export default function CreateForm({
                 Create
               </button>
             )}
-            {/* <button
-              type="submit"
-              className="btn btn-sm btn-primary"
-              disabled={!canSubmit}
-            >
-              Create
-            </button> */}
           </form.Subscribe>
-
-          {/* <button type="submit" className="btn btn-sm btn-primary">
-            Create
-          </button> */}
         </div>
       </form>
     </div>
