@@ -1,5 +1,6 @@
 "use client";
 
+import { nftStorageIpfsHost } from "@/app/constants";
 import { NFTStorage, File, Blob } from "nft.storage";
 import { useState } from "react";
 
@@ -7,7 +8,6 @@ export default function NftStorageExample(props: { token: string }) {
   const [file, setFile] = useState<File>();
   const [downloadLink, setDownloadLink] = useState<string>();
 
-  const protocol = "https://nftstorage.link/ipfs/";
   const client = new NFTStorage({ token: props.token });
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -22,7 +22,7 @@ export default function NftStorageExample(props: { token: string }) {
 
       console.log("cid: ", cid);
 
-      setDownloadLink(protocol + cid);
+      setDownloadLink(nftStorageIpfsHost + cid);
     } catch (e: any) {
       // Handle errors here
       console.error(e);

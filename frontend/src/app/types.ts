@@ -16,7 +16,7 @@ export type CategoryModel = {
 };
 
 export type Dataset = {
-  id?: number;
+  id: number;
   name: string;
   cover_image: {
     name: string;

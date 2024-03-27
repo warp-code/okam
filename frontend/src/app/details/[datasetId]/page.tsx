@@ -7,11 +7,11 @@ import LoadingIndicator from "@/app/_components/LoadingIndicator";
 import { useAccount } from "wagmi";
 import { getOne } from "@/app/actions";
 import { Dataset } from "@/app/types";
+import { nftStorageIpfsHost } from "@/app/constants";
 
 export default function Details() {
   const params = useParams();
   const { address } = useAccount();
-  const protocol = "https://nftstorage.link/ipfs/";
 
   const { isPending, error, data } = useQuery({
     queryKey: ["datasets", params.datasetId],
@@ -54,7 +54,7 @@ export default function Details() {
                 <div className=" rounded-lg w-131 h-64">
                   <Image
                     alt={data.cover_image.name}
-                    src={protocol + data.cover_image.cid}
+                    src={nftStorageIpfsHost + data.cover_image.cid}
                     width="0"
                     height="0"
                     sizes="100vw"
@@ -124,7 +124,7 @@ export default function Details() {
                 <div className="rounded-t-lg w-131 h-64">
                   <Image
                     alt={data.cover_image.name}
-                    src={protocol + data.cover_image.cid}
+                    src={nftStorageIpfsHost + data.cover_image.cid}
                     width="0"
                     height="0"
                     sizes="100vw"
