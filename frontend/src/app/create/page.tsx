@@ -33,7 +33,9 @@ export default function Create() {
       quadratic_param: 3,
       linear_param: 2,
       constant_param: 1,
-      categories: model.categories.filter((x) => x.checked).map((x) => x.id),
+      categories: model.categories
+        .filter((category) => category.checked)
+        .map((category) => category.id),
     } as Dataset;
 
     const { data, error } = await create<Dataset>("datasets", [dataset]);
@@ -74,10 +76,10 @@ export default function Create() {
       description: "",
       categories: categoriesQuery.isFetching
         ? []
-        : categoriesQuery.data?.map((x) => {
+        : categoriesQuery.data?.map((category) => {
             return {
-              id: x.id,
-              text: x.text,
+              id: category.id,
+              text: category.text,
               checked: false,
             };
           }),
@@ -87,7 +89,7 @@ export default function Create() {
         cid: "",
       },
     } as CreateModel,
-    onSubmit: (e) => createDataset(e.value),
+    onSubmit: (event) => createDataset(event.value),
   });
 
   return (
