@@ -1,5 +1,6 @@
 "use client";
 
+import { ValidationError } from "@tanstack/react-form";
 import { ChangeEventHandler } from "react";
 
 export default function TextareaInput({
@@ -15,7 +16,7 @@ export default function TextareaInput({
   label?: string | undefined;
   placeholder?: string | undefined;
   handleOnChange: ChangeEventHandler<HTMLTextAreaElement>;
-  errors?: string[];
+  errors?: ValidationError[];
 }) {
   return (
     <div className="flex flex-col gap-y-6 min-w-full">
@@ -38,9 +39,9 @@ export default function TextareaInput({
         className="block w-full border border-green-700 focus:border-green-400 focus:outline-none rounded-2xl px-6 py-4 bg-okam-dark-green placeholder:text-gray-400 text-gray-50 resize-y no-resizer no-scrollbar"
       />
 
-      {errors?.length && (
+      {(errors?.length as number) > 0 && (
         <div className="text-left text-gray-400 text-sm">
-          {errors.join(", ")}
+          {errors?.join(" ")}
         </div>
       )}
     </div>

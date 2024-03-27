@@ -3,6 +3,7 @@
 import { uploadFile } from "@/app/actions";
 import { nftStorageIpfsHost } from "@/app/constants";
 import { OkamFile } from "@/app/types";
+import { ValidationError } from "@tanstack/react-form";
 import Image from "next/image";
 
 export default function ImageUploader({
@@ -15,7 +16,7 @@ export default function ImageUploader({
   name: string;
   value?: OkamFile | undefined;
   label?: string | undefined;
-  errors?: string[];
+  errors?: ValidationError[];
   handleOnChange: Function;
 }) {
   const uploadFormData = async (file: any): Promise<OkamFile | undefined> => {
@@ -96,9 +97,9 @@ export default function ImageUploader({
         )}
       </div>
 
-      {errors?.length && (
+      {(errors?.length as number) > 0 && (
         <div className="text-left text-gray-400 text-sm">
-          {errors.join(", ")}
+          {errors?.join(" ")}
         </div>
       )}
     </div>

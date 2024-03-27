@@ -2,6 +2,7 @@
 
 import { uploadFile } from "@/app/actions";
 import { OkamFile } from "@/app/types";
+import { ValidationError } from "@tanstack/react-form";
 import { MouseEventHandler } from "react";
 
 export default function FileUploader({
@@ -17,7 +18,7 @@ export default function FileUploader({
   label?: string | undefined;
   handleOnChange: Function;
   handleClear: MouseEventHandler<HTMLButtonElement>;
-  errors?: string[];
+  errors?: ValidationError[];
 }) {
   const uploadFormData = async (file: any) => {
     const formData = new FormData();
@@ -104,9 +105,9 @@ export default function FileUploader({
             />
           </div>
 
-          {errors?.length && (
+          {(errors?.length as number) > 0 && (
             <div className="text-left text-gray-400 text-sm">
-              {errors.join(", ")}
+              {errors?.join(" ")}
             </div>
           )}
         </>
