@@ -67,20 +67,6 @@ export default function Home() {
     onSubmit: (event) => filterDatasets(event.value),
   });
 
-  const selectDatasets = (array: any[], page: number) => {
-    // Calculate the starting index of the section
-    const startIndex = (page - 1) * 6;
-
-    // Check if the starting index is within the array bounds
-    if (startIndex < array.length) {
-      // Slice the array to get the section of 6 elements
-      return array.slice(startIndex, startIndex + 6);
-    } else {
-      // If the starting index is out of bounds, return an empty array
-      return [];
-    }
-  };
-
   const datasetQuery = useQuery({
     queryKey: ["datasets"],
     queryFn: async (query) => {
