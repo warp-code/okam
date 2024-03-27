@@ -18,15 +18,15 @@ export default function Home() {
     let datasetsToReturn = datasets;
 
     if (model.search.length) {
-      datasetsToReturn = datasetsToReturn.filter((x) =>
-        x.name.includes(model.search)
+      datasetsToReturn = datasetsToReturn.filter((dataset) =>
+        dataset.name.includes(model.search)
       );
     }
 
-    if (model.categories.some((x) => x.checked)) {
+    if (model.categories.some((category) => category.checked)) {
       const ids = model.categories
         .filter((category) => category.checked)
-        .map((x) => x.id);
+        .map((category) => category.id);
 
       datasetsToReturn = datasetsToReturn.filter((dataset) =>
         dataset.categories.some((id) => ids.includes(id))
@@ -77,10 +77,10 @@ export default function Home() {
       search: "",
       categories: categoriesQuery.isPending
         ? []
-        : categoriesQuery.data?.map((x) => {
+        : categoriesQuery.data?.map((category) => {
             return {
-              id: x.id,
-              text: x.text,
+              id: category.id,
+              text: category.text,
               checked: false,
             };
           }),
@@ -103,9 +103,9 @@ export default function Home() {
 
             <form
               className="min-w-full text-center"
-              onChange={(e) => {
-                e.persist();
-                e.stopPropagation();
+              onChange={(event) => {
+                event.persist();
+                event.stopPropagation();
 
                 void form.handleSubmit();
               }}
