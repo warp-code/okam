@@ -1,13 +1,6 @@
-export default function LoadingIndicator({ size }: { size?: string }) {
+export default function LoadingIndicator() {
   return (
-    <div
-      role="status"
-      className={
-        size
-          ? `${size} flex flex-grow justify-center`
-          : "flex flex-grow justify-center"
-      }
-    >
+    <div role="status" className="flex flex-grow justify-center">
       <svg
         aria-hidden="true"
         className="h-full max-w-full text-gray-200 animate-spin"
