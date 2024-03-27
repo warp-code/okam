@@ -11,10 +11,17 @@ import { useRouter } from "next/navigation";
 import { useAccount } from "wagmi";
 import { create, getAll } from "@/app/actions";
 import { Category, Dataset, DatasetCategory, OkamFile } from "@/app/types";
+import { useLayoutEffect } from "react";
 
 export default function Create() {
   const { push } = useRouter();
   const { address } = useAccount();
+
+  useLayoutEffect(() => {
+    if (!address) {
+      push("/");
+    }
+  }, [address, push]);
 
   const handleSubmit = async (e: any) => {
     const dataset = {
