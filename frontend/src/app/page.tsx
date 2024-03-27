@@ -12,40 +12,28 @@ import { useState } from "react";
 
 export default function Home() {
   const [datasets, setDatasets] = useState<Dataset[]>([]);
+  const [filteredDatasets, setFilteredDatasets] = useState<Dataset[]>([]);
 
   const filterDatasets = (model: SearchModel) => {
-    return model;
-  };
+    let datasetsToReturn = datasets;
 
-  const penis = (query: any, data: any) => {
-    // console.log(data);
-
-    const searchParams = query.queryKey[1] as {
-      search: string;
-      categories: any[];
-    };
-
-    let datasetsToReturn = data as Dataset[];
-    // console.log(datasetsToReturn);
-
-    if (searchParams.search) {
+    if (model.search.length) {
       datasetsToReturn = datasetsToReturn.filter((x) =>
-        x.name.includes(searchParams.search)
+        x.name.includes(model.search)
       );
     }
 
-    if (searchParams.categories.some((x) => x.checked)) {
-      const ids = searchParams.categories
-        .filter((x) => x.checked)
+    if (model.categories.some((x) => x.checked)) {
+      const ids = model.categories
+        .filter((category) => category.checked)
         .map((x) => x.id);
 
-      datasetsToReturn = datasetsToReturn.filter((x) =>
-        x.categories.some((y) => ids.includes(y))
+      datasetsToReturn = datasetsToReturn.filter((dataset) =>
+        dataset.categories.some((id) => ids.includes(id))
       );
     }
 
-    console.log(datasetsToReturn);
-    return datasetsToReturn;
+    setFilteredDatasets(datasetsToReturn);
   };
 
   const categoriesQuery = useQuery({
@@ -76,7 +64,7 @@ export default function Home() {
             };
           }),
     } as SearchModel,
-    onSubmit: (e) => filterDatasets(e.value),
+    onSubmit: (event) => filterDatasets(event.value),
   });
 
   const selectDatasets = (array: any[], page: number) => {
@@ -104,6 +92,9 @@ export default function Home() {
         console.log(error);
         return;
       }
+
+      setDatasets(data);
+      setFilteredDatasets(data);
 
       return data;
     },
@@ -172,7 +163,7 @@ export default function Home() {
                   <LoadingIndicator />
                 </div>
               ) : (
-                datasetQuery.data?.map((dataset) => {
+                filteredDatasets.map((dataset) => {
                   return (
                     <Card
                       key={dataset?.id}
