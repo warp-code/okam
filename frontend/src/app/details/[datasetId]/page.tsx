@@ -1,20 +1,33 @@
 "use client";
 
-import { datasets } from "@/app/_examples/datasets";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import LoadingIndicator from "@/app/_components/LoadingIndicator";
+import { useAccount } from "wagmi";
+import { getOne } from "@/app/actions";
+import { Dataset } from "@/app/types";
 
 export default function Details() {
   const params = useParams();
+  const { address } = useAccount();
+  const protocol = "https://nftstorage.link/ipfs/";
 
   const { isPending, error, data } = useQuery({
     queryKey: ["datasets", params.datasetId],
-    queryFn: () =>
-      datasets.find(
-        (x) => x.id === Number.parseInt(params.datasetId as string)
-      ),
+    queryFn: async () => {
+      const { data, error } = await getOne<Dataset>(
+        "datasets",
+        Number.parseInt(params.datasetId as string)
+      );
+
+      if (error) {
+        console.error(error);
+        return {} as Dataset;
+      }
+
+      return data;
+    },
   });
 
   if (error) {
@@ -30,43 +43,42 @@ export default function Details() {
           </div>
         )}
 
-        {!isPending && (
+        {!isPending && data && (
           <>
             <h2 className="text-gray-50 font-semibold text-3xl pb-6">
-              {data?.title}
+              {data.name}
             </h2>
 
             <div className="flex sm:flex-row sm:flex-wrap flex-col sm:gap-x-8 gap-y-8">
               <div className="max-w-131 rounded-lg flex flex-col gap-y-4">
-                <Image
-                  alt={data?.title as string}
-                  src={data?.image as StaticImageData}
-                  width={524}
-                  height={256}
-                  className="rounded-lg"
-                />
+                <div className=" rounded-lg w-131 h-64">
+                  <Image
+                    alt={data.cover_image.name}
+                    src={protocol + data.cover_image.cid}
+                    width="0"
+                    height="0"
+                    sizes="100vw"
+                    className="block mx-auto rounded-lg h-full w-auto"
+                  />
+                </div>
 
                 <h4 className="text-gray-50 font-semibold text-2xl">
                   Description
                 </h4>
 
-                <div className="text-gray-400">{data?.description}</div>
+                <div className="text-gray-400">{data.description}</div>
 
-                <h4 className="text-gray-50 font-semibold text-2xl">Files</h4>
+                <h4 className="text-gray-50 font-semibold text-2xl">File</h4>
 
                 <div className="flex flex-col gap-y-3">
-                  {data?.fileCids.map((fileCid) => {
-                    return (
-                      <div key={fileCid} className="flex flex-row gap-x-2.5">
-                        <span className="btn btn-xs btn-secondary my-auto">
-                          IPFS
-                        </span>
-                        <span className="text-sm font-medium text-gray-400 break-all my-auto">
-                          {fileCid}
-                        </span>
-                      </div>
-                    );
-                  })}
+                  <div className="flex flex-row gap-x-2.5">
+                    <span className="btn btn-xs btn-secondary my-auto">
+                      IPFS
+                    </span>
+                    <span className="text-sm font-medium text-gray-400 break-all my-auto">
+                      {data.file_cid}
+                    </span>
+                  </div>
                 </div>
 
                 <h4 className="text-gray-50 font-semibold text-2xl">Author</h4>
@@ -102,33 +114,37 @@ export default function Details() {
                     </svg>
                   </span>
                   <span className="text-gray-400 font-semibold break-all my-auto ">
-                    {data?.author}
+                    {data.author}
                   </span>
                 </div>
               </div>
 
               <div className="max-h-115 max-w-131 rounded-lg flex flex-col">
                 {/* chart goes here instead of the image */}
-                <Image
-                  alt={data?.title as string}
-                  src={data?.image as StaticImageData}
-                  width={524}
-                  height={256}
-                  className="rounded-t-lg"
-                />
+                <div className="rounded-t-lg w-131 h-64">
+                  <Image
+                    alt={data.cover_image.name}
+                    src={protocol + data.cover_image.cid}
+                    width="0"
+                    height="0"
+                    sizes="100vw"
+                    className="block mx-auto rounded-t-lg h-full w-auto"
+                  />
+                </div>
                 <div className="max-w-131 rounded-b-lg pt-6 pb-8 px-6 flex flex-col gap-y-4 bg-okam-dark-green">
                   <div className="text-green-500 text-sm/7 font-semibold">
-                    Current supply: {data?.currentSupply}
+                    Current supply: 120
                   </div>
 
                   <div className="flex flex-row justify-between">
                     <span className="text-gray-50 font-medium py-4">
-                      Buy price: {data?.buyPrice} FIL
+                      Buy price: X FIL
                     </span>
 
                     <button
                       type="button"
                       className="btn btn-primary my-auto min-w-25 py-2 text-lg font-semibold rounded-lg"
+                      disabled={!address}
                     >
                       Buy
                     </button>
@@ -136,7 +152,7 @@ export default function Details() {
 
                   <div className="flex flex-row justify-between">
                     <span className="text-gray-50 font-medium py-4">
-                      Sell price: {data?.sellPrice} FIL
+                      Sell price: Y FIL
                     </span>
 
                     <button
