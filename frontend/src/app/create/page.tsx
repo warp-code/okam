@@ -197,9 +197,10 @@ export default function Create() {
                               name={subField.name}
                               label={category.text}
                               value={subField.state.value}
-                              handleOnChange={(event) =>
-                                subField.handleChange(event.target.checked)
-                              }
+                              handleOnChange={(event) => {
+                                subField.handleChange(event.target.checked);
+                                field.handleChange(field.state.value);
+                              }}
                             />
                           );
                         }}
