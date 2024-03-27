@@ -118,8 +118,8 @@ export default function Create() {
           <form.Field
             name="name"
             validators={{
-              onBlur: ({ value }) =>
-                !value.length ? "Name is required." : undefined,
+              onChange: ({ value: name }) =>
+                !name.length ? "Name is required." : undefined,
             }}
           >
             {(field) => (
@@ -138,8 +138,8 @@ export default function Create() {
           <form.Field
             name="coverImage"
             validators={{
-              onBlur: ({ value }) =>
-                !value.cid.length ? "Cover image is required." : undefined,
+              onChange: ({ value: coverImage }) =>
+                !coverImage.cid.length ? "Cover image is required." : undefined,
             }}
           >
             {(field) => (
@@ -148,6 +148,7 @@ export default function Create() {
                 name={field.name}
                 value={field.state.value}
                 handleOnChange={(file: OkamFile) => field.handleChange(file)}
+                errors={field.state.meta.errors}
               />
             )}
           </form.Field>
@@ -155,8 +156,8 @@ export default function Create() {
           <form.Field
             name="description"
             validators={{
-              onBlur: ({ value }) =>
-                !value.length ? "Description is required." : undefined,
+              onChange: ({ value: description }) =>
+                !description.length ? "Description is required." : undefined,
             }}
           >
             {(field) => (
@@ -167,40 +168,60 @@ export default function Create() {
                 handleOnChange={(event) =>
                   field.handleChange(event.target.value)
                 }
+                errors={field.state.meta.errors}
               />
             )}
           </form.Field>
 
           <h4 className="text-gray-50 text-lg text-left">Tags</h4>
 
-          <div className="flex flex-row flex-wrap py-4 gap-3">
-            <form.Field name="categories" mode="array">
-              {(field) =>
-                field.state.value?.map((category, i) => (
-                  <form.Field key={i} name={`categories[${i}].checked`}>
-                    {(subField) => {
-                      return (
-                        <CategoryCheckbox
-                          name={subField.name}
-                          label={category.text}
-                          value={subField.state.value}
-                          handleOnChange={(event) =>
-                            subField.handleChange(event.target.checked)
-                          }
-                        />
-                      );
-                    }}
-                  </form.Field>
-                ))
-              }
+          <div className="flex flex-col gap-y-6 min-w-full">
+            <form.Field
+              name="categories"
+              mode="array"
+              validators={{
+                onChange: ({ value: categories }) =>
+                  !categories.some((category) => category.checked)
+                    ? "At least one category is required"
+                    : undefined,
+              }}
+            >
+              {(field) => (
+                <>
+                  <div className="flex flex-row flex-wrap pt-4 gap-3">
+                    {field.state.value?.map((category, i) => (
+                      <form.Field key={i} name={`categories[${i}].checked`}>
+                        {(subField) => {
+                          return (
+                            <CategoryCheckbox
+                              name={subField.name}
+                              label={category.text}
+                              value={subField.state.value}
+                              handleOnChange={(event) =>
+                                subField.handleChange(event.target.checked)
+                              }
+                            />
+                          );
+                        }}
+                      </form.Field>
+                    ))}
+                  </div>
+
+                  {(field.state.meta.errors?.length as number) > 0 && (
+                    <div className="text-left text-gray-400 text-sm">
+                      {field.state.meta.errors.join(" ")}
+                    </div>
+                  )}
+                </>
+              )}
             </form.Field>
           </div>
 
           <form.Field
             name="file"
             validators={{
-              onBlur: ({ value }) =>
-                !value.cid.length ? "File is required." : undefined,
+              onChange: ({ value: file }) =>
+                !file.cid.length ? "File is required." : undefined,
             }}
           >
             {(field) => (
@@ -216,6 +237,7 @@ export default function Create() {
                     mimeType: "",
                   } as OkamFile)
                 }
+                errors={field.state.meta.errors}
               />
             )}
           </form.Field>
