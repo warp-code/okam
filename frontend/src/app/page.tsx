@@ -38,14 +38,35 @@ export default function Home() {
 
   const categoriesQuery = useQuery({
     queryKey: ["categories"],
-    queryFn: async () => {
-      const { data, error } = await getAll<Category>("categories");
+    queryFn: async (query) => {
+      if (!query.queryKey.length) return;
+
+      const { data, error } = await getAll<Category>(query.queryKey[0]);
 
       if (error) {
         console.error(error);
 
         return [];
       }
+
+      return data;
+    },
+  });
+
+  const datasetQuery = useQuery({
+    queryKey: ["datasets"],
+    queryFn: async (query) => {
+      if (!query.queryKey.length) return;
+
+      const { data, error } = await getAll<Dataset>(query.queryKey[0]);
+
+      if (error) {
+        console.log(error);
+        return;
+      }
+
+      setDatasets(data);
+      setFilteredDatasets(data);
 
       return data;
     },
@@ -65,25 +86,6 @@ export default function Home() {
           }),
     } as SearchModel,
     onSubmit: (event) => filterDatasets(event.value),
-  });
-
-  const datasetQuery = useQuery({
-    queryKey: ["datasets"],
-    queryFn: async (query) => {
-      if (!query.queryKey.length) return;
-
-      const { data, error } = await getAll<Dataset>("datasets");
-
-      if (error) {
-        console.log(error);
-        return;
-      }
-
-      setDatasets(data);
-      setFilteredDatasets(data);
-
-      return data;
-    },
   });
 
   return (
