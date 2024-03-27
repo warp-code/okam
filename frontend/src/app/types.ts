@@ -13,7 +13,11 @@ export type Category = {
 export type Dataset = {
   id?: number;
   name: string;
-  cover_image: string;
+  cover_image: {
+    name: string;
+    mimeType: string;
+    cid: string;
+  };
   description: string;
   file_cid: string;
   author: string;
