@@ -6,8 +6,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Okam",
-  description: "Crypto marketplace for AI datasets",
+  title: "OKAM.ai",
+  description: "An open platform for private AI models",
 };
 
 export default function RootLayout({
