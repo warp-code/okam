@@ -1,4 +1,4 @@
-import { http, createConfig } from "wagmi";
+import { http, createConfig, createStorage, cookieStorage } from "wagmi";
 import { sepolia, anvil } from "wagmi/chains";
 
 export const wagmiConfig = createConfig({
@@ -8,6 +8,9 @@ export const wagmiConfig = createConfig({
     [sepolia.id]: http(),
   },
   ssr: true,
+  storage: createStorage({
+    storage: cookieStorage,
+  }),
 });
 
 export const litConfig = {
