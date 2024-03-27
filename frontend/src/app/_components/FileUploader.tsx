@@ -1,6 +1,7 @@
 "use client";
 
 import { uploadFile } from "@/app/actions";
+import { OkamFile } from "@/app/types";
 import { MouseEventHandler } from "react";
 
 export default function FileUploader({
@@ -12,13 +13,7 @@ export default function FileUploader({
   errors,
 }: {
   name: string;
-  value?:
-    | {
-        name: string | null;
-        mimeType: string | null;
-        cid: string | null;
-      }
-    | undefined;
+  value?: OkamFile | undefined;
   label?: string | undefined;
   handleOnChange: Function;
   handleClear: MouseEventHandler<HTMLButtonElement>;
@@ -43,7 +38,7 @@ export default function FileUploader({
         </label>
       )}
 
-      {value?.name ? (
+      {value?.name.length ? (
         <div className="flex flex-row justify-between gap-x-2.5">
           <div className="flex flex-row gap-x-2.5">
             <span className="btn btn-xs btn-secondary my-auto select-none">

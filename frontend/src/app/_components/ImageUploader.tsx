@@ -39,7 +39,7 @@ export default function ImageUploader({
       )}
 
       <div className="flex flex-col relative border border-green-800 rounded-lg w-full px-6 py-4 gap-y-3 items-center">
-        {value?.name ? (
+        {value?.name.length ? (
           <Image
             alt={value.name}
             src={protocol + value.cid}

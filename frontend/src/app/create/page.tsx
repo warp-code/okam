@@ -10,7 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useAccount } from "wagmi";
 import { create, getAll } from "@/app/actions";
-import { Category, Dataset, DatasetCategory, OkamFile } from "@/app/types";
+import { Category, CreateModel, Dataset, OkamFile } from "@/app/types";
 import { useLayoutEffect } from "react";
 
 export default function Create() {
@@ -23,48 +23,27 @@ export default function Create() {
     }
   }, [address, push]);
 
-  const handleSubmit = async (e: any) => {
+  const createDataset = async (model: CreateModel) => {
     const dataset = {
-      name: e.name,
-      cover_image: e.coverImage,
-      description: e.description,
-      file_cid: e.file.cid,
+      name: model.name,
+      cover_image: model.coverImage,
+      description: model.description,
+      file_cid: model.file.cid,
       author: address,
       quadratic_param: 3,
       linear_param: 2,
       constant_param: 1,
+      categories: model.categories.filter((x) => x.checked).map((x) => x.id),
     } as Dataset;
 
-    const { data: datasetData, error: datasetError } = await create<Dataset>(
-      "datasets",
-      [dataset]
-    );
+    const { data, error } = await create<Dataset>("datasets", [dataset]);
 
-    if (datasetError) {
-      console.error(datasetError);
+    if (error) {
+      console.error(error);
       return;
     }
 
-    const categories = e.categories
-      .filter((x: any) => x.checked)
-      .map((x: any) => x.id);
-
-    const datasetCategories = categories.map((x: number) => {
-      return {
-        dataset_id: datasetData[0].id,
-        category_id: x,
-      };
-    });
-
-    const { data: datasetCategoriesData, error: datasetCategoriesError } =
-      await create<DatasetCategory>("dataset_categories", datasetCategories);
-
-    if (datasetCategoriesError) {
-      console.error(datasetCategoriesError);
-      return;
-    }
-
-    push(`/details/${datasetData[0].id}`);
+    push(`/details/${data[0].id}`);
   };
 
   const categoriesQuery = useQuery({
@@ -86,23 +65,27 @@ export default function Create() {
     defaultValues: {
       name: "",
       coverImage: {
-        name: null,
-        mimeType: null,
-        cid: null,
-      } as OkamFile,
+        name: "",
+        mimeType: "",
+        cid: "",
+      },
       description: "",
       categories: categoriesQuery.isFetching
         ? []
         : categoriesQuery.data?.map((x) => {
-            return { id: x.id, text: x.text, checked: false };
+            return {
+              id: x.id,
+              text: x.text,
+              checked: false,
+            };
           }),
       file: {
-        name: null,
-        mimeType: null,
+        name: "",
+        mimeType: "",
         cid: "",
-      } as OkamFile,
-    },
-    onSubmit: (e) => handleSubmit(e.value),
+      },
+    } as CreateModel,
+    onSubmit: (e) => createDataset(e.value),
   });
 
   return (
@@ -186,9 +169,9 @@ export default function Create() {
             handleOnChange={(file: OkamFile) => field.handleChange(file)}
             handleClear={() =>
               field.setValue({
-                name: null,
-                cid: null,
-                mimeType: null,
+                name: "",
+                cid: "",
+                mimeType: "",
               } as OkamFile)
             }
           />
