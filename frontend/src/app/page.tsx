@@ -3,35 +3,80 @@
 import Card from "@/app/_components/Card";
 import CategoryCheckbox from "@/app/_components/CategoryCheckbox";
 import LoadingIndicator from "@/app/_components/LoadingIndicator";
-import Pagination from "@/app/_components/Pagination";
 import TextInput from "@/app/_components/TextInput";
-import { categories } from "@/app/_examples/categories";
-import { datasets } from "@/app/_examples/datasets";
+import { getAll } from "@/app/actions";
+import { Category, Dataset, SearchModel } from "@/app/types";
 import { useForm } from "@tanstack/react-form";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 export default function Home() {
-  const handleSubmit = (e: any) => {
-    // console.log(e);
-    return e;
+  const [datasets, setDatasets] = useState<Dataset[]>([]);
+
+  const filterDatasets = (model: SearchModel) => {
+    return model;
+  };
+
+  const penis = (query: any, data: any) => {
+    // console.log(data);
+
+    const searchParams = query.queryKey[1] as {
+      search: string;
+      categories: any[];
+    };
+
+    let datasetsToReturn = data as Dataset[];
+    // console.log(datasetsToReturn);
+
+    if (searchParams.search) {
+      datasetsToReturn = datasetsToReturn.filter((x) =>
+        x.name.includes(searchParams.search)
+      );
+    }
+
+    if (searchParams.categories.some((x) => x.checked)) {
+      const ids = searchParams.categories
+        .filter((x) => x.checked)
+        .map((x) => x.id);
+
+      datasetsToReturn = datasetsToReturn.filter((x) =>
+        x.categories.some((y) => ids.includes(y))
+      );
+    }
+
+    console.log(datasetsToReturn);
+    return datasetsToReturn;
   };
 
   const categoriesQuery = useQuery({
     queryKey: ["categories"],
-    queryFn: () => categories,
+    queryFn: async () => {
+      const { data, error } = await getAll<Category>("categories");
+
+      if (error) {
+        console.error(error);
+
+        return [];
+      }
+
+      return data;
+    },
   });
 
   const form = useForm({
     defaultValues: {
       search: "",
-      categories: categoriesQuery.isFetching
+      categories: categoriesQuery.isPending
         ? []
-        : (categoriesQuery.data?.map((x) => {
-            return { id: x.id, text: x.text, checked: false };
-          }) as Array<{ id: number; text: string; checked: boolean }>),
-    },
-    onSubmit: (e) => handleSubmit(e.value),
+        : categoriesQuery.data?.map((x) => {
+            return {
+              id: x.id,
+              text: x.text,
+              checked: false,
+            };
+          }),
+    } as SearchModel,
+    onSubmit: (e) => filterDatasets(e.value),
   });
 
   const selectDatasets = (array: any[], page: number) => {
@@ -48,41 +93,26 @@ export default function Home() {
     }
   };
 
-  const [page, setPage] = useState(1);
-  const [resultsLength, setResultsLength] = useState(0);
-
   const datasetQuery = useQuery({
-    queryKey: ["datasets", form.state.values, page],
-    queryFn: () => {
-      const params = form.state.values;
+    queryKey: ["datasets"],
+    queryFn: async (query) => {
+      if (!query.queryKey.length) return;
 
-      let datasetsToReturn = datasets;
+      const { data, error } = await getAll<Dataset>("datasets");
 
-      if (params.search) {
-        datasetsToReturn = datasetsToReturn.filter((x) =>
-          x.title.includes(params.search)
-        );
+      if (error) {
+        console.log(error);
+        return;
       }
 
-      if (params.categories.some((x) => x.checked)) {
-        const ids = params.categories.filter((x) => x.checked).map((x) => x.id);
-
-        datasetsToReturn = datasetsToReturn.filter((x) =>
-          x.categories.some((y) => ids.includes(y))
-        );
-      }
-
-      const x = selectDatasets(datasetsToReturn, page);
-
-      return x;
+      return data;
     },
-    placeholderData: keepPreviousData,
   });
 
   return (
     <div className="h-full max-w-270 flex flex-col gap-y-12 mx-auto">
       <div className="min-w-full text-center">
-        {categoriesQuery.isFetching ? (
+        {categoriesQuery.isPending ? (
           <div className="h-24 w-24 mx-auto mt-40">
             <LoadingIndicator />
           </div>
@@ -137,7 +167,7 @@ export default function Home() {
             </form>
 
             <div className="flex flex-row flex-wrap py-8 sm:gap-3 gap-y-3">
-              {datasetQuery.isFetching ? (
+              {datasetQuery.isPending ? (
                 <div className="h-24 w-24 mx-auto mt-40">
                   <LoadingIndicator />
                 </div>
@@ -145,21 +175,21 @@ export default function Home() {
                 datasetQuery.data?.map((dataset) => {
                   return (
                     <Card
-                      key={dataset.id}
-                      id={dataset.id}
-                      image={dataset.image}
-                      title={dataset.title}
+                      key={dataset?.id}
+                      id={dataset?.id}
+                      image={dataset.cover_image}
+                      title={dataset.name}
                       description={dataset.description}
-                      buyPrice={dataset.buyPrice}
+                      buyPrice={10}
                     />
                   );
                 })
               )}
             </div>
 
-            <div className="py-8">
+            {/* <div className="py-8">
               <Pagination elementsNum={90} setPage={setPage} />
-            </div>
+            </div> */}
           </>
         )}
       </div>
