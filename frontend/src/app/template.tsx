@@ -9,7 +9,6 @@ export default function Template({ children }: { children: React.ReactNode }) {
   const { push } = useRouter();
 
   const { connect } = useConnect();
-  const { disconnect } = useDisconnect();
   const { address } = useAccount();
 
   const connectWallet = () => {
@@ -34,13 +33,6 @@ export default function Template({ children }: { children: React.ReactNode }) {
                 onClick={() => push("/create")}
               >
                 Create
-              </button>
-
-              <button
-                className="btn btn-md btn-secondary"
-                onClick={() => disconnect()}
-              >
-                Disconnect wallet
               </button>
 
               <span>
