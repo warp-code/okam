@@ -2,16 +2,15 @@
 
 import { useRouter } from "next/navigation";
 import { anvil } from "viem/chains";
-import { useConnect, useAccount, useBalance } from "wagmi";
+import { useConnect, useAccount, useDisconnect } from "wagmi";
 import { injected } from "wagmi/connectors";
 
 export default function Template({ children }: { children: React.ReactNode }) {
   const { push } = useRouter();
 
   const { connect } = useConnect();
+  const { disconnect } = useDisconnect();
   const { address } = useAccount();
-
-  const { data: balance } = useBalance({ address: address });
 
   const connectWallet = () => {
     connect({ connector: injected(), chainId: anvil.id });
@@ -35,6 +34,13 @@ export default function Template({ children }: { children: React.ReactNode }) {
                 onClick={() => push("/create")}
               >
                 Create
+              </button>
+
+              <button
+                className="btn btn-md btn-secondary"
+                onClick={() => disconnect()}
+              >
+                Disconnect wallet
               </button>
 
               <span>
