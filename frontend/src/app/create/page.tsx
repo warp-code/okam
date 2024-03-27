@@ -12,6 +12,7 @@ import { useAccount } from "wagmi";
 import { create, getAll } from "@/app/actions";
 import { Category, CreateModel, Dataset, OkamFile } from "@/app/types";
 import { useLayoutEffect } from "react";
+import LoadingIndicator from "@/app/_components/LoadingIndicator";
 
 export default function Create() {
   const { push } = useRouter();
@@ -74,7 +75,7 @@ export default function Create() {
         cid: "",
       },
       description: "",
-      categories: categoriesQuery.isFetching
+      categories: categoriesQuery.isLoading
         ? []
         : categoriesQuery.data?.map((category) => {
             return {
@@ -94,117 +95,154 @@ export default function Create() {
 
   return (
     <div className="max-w-192 flex flex-col mx-auto">
-      <form
-        className="flex flex-col min-w-full text-center gap-y-6"
-        onSubmit={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-
-          void form.handleSubmit();
-        }}
-      >
-        <h2 className="text-gray-50 font-semibold text-3xl/9.5 pb-6 text-left">
-          Create dataset
-        </h2>
-
-        <form.Field name="name">
-          {(field) => (
-            <TextInput
-              label="Name"
-              name={field.name}
-              value={field.state.value}
-              handleOnChange={(event) => field.handleChange(event.target.value)}
-            />
-          )}
-        </form.Field>
-
-        <form.Field name="coverImage">
-          {(field) => (
-            <ImageUploader
-              label="Cover image"
-              name={field.name}
-              value={field.state.value}
-              handleOnChange={(file: OkamFile) => field.handleChange(file)}
-            />
-          )}
-        </form.Field>
-
-        <form.Field name="description">
-          {(field) => (
-            <TextareaInput
-              label="Description"
-              name={field.name}
-              value={field.state.value}
-              handleOnChange={(event) => field.handleChange(event.target.value)}
-            />
-          )}
-        </form.Field>
-
-        <h4 className="text-gray-50 text-lg text-left">Tags</h4>
-
-        <div className="flex flex-row flex-wrap py-4 gap-3">
-          <form.Field name="categories" mode="array">
-            {(field) =>
-              field.state.value?.map((category, i) => (
-                <form.Field key={i} name={`categories[${i}].checked`}>
-                  {(subField) => {
-                    return (
-                      <CategoryCheckbox
-                        name={subField.name}
-                        label={category.text}
-                        value={subField.state.value}
-                        handleOnChange={(event) =>
-                          subField.handleChange(event.target.checked)
-                        }
-                      />
-                    );
-                  }}
-                </form.Field>
-              ))
-            }
-          </form.Field>
+      {categoriesQuery.isLoading ? (
+        <div className="min-w-full text-center">
+          <div className="h-24 w-24 mx-auto mt-40">
+            <LoadingIndicator />
+          </div>
         </div>
+      ) : (
+        <form
+          className="flex flex-col min-w-full text-center gap-y-6"
+          onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
 
-        <form.Field name="file">
-          {(field) => (
-            <FileUploader
-              label="File"
-              name={field.name}
-              value={field.state.value}
-              handleOnChange={(file: OkamFile) => field.handleChange(file)}
-              handleClear={() =>
-                field.setValue({
-                  name: "",
-                  cid: "",
-                  mimeType: "",
-                } as OkamFile)
-              }
-            />
-          )}
-        </form.Field>
+            void form.handleSubmit();
+          }}
+        >
+          <h2 className="text-gray-50 font-semibold text-3xl/9.5 pb-6 text-left">
+            Create dataset
+          </h2>
 
-        <div className="flex justify-end gap-x-2.5 py-2.5">
-          <button
-            type="button"
-            className="btn btn-sm btn-secondary"
-            onClick={() => push("/")}
+          <form.Field
+            name="name"
+            validators={{
+              onBlur: ({ value }) =>
+                !value.length ? "Name is required." : undefined,
+            }}
           >
-            Cancel
-          </button>
-
-          <form.Subscribe>
-            {(formState) => (
-              <button
-                type="submit"
-                className="btn btn-sm btn-primary"
-                disabled={!formState.canSubmit}
-              >
-                Create
-              </button>
+            {(field) => (
+              <TextInput
+                label="Name"
+                name={field.name}
+                value={field.state.value}
+                handleOnChange={(event) =>
+                  field.handleChange(event.target.value)
+                }
+                errors={field.state.meta.errors}
+              />
             )}
-          </form.Subscribe>
-        </div>
-      </form>
+          </form.Field>
+
+          <form.Field
+            name="coverImage"
+            validators={{
+              onBlur: ({ value }) =>
+                !value.cid.length ? "Cover image is required." : undefined,
+            }}
+          >
+            {(field) => (
+              <ImageUploader
+                label="Cover image"
+                name={field.name}
+                value={field.state.value}
+                handleOnChange={(file: OkamFile) => field.handleChange(file)}
+              />
+            )}
+          </form.Field>
+
+          <form.Field
+            name="description"
+            validators={{
+              onBlur: ({ value }) =>
+                !value.length ? "Description is required." : undefined,
+            }}
+          >
+            {(field) => (
+              <TextareaInput
+                label="Description"
+                name={field.name}
+                value={field.state.value}
+                handleOnChange={(event) =>
+                  field.handleChange(event.target.value)
+                }
+              />
+            )}
+          </form.Field>
+
+          <h4 className="text-gray-50 text-lg text-left">Tags</h4>
+
+          <div className="flex flex-row flex-wrap py-4 gap-3">
+            <form.Field name="categories" mode="array">
+              {(field) =>
+                field.state.value?.map((category, i) => (
+                  <form.Field key={i} name={`categories[${i}].checked`}>
+                    {(subField) => {
+                      return (
+                        <CategoryCheckbox
+                          name={subField.name}
+                          label={category.text}
+                          value={subField.state.value}
+                          handleOnChange={(event) =>
+                            subField.handleChange(event.target.checked)
+                          }
+                        />
+                      );
+                    }}
+                  </form.Field>
+                ))
+              }
+            </form.Field>
+          </div>
+
+          <form.Field
+            name="file"
+            validators={{
+              onBlur: ({ value }) =>
+                !value.cid.length ? "File is required." : undefined,
+            }}
+          >
+            {(field) => (
+              <FileUploader
+                label="File"
+                name={field.name}
+                value={field.state.value}
+                handleOnChange={(file: OkamFile) => field.handleChange(file)}
+                handleClear={() =>
+                  field.setValue({
+                    name: "",
+                    cid: "",
+                    mimeType: "",
+                  } as OkamFile)
+                }
+              />
+            )}
+          </form.Field>
+
+          <div className="flex justify-end gap-x-2.5 py-2.5">
+            <button
+              type="button"
+              className="btn btn-sm btn-secondary"
+              onClick={() => push("/")}
+            >
+              Cancel
+            </button>
+
+            <form.Subscribe>
+              {(formState) => (
+                <button
+                  type="submit"
+                  className="btn btn-sm btn-primary"
+                  disabled={!formState.canSubmit}
+                >
+                  Create
+                </button>
+              )}
+            </form.Subscribe>
+          </div>
+        </form>
+      )}
     </div>
   );
 }

@@ -75,7 +75,7 @@ export default function Home() {
   const form = useForm({
     defaultValues: {
       search: "",
-      categories: categoriesQuery.isPending
+      categories: categoriesQuery.isLoading
         ? []
         : categoriesQuery.data?.map((category) => {
             return {
@@ -91,7 +91,7 @@ export default function Home() {
   return (
     <div className="h-full max-w-270 flex flex-col gap-y-12 mx-auto">
       <div className="min-w-full text-center">
-        {categoriesQuery.isPending ? (
+        {categoriesQuery.isLoading ? (
           <div className="h-24 w-24 mx-auto mt-40">
             <LoadingIndicator />
           </div>
@@ -146,7 +146,7 @@ export default function Home() {
             </form>
 
             <div className="flex flex-row flex-wrap py-8 sm:gap-3 gap-y-3">
-              {datasetQuery.isPending ? (
+              {datasetQuery.isLoading ? (
                 <div className="h-24 w-24 mx-auto mt-40">
                   <LoadingIndicator />
                 </div>

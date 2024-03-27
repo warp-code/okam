@@ -13,7 +13,7 @@ export default function Details() {
   const params = useParams();
   const { address } = useAccount();
 
-  const { isPending, error, data } = useQuery({
+  const { isLoading, error, data } = useQuery({
     queryKey: ["datasets", params.datasetId],
     queryFn: async () => {
       const { data, error } = await getOne<Dataset>(
@@ -37,13 +37,13 @@ export default function Details() {
   return (
     <div className="h-full max-w-270 flex flex-col gap-y-12 mx-auto">
       <div className="min-w-full">
-        {isPending && (
+        {isLoading && (
           <div className="h-24 w-24 mx-auto mt-40">
             <LoadingIndicator />
           </div>
         )}
 
-        {!isPending && data && (
+        {!isLoading && data && (
           <>
             <h2 className="text-gray-50 font-semibold text-3xl pb-6">
               {data.name}

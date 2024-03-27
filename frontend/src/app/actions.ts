@@ -18,7 +18,11 @@ export async function uploadFile(formData: FormData): Promise<OkamFile | undefin
   try {
     const cid = await client.storeBlob(new Blob([file], { type: file.type }));
 
-    return { name: file.name, mimeType: file.type, cid: cid } as OkamFile;
+    return {
+      name: file.name,
+      mimeType: file.type,
+      cid: cid
+    } as OkamFile;
   } catch (e: any) {
     console.error("An error occured while uploading the file: ", e);
 
@@ -29,7 +33,7 @@ export async function uploadFile(formData: FormData): Promise<OkamFile | undefin
 export async function getAll<T>(tableName: string): Promise<PostgrestSingleResponse<T[]>> {
   return await supabase
     .from(tableName)
-    .select("*");
+    .select<"*", T>("*");
 }
 
 export async function getOne<T>(tableName: string, id: number): Promise<PostgrestSingleResponse<T>> {
@@ -44,6 +48,6 @@ export async function create<T>(tableName: string, data: any[]): Promise<Postgre
   return await supabase
     .from(tableName)
     .insert<T>(data)
-    .select();
+    .select<"*", T>();
 
 }
