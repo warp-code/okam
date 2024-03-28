@@ -85,14 +85,13 @@ export default function Details() {
     scales: {
       x: {
         grid: {
-          color: "#333741",
+          color: "transparent",
         },
         ticks: {
           display: false,
           color: "#333741",
           precision: 0,
         },
-        beginAtZero: true,
       },
       y: {
         grid: {
@@ -116,10 +115,11 @@ export default function Details() {
             scaleID: "x",
             value: 4,
             borderColor: "#333741",
-            borderWidth: 2,
+            borderWidth: 1,
             label: {
               display: true,
               position: `${110}%`,
+              xAdjust: 10,
               padding: 1,
               color: "#333741",
               content: "5",
