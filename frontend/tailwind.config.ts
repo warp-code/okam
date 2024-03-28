@@ -62,7 +62,8 @@ const config: Config = {
           '950': '#0A2926'
         },
         "okam-black": "#191919",
-        "okam-dark-green": "#1C2120"
+        "okam-dark-green": "#1C2120",
+        "okam-chart-gray": "#131615"
       }
     },
   },

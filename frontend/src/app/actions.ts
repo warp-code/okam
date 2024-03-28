@@ -8,6 +8,15 @@ import { NFTStorage } from 'nft.storage';
 const supabase = createClient();
 const client = new NFTStorage({ token: process.env.NFT_STORAGE_API_KEY });
 
+
+export async function calculateBuyPrice(quadraticParam: number, linearParam: number, constantParam: number, quantity: number): Promise<number> {
+  return (quadraticParam * Math.pow(quantity, 2)) + (linearParam * quantity) + constantParam;
+}
+
+export async function calculateSellPrice(buyPrice: number) {
+  return Math.floor(buyPrice * 9 / 10);
+}
+
 export async function uploadFile(formData: FormData): Promise<OkamFile | undefined> {
   const file = formData.get("file") as File;
 
