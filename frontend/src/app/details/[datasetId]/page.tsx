@@ -11,7 +11,7 @@ import { nftStorageIpfsHost } from "@/app/constants";
 
 export default function Details() {
   const params = useParams();
-  const { address } = useAccount();
+  const { address, isDisconnected } = useAccount();
 
   const { isLoading, error, data } = useQuery({
     queryKey: ["datasets", params.datasetId],
@@ -144,7 +144,7 @@ export default function Details() {
                     <button
                       type="button"
                       className="btn btn-primary my-auto min-w-25 py-2 text-lg font-semibold rounded-lg"
-                      disabled={!address}
+                      disabled={isDisconnected}
                     >
                       Buy
                     </button>
@@ -158,6 +158,7 @@ export default function Details() {
                     <button
                       type="button"
                       className="btn btn-tertiary my-auto min-w-25 py-2 text-lg font-semibold rounded-lg"
+                      disabled={isDisconnected}
                     >
                       Sell
                     </button>

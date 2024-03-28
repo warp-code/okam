@@ -16,13 +16,13 @@ import LoadingIndicator from "@/app/_components/LoadingIndicator";
 
 export default function Create() {
   const { push } = useRouter();
-  const { address } = useAccount();
+  const { address, isDisconnected } = useAccount();
 
   useLayoutEffect(() => {
-    if (!address) {
+    if (isDisconnected) {
       push("/");
     }
-  }, [address, push]);
+  }, [isDisconnected, push]);
 
   const createDataset = async (model: CreateModel) => {
     const dataset = {
