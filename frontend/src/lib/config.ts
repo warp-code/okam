@@ -1,5 +1,6 @@
 import { http, createConfig, createStorage, cookieStorage } from "wagmi";
 import { sepolia, anvil } from "wagmi/chains";
+import { injected } from 'wagmi/connectors';
 
 export const wagmiConfig = createConfig({
   chains: [anvil, sepolia],
@@ -7,6 +8,7 @@ export const wagmiConfig = createConfig({
     [anvil.id]: http(),
     [sepolia.id]: http(),
   },
+  connectors: [injected({ shimDisconnect: true })],
   ssr: true,
   storage: createStorage({
     storage: cookieStorage,

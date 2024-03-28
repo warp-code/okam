@@ -1,18 +1,17 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { anvil } from "viem/chains";
 import { useConnect, useAccount, useDisconnect } from "wagmi";
-import { injected } from "wagmi/connectors";
 
 export default function Template({ children }: { children: React.ReactNode }) {
   const { push } = useRouter();
 
-  const { connect } = useConnect();
-  const { address } = useAccount();
+  const { connectors, connect } = useConnect();
+  const { disconnect } = useDisconnect();
+  const { isConnected } = useAccount();
 
   const connectWallet = () => {
-    connect({ connector: injected(), chainId: anvil.id });
+    connect({ connector: connectors[0] });
   };
 
   return (
@@ -26,13 +25,20 @@ export default function Template({ children }: { children: React.ReactNode }) {
         </span>
 
         <span className="flex flex-row gap-4 items-center">
-          {address ? (
+          {isConnected ? (
             <>
               <button
                 className="btn btn-md btn-secondary"
                 onClick={() => push("/create")}
               >
                 Create
+              </button>
+
+              <button
+                className="btn btn-md btn-secondary"
+                onClick={() => disconnect()}
+              >
+                Disconnect
               </button>
 
               <span>
