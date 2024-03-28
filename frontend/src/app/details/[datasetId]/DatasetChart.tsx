@@ -1,3 +1,4 @@
+import { calculateBuyPrice, calculateSellPrice } from "@/app/actions";
 import {
   ChartData,
   Point,
@@ -9,6 +10,7 @@ import {
   PointElement,
 } from "chart.js";
 import annotationPlugin from "chartjs-plugin-annotation";
+import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 
 export default function DatasetChart({
@@ -27,29 +29,74 @@ export default function DatasetChart({
     LinearScale,
     PointElement,
     LineElement,
-
     annotationPlugin
   );
 
-  const chartData: ChartData<"line", (number | Point | null)[], unknown> = {
-    labels: ["", "", "", "", "5", "", "", "", "", "", ""], // quantities go here
-    datasets: [
-      {
-        data: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22], // buy prices go here
-        borderColor: "#2ED3B7",
-        label: "Buy price",
-        borderWidth: 2,
-        pointRadius: 0,
-      },
-      {
-        data: [1, 2, 3, 4, 9, 12, 16, 21, 35, 42, 56], // sell prices go here
-        borderColor: "#FFFFFF",
-        label: "Sell price",
-        borderWidth: 2,
-        pointRadius: 0,
-      },
-    ],
+  const [chartData, setChartData] =
+    useState<ChartData<"line", (number | Point | null)[], unknown>>();
+
+  const calculateQuantities = (currentSupply: number) => {
+    const datapointIncrement = Math.floor(currentSupply / 5);
+
+    const datapoints: number[] = [];
+
+    for (let i = 0; i <= 11; i++) {
+      datapoints.push(datapointIncrement * i);
+    }
+
+    //just so that we're absolutely sure this is the number in this position
+    datapoints[5] = currentSupply;
+
+    return datapoints;
   };
+
+  useEffect(() => {
+    const calculateDatasets = async () => {
+      const datapoints = calculateQuantities(currentSupply);
+
+      const buyPrices: number[] = [];
+      const sellPrices: number[] = [];
+
+      for (const datapoint of datapoints) {
+        const buyPrice = await calculateBuyPrice(
+          quadraticParam,
+          linearParam,
+          constantParam,
+          datapoint
+        );
+
+        const sellPrice = await calculateSellPrice(buyPrice);
+
+        buyPrices.push(buyPrice);
+        sellPrices.push(sellPrice);
+      }
+
+      console.log(buyPrices);
+      console.log(sellPrices);
+
+      setChartData({
+        labels: datapoints.map((x) => x.toString),
+        datasets: [
+          {
+            data: buyPrices,
+            borderColor: "#2ED3B7",
+            label: "Buy price",
+            borderWidth: 2,
+            pointRadius: 0,
+          },
+          {
+            data: sellPrices,
+            borderColor: "#FFFFFF",
+            label: "Sell price",
+            borderWidth: 2,
+            pointRadius: 0,
+          },
+        ],
+      });
+    };
+
+    calculateDatasets();
+  }, [currentSupply, quadraticParam, linearParam, constantParam]);
 
   const options: ChartOptions<"line"> = {
     responsive: true,
@@ -92,16 +139,16 @@ export default function DatasetChart({
           {
             type: "line",
             scaleID: "x",
-            value: 4,
+            value: 5,
             borderColor: "#333741",
             borderWidth: 1,
             label: {
               display: true,
-              position: `${110}%`,
+              position: "start",
               xAdjust: 10,
               padding: 1,
               color: "#333741",
-              content: "5",
+              content: `${currentSupply}`,
               backgroundColor: "transparent",
               font: {
                 lineHeight: "18px",
@@ -114,5 +161,5 @@ export default function DatasetChart({
     },
   };
 
-  return <Line data={chartData} options={options} />;
+  return <>{chartData && <Line data={chartData} options={options} />}</>;
 }
