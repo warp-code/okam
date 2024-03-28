@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { accessTokenAbi } from "@/contracts/accessTokenAbi";
 import { ownershipTokenAbi } from "@/contracts/ownershipTokenAbi";
@@ -37,7 +37,12 @@ export default function ReadContract() {
           <div>Constant: {constant.toString()}</div>
         </>
       ) : (
-        <button className="bg-gray-500 px-3 py-1.5" onClick={() => getCurveParams()}>Get curve params.</button>
+        <button
+          className="bg-gray-500 px-3 py-1.5"
+          onClick={() => getCurveParams()}
+        >
+          Get curve params.
+        </button>
       )}
     </div>
   );

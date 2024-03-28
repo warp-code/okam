@@ -18,7 +18,7 @@ export default function WriteContract() {
       args: [BigInt(1), BigInt(2), BigInt(3)],
     }).catch((reason) => {
       console.log(reason);
-    })
+    });
 
     if (result) {
     }

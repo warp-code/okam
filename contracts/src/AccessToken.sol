@@ -59,6 +59,10 @@ contract AccessToken is ERC721 {
         _burn(tokenId);
     }
 
+    function getSupply(uint256 ownershipTokenId) external view returns (uint256) {
+        return _supplyPerOwnershipToken[ownershipTokenId];
+    }
+
     function buyPrice(uint256 ownershipTokenId) public view returns (uint256) {
         (uint256 quadratic, uint256 linear, uint256 const) =
             OwnershipToken(_ownerTokenContractAddress).getCurveParams(ownershipTokenId);
