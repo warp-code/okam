@@ -8,11 +8,17 @@ import FileUploader from "@/app/_components/FileUploader";
 import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useAccount } from "wagmi";
+import { BaseError, useAccount } from "wagmi";
 import { create, getAll } from "@/app/actions";
 import { Category, CreateModel, Dataset, OkamFile } from "@/app/types";
 import { useLayoutEffect } from "react";
 import LoadingIndicator from "@/app/_components/LoadingIndicator";
+import { writeContract, waitForTransactionReceipt, watchContractEvent } from "@wagmi/core";
+import { wagmiConfig } from "@/lib/config";
+import { ownershipTokenAbi } from "@/contracts/ownershipTokenAbi";
+import { config, env } from "process";
+import { ContractFunctionExecutionError } from "viem";
+import { getTransaction, getTransactionReceipt } from "wagmi/actions";
 
 export default function Create() {
   const { push } = useRouter();
@@ -25,28 +31,53 @@ export default function Create() {
   }, [isDisconnected, push]);
 
   const createDataset = async (model: CreateModel) => {
-    const dataset = {
-      name: model.name,
-      cover_image: model.coverImage,
-      description: model.description,
-      file_cid: model.file.cid,
-      author: address,
-      quadratic_param: 3,
-      linear_param: 2,
-      constant_param: 1,
-      categories: model.categories
-        .filter((category) => category.checked)
-        .map((category) => category.id),
-    } as Dataset;
+    const tx = await writeContract(wagmiConfig, {
+      abi: ownershipTokenAbi,
+      address: process.env.NEXT_PUBLIC_OWNERSHIP_CONTRACT_ADDRESS,
+      functionName: "registerOwner",
+      args: [BigInt(0), BigInt(0), BigInt(10000), model.file.cid],
+    }).catch(err => {
+      debugger;
+      if (err instanceof ContractFunctionExecutionError) {
+        const cause = err.cause
+          .walk()
+          .message.split(":")[2]
+          .split("\n")[0]
+          .trim();
+        console.log(cause);
+      }
+      throw err;
+    });
+    const a =  await waitForTransactionReceipt(wagmiConfig, {
+      hash: tx,
+      confirmations: 2,
+    })
+    console.log("a", a.logs);
+    console.log("asdf");
+    return;
+    // const dataset = {
+    //   name: model.name,
+    //   cover_image: model.coverImage,
+    //   description: model.description,
+    //   file_cid: model.file.cid,
+    //   author: address,
+    //   quadratic_param: 0,
+    //   linear_param: 0,
+    //   constant_param: 10000,
+    //   categories: model.categories
+    //     .filter((category) => category.checked)
+    //     .map((category) => category.id),
+    //   token_id: tokenId,
+    // } as Dataset;
 
-    const { data, error } = await create<Dataset>("datasets", [dataset]);
+    // const { data, error } = await create<Dataset>("datasets", [dataset]);
 
-    if (error) {
-      console.error(error);
-      return;
-    }
+    // if (error) {
+    //   console.error(error);
+    //   return;
+    // }
 
-    push(`/details/${data[0].id}`);
+    // push(`/details/${data[0].id}`);
   };
 
   const categoriesQuery = useQuery({

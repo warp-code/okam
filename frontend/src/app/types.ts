@@ -30,6 +30,7 @@ export type Dataset = {
   linear_param: number;
   constant_param: number;
   categories: number[];
+  token_id: string;
 };
 
 export type SearchModel = {

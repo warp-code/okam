@@ -15,7 +15,7 @@ export default function WriteContract() {
       abi: ownershipTokenAbi,
       address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
       functionName: "registerOwner",
-      args: [BigInt(1), BigInt(2), BigInt(3)],
+      args: [BigInt(1), BigInt(2), BigInt(3), "asdf"],
     }).catch((reason) => {
       console.log(reason);
     });

@@ -1,20 +1,7 @@
 export const ownershipTokenAbi = [
   {
     type: "constructor",
-    inputs: [
-      {
-        name: "creator",
-        type: "address",
-        internalType: "address",
-      },
-    ],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "appendFiles",
     inputs: [],
-    outputs: [],
     stateMutability: "nonpayable",
   },
   {
@@ -104,7 +91,7 @@ export const ownershipTokenAbi = [
   },
   {
     type: "function",
-    name: "getFiles",
+    name: "getFileCid",
     inputs: [
       {
         name: "tokenId",
@@ -115,8 +102,8 @@ export const ownershipTokenAbi = [
     outputs: [
       {
         name: "",
-        type: "uint256",
-        internalType: "uint256",
+        type: "string",
+        internalType: "string",
       },
     ],
     stateMutability: "view",
@@ -147,13 +134,6 @@ export const ownershipTokenAbi = [
   },
   {
     type: "function",
-    name: "mintOwnershipToken",
-    inputs: [],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
     name: "name",
     inputs: [],
     outputs: [
@@ -161,19 +141,6 @@ export const ownershipTokenAbi = [
         name: "",
         type: "string",
         internalType: "string",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "owner",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
       },
     ],
     stateMutability: "view",
@@ -216,15 +183,19 @@ export const ownershipTokenAbi = [
         type: "uint256",
         internalType: "uint256",
       },
+      {
+        name: "fileCid",
+        type: "string",
+        internalType: "string",
+      },
     ],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "renounceOwnership",
-    inputs: [],
-    outputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "nonpayable",
   },
   {
@@ -371,19 +342,6 @@ export const ownershipTokenAbi = [
     stateMutability: "nonpayable",
   },
   {
-    type: "function",
-    name: "transferOwnership",
-    inputs: [
-      {
-        name: "newOwner",
-        type: "address",
-        internalType: "address",
-      },
-    ],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
     type: "event",
     name: "Approval",
     inputs: [
@@ -429,25 +387,6 @@ export const ownershipTokenAbi = [
         type: "bool",
         indexed: false,
         internalType: "bool",
-      },
-    ],
-    anonymous: false,
-  },
-  {
-    type: "event",
-    name: "OwnershipTransferred",
-    inputs: [
-      {
-        name: "previousOwner",
-        type: "address",
-        indexed: true,
-        internalType: "address",
-      },
-      {
-        name: "newOwner",
-        type: "address",
-        indexed: true,
-        internalType: "address",
       },
     ],
     anonymous: false,
@@ -577,28 +516,6 @@ export const ownershipTokenAbi = [
         name: "tokenId",
         type: "uint256",
         internalType: "uint256",
-      },
-    ],
-  },
-  {
-    type: "error",
-    name: "OwnableInvalidOwner",
-    inputs: [
-      {
-        name: "owner",
-        type: "address",
-        internalType: "address",
-      },
-    ],
-  },
-  {
-    type: "error",
-    name: "OwnableUnauthorizedAccount",
-    inputs: [
-      {
-        name: "account",
-        type: "address",
-        internalType: "address",
       },
     ],
   },

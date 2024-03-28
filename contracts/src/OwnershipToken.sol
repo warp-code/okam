@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-contract OwnershipToken is ERC721, Ownable {
+contract OwnershipToken is ERC721 {
     struct TokenDetails {
         CurveParams curveParams;
         string fileCid;
@@ -20,7 +20,7 @@ contract OwnershipToken is ERC721, Ownable {
 
     mapping(uint256 tokenId => TokenDetails) _details;
 
-    constructor(address creator) ERC721("OwnerToken", "OWN") Ownable(creator) {}
+    constructor() ERC721("OwnerToken", "OWN") {}
 
     function registerOwner(uint256 quadraticParam, uint256 linearParam, uint256 constantParam, string calldata fileCid)
         external

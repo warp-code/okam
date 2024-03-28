@@ -9,6 +9,8 @@ declare global {
       SUPABASE_URL: string;
       SUPABASE_KEY: string;
       NFT_STORAGE_API_KEY: string;
+      NEXT_PUBLIC_OWNERSHIP_CONTRACT_ADDRESS: `0x${string}`;
+      NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS: `0x${string}`;
     }
   }
 }
