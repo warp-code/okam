@@ -182,7 +182,7 @@ export default function Create() {
               validators={{
                 onChange: ({ value: categories }) =>
                   !categories.some((category) => category.checked)
-                    ? "At least one category is required"
+                    ? "At least one category is required."
                     : undefined,
               }}
             >
