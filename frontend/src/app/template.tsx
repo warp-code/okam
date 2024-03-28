@@ -12,7 +12,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <header className="flex h-18 w-full sm:px-16 px-8 items-center justify-between">
+      <header className="flex h-18 w-full sm:px-16 px-8 gap-4 items-center justify-between">
         <span
           className="text-lg font-bold text-green-500 cursor-pointer"
           onClick={() => push("/")}
