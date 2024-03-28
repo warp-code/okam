@@ -10,10 +10,6 @@ export default function Template({ children }: { children: React.ReactNode }) {
   const { disconnect } = useDisconnect();
   const { isConnected } = useAccount();
 
-  const connectWallet = () => {
-    connect({ connector: connectors[0] });
-  };
-
   return (
     <>
       <header className="flex h-18 w-full sm:px-16 px-8 items-center justify-between">
@@ -74,7 +70,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
           ) : (
             <button
               className="btn btn-md btn-secondary"
-              onClick={() => connectWallet()}
+              onClick={() => connect({ connector: connectors[0] })}
             >
               Connect wallet
             </button>
