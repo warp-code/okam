@@ -217,12 +217,12 @@ export default function Details() {
               </div>
 
               <div className="max-h-115 max-w-131 rounded-lg flex flex-col">
-                {/* chart goes here instead of the image */}
-                <div className="rounded-t-lg max-w-131 max-h-64 bg-okam-chart-gray py-5 sm:px-10 items-center">
+                <div className="rounded-t-lg max-w-131 max-h-64 bg-okam-chart-gray py-5 sm:px-10 px-5 items-center">
                   {chartData && options && (
                     <Line data={chartData} options={options} />
                   )}
                 </div>
+
                 <div className="max-w-131 rounded-b-lg pt-6 pb-8 px-6 flex flex-col gap-y-4 bg-okam-dark-green">
                   <div className="text-green-500 text-sm/7 font-semibold">
                     Current supply: 120
