@@ -100,6 +100,10 @@ export default function Details() {
         ticks: {
           precision: 0,
           color: "#333741",
+          font: {
+            lineHeight: "18px",
+            size: 12,
+          },
         },
         beginAtZero: true,
       },
@@ -124,6 +128,10 @@ export default function Details() {
               color: "#333741",
               content: "5",
               backgroundColor: "transparent",
+              font: {
+                lineHeight: "18px",
+                size: 12,
+              },
             },
           },
         ],
