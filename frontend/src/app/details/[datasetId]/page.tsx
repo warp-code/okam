@@ -8,30 +8,11 @@ import { useAccount } from "wagmi";
 import { getOne } from "@/app/actions";
 import { Dataset } from "@/app/types";
 import { nftStorageIpfsHost } from "@/app/constants";
-import { Line } from "react-chartjs-2";
-import {
-  ChartData,
-  Point,
-  Chart,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  ChartOptions,
-} from "chart.js";
-import annotationPlugin from "chartjs-plugin-annotation";
+import DatasetChart from "@/app/details/[datasetId]/DatasetChart";
 
 export default function Details() {
   const params = useParams();
   const { address, isDisconnected } = useAccount();
-
-  Chart.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    annotationPlugin
-  );
 
   const { isLoading, error, data } = useQuery({
     queryKey: ["datasets", params.datasetId],
@@ -53,91 +34,6 @@ export default function Details() {
   if (error) {
     return console.error(error);
   }
-
-  const chartData: ChartData<"line", (number | Point | null)[], unknown> = {
-    labels: ["", "", "", "", "5", "", "", ""],
-    datasets: [
-      {
-        data: [2, 4, 6, 8, 10, 12, 14, 16],
-        borderColor: "#2ED3B7",
-        label: "Buy price",
-        borderWidth: 2,
-        fill: "start",
-        pointRadius: 0,
-      },
-      {
-        data: [1, 2, 3, 4, 5, 6, 7, 8],
-        borderColor: "#FFFFFF",
-        label: "Sell price",
-        borderWidth: 2,
-        fill: "start",
-        pointRadius: 0,
-      },
-    ],
-  };
-
-  const options: ChartOptions<"line"> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    backgroundColor: "#131615",
-    color: "#333741",
-    borderColor: "#333741",
-    scales: {
-      x: {
-        grid: {
-          color: "transparent",
-        },
-        ticks: {
-          display: false,
-          color: "#333741",
-          precision: 0,
-        },
-      },
-      y: {
-        grid: {
-          color: "#333741",
-        },
-        ticks: {
-          precision: 0,
-          color: "#333741",
-          font: {
-            lineHeight: "18px",
-            size: 12,
-          },
-        },
-        beginAtZero: true,
-      },
-    },
-    plugins: {
-      legend: {
-        display: false,
-      },
-      annotation: {
-        annotations: [
-          {
-            type: "line",
-            scaleID: "x",
-            value: 4,
-            borderColor: "#333741",
-            borderWidth: 1,
-            label: {
-              display: true,
-              position: `${110}%`,
-              xAdjust: 10,
-              padding: 1,
-              color: "#333741",
-              content: "5",
-              backgroundColor: "transparent",
-              font: {
-                lineHeight: "18px",
-                size: 12,
-              },
-            },
-          },
-        ],
-      },
-    },
-  };
 
   return (
     <div className="h-full max-w-270 flex flex-col gap-y-12 mx-auto">
@@ -163,6 +59,7 @@ export default function Details() {
                     width="0"
                     height="0"
                     sizes="100vw"
+                    priority={true}
                     className="block mx-auto rounded-lg h-full w-auto"
                   />
                 </div>
@@ -226,8 +123,13 @@ export default function Details() {
 
               <div className="max-h-115 max-w-131 rounded-lg flex flex-col">
                 <div className="rounded-t-lg max-w-131 max-h-64 bg-okam-chart-gray py-5 sm:px-10 px-5 items-center">
-                  {chartData && options && (
-                    <Line data={chartData} options={options} />
+                  {true && (
+                    <DatasetChart
+                      currentSupply={20}
+                      quadraticParam={data.quadratic_param}
+                      linearParam={data.linear_param}
+                      constantParam={data.constant_param}
+                    />
                   )}
                 </div>
 
