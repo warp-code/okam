@@ -1,3 +1,4 @@
+import LoadingIndicator from "@/app/_components/LoadingIndicator";
 import {
   calculateBuyPrice,
   calculateSellPrice,
@@ -160,5 +161,13 @@ export default function DatasetChart({
     },
   };
 
-  return <>{chartData && <Line data={chartData} options={options} />}</>;
+  return (
+    <>
+      {chartData ? (
+        <Line data={chartData} options={options} />
+      ) : (
+        <LoadingIndicator />
+      )}
+    </>
+  );
 }
