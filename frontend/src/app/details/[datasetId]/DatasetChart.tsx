@@ -166,7 +166,11 @@ export default function DatasetChart({
       {chartData ? (
         <Line data={chartData} options={options} />
       ) : (
-        <LoadingIndicator />
+        <div className="flex flex-row w-full h-full items-center">
+          <div className="h-12 w-12 mx-auto">
+            <LoadingIndicator />
+          </div>
+        </div>
       )}
     </>
   );
