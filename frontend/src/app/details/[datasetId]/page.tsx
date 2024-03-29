@@ -140,7 +140,7 @@ export default function Details() {
 
                   <div className="flex flex-row justify-between">
                     <span className="text-gray-50 font-medium py-4">
-                      Buy price: 2946 FIL
+                      Buy price: 994 FIL
                     </span>
 
                     <button
@@ -154,7 +154,7 @@ export default function Details() {
 
                   <div className="flex flex-row justify-between">
                     <span className="text-gray-50 font-medium py-4">
-                      Sell price: 2651 FIL
+                      Sell price: 894 FIL
                     </span>
 
                     <button
