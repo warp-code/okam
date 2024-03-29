@@ -8,8 +8,8 @@ import FileUploader from "@/app/_components/FileUploader";
 import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { BaseError, useAccount } from "wagmi";
-import { create, getAll } from "@/app/actions";
+import { useAccount } from "wagmi";
+import { create, getAll } from "@/utils/actions/serverActions";
 import { Category, CreateModel, Dataset, OkamFile } from "@/app/types";
 import { useLayoutEffect } from "react";
 import LoadingIndicator from "@/app/_components/LoadingIndicator";
@@ -106,7 +106,7 @@ export default function Create() {
         cid: "",
       },
       description: "",
-      categories: categoriesQuery.isLoading
+      categories: categoriesQuery.isFetching
         ? []
         : categoriesQuery.data?.map((category) => {
             return {
@@ -126,7 +126,7 @@ export default function Create() {
 
   return (
     <div className="max-w-192 flex flex-col mx-auto">
-      {categoriesQuery.isLoading ? (
+      {categoriesQuery.isFetching ? (
         <div className="min-w-full text-center">
           <div className="h-24 w-24 mx-auto mt-40">
             <LoadingIndicator />
