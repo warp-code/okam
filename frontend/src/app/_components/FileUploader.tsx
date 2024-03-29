@@ -1,6 +1,6 @@
 "use client";
 
-import { uploadFile } from "@/utils/actions/serverActions";
+import { uploadFileToIpfs } from "@/utils/actions/serverActions";
 import { OkamFile } from "@/app/types";
 import { ValidationError } from "@tanstack/react-form";
 import { MouseEventHandler } from "react";
@@ -20,12 +20,14 @@ export default function FileUploader({
   handleClear: MouseEventHandler<HTMLButtonElement>;
   errors?: ValidationError[];
 }) {
-  const uploadFormData = async (file: any) => {
+  const uploadFormData = async (
+    file: File | undefined
+  ): Promise<OkamFile | undefined> => {
     const formData = new FormData();
 
-    formData.append("file", file);
+    formData.append("file", file as File);
 
-    return await uploadFile(formData);
+    return await uploadFileToIpfs(formData);
   };
 
   return (
