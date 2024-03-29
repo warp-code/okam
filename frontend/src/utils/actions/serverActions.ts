@@ -1,6 +1,6 @@
 "use server";
 
-import { OkamFile } from '@/app/types';
+import { OkamCoverImage, OkamFile } from '@/app/types';
 import { createClient } from '@/utils/supabase/server';
 import { PostgrestSingleResponse } from '@supabase/supabase-js';
 import { NFTStorage } from 'nft.storage';
@@ -8,30 +8,39 @@ import { NFTStorage } from 'nft.storage';
 const supabase = createClient();
 const client = new NFTStorage({ token: process.env.NFT_STORAGE_API_KEY });
 
-export async function uploadFileToSupabase(formData: FormData): Promise<string> {
+export async function uploadFileToSupabase(formData: FormData): Promise<OkamCoverImage> {
   const file = formData.get("file") as File;
+
+  const extension = file.name.split(".")[1];
+  const fileName = crypto.randomUUID();
 
   const { data, error } = await supabase.storage
     .from("test")
-    .upload(`cover-images/${file.name}${file.type}`, file);
+    .upload(`cover-images/${fileName}.${extension}`, file);
 
   if (error) {
-    return "";
+    console.error("An error occured while uploading the file to supabase: ", error);
+
+    return {
+      name: "",
+      mimeType: "",
+      url: ""
+    } as OkamCoverImage;
   }
 
   const { data: storedFile } = supabase.storage
     .from("test")
     .getPublicUrl(data.path);
 
-  return storedFile.publicUrl;
+  return {
+    name: `${fileName}.${extension}`,
+    mimeType: file.type,
+    url: storedFile.publicUrl
+  };
 }
 
-export async function uploadFileToIpfs(formData: FormData): Promise<OkamFile | undefined> {
+export async function uploadFileToIpfs(formData: FormData): Promise<OkamFile> {
   const file = formData.get("file") as File;
-
-  if (!file) {
-    return;
-  }
 
   try {
     const cid = await client.storeBlob(new Blob([file], { type: file.type }));
@@ -44,7 +53,11 @@ export async function uploadFileToIpfs(formData: FormData): Promise<OkamFile | u
   } catch (e: any) {
     console.error("An error occured while uploading the file: ", e);
 
-    return;
+    return {
+      name: "",
+      mimeType: "",
+      cid: ""
+    } as OkamFile;
   }
 };
 

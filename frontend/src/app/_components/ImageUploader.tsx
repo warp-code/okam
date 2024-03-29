@@ -1,8 +1,7 @@
 "use client";
 
-import { uploadFile } from "@/utils/actions/serverActions";
-import { nftStorageIpfsHost } from "@/app/constants";
-import { OkamFile } from "@/app/types";
+import { uploadFileToSupabase } from "@/utils/actions/serverActions";
+import { OkamCoverImage } from "@/app/types";
 import { ValidationError } from "@tanstack/react-form";
 import Image from "next/image";
 
@@ -14,17 +13,29 @@ export default function ImageUploader({
   errors,
 }: {
   name: string;
-  value?: OkamFile | undefined;
+  value?: OkamCoverImage | undefined;
   label?: string | undefined;
   errors?: ValidationError[];
   handleOnChange: Function;
 }) {
-  const uploadFormData = async (file: any): Promise<OkamFile | undefined> => {
+  const uploadFormData = async (
+    file: File | undefined
+  ): Promise<OkamCoverImage> => {
+    if (!file) {
+      console.error("No file was uploaded.");
+
+      return {
+        name: "",
+        mimeType: "",
+        url: "",
+      } as OkamCoverImage;
+    }
+
     const formData = new FormData();
 
-    formData.append("file", file);
+    formData.append("file", file as File);
 
-    return await uploadFile(formData);
+    return await uploadFileToSupabase(formData);
   };
 
   return (
@@ -42,7 +53,7 @@ export default function ImageUploader({
         {value?.name.length ? (
           <Image
             alt={value.name}
-            src={nftStorageIpfsHost + value.cid}
+            src={value.url}
             width={524}
             height={256}
             className="rounded-lg"

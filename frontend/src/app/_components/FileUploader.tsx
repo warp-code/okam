@@ -20,12 +20,20 @@ export default function FileUploader({
   handleClear: MouseEventHandler<HTMLButtonElement>;
   errors?: ValidationError[];
 }) {
-  const uploadFormData = async (
-    file: File | undefined
-  ): Promise<OkamFile | undefined> => {
+  const uploadFormData = async (file: File | undefined): Promise<OkamFile> => {
+    if (!file) {
+      console.error("No file was uploaded.");
+
+      return {
+        name: "",
+        mimeType: "",
+        cid: "",
+      } as OkamFile;
+    }
+
     const formData = new FormData();
 
-    formData.append("file", file as File);
+    formData.append("file", file);
 
     return await uploadFileToIpfs(formData);
   };
