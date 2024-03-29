@@ -75,7 +75,7 @@ export default function Create() {
         cid: "",
       },
       description: "",
-      categories: categoriesQuery.isLoading
+      categories: categoriesQuery.isFetching
         ? []
         : categoriesQuery.data?.map((category) => {
             return {
@@ -95,7 +95,7 @@ export default function Create() {
 
   return (
     <div className="max-w-192 flex flex-col mx-auto">
-      {categoriesQuery.isLoading ? (
+      {categoriesQuery.isFetching ? (
         <div className="min-w-full text-center">
           <div className="h-24 w-24 mx-auto mt-40">
             <LoadingIndicator />
