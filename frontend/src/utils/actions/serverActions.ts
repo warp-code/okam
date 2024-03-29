@@ -8,7 +8,25 @@ import { NFTStorage } from 'nft.storage';
 const supabase = createClient();
 const client = new NFTStorage({ token: process.env.NFT_STORAGE_API_KEY });
 
-export async function uploadFile(formData: FormData): Promise<OkamFile | undefined> {
+export async function uploadFileToSupabase(formData: FormData): Promise<string> {
+  const file = formData.get("file") as File;
+
+  const { data, error } = await supabase.storage
+    .from("test")
+    .upload(`cover-images/${file.name}${file.type}`, file);
+
+  if (error) {
+    return "";
+  }
+
+  const { data: storedFile } = supabase.storage
+    .from("test")
+    .getPublicUrl(data.path);
+
+  return storedFile.publicUrl;
+}
+
+export async function uploadFileToIpfs(formData: FormData): Promise<OkamFile | undefined> {
   const file = formData.get("file") as File;
 
   if (!file) {
