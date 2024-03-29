@@ -135,12 +135,12 @@ export default function Details() {
 
                 <div className="max-w-131 rounded-b-lg pt-6 pb-8 px-6 flex flex-col gap-y-4 bg-okam-dark-green">
                   <div className="text-green-500 text-sm/7 font-semibold">
-                    Current supply: 30
+                    Current supply: 31
                   </div>
 
                   <div className="flex flex-row justify-between">
                     <span className="text-gray-50 font-medium py-4">
-                      Buy price: 2761 FIL
+                      Buy price: 2946 FIL
                     </span>
 
                     <button
@@ -154,7 +154,7 @@ export default function Details() {
 
                   <div className="flex flex-row justify-between">
                     <span className="text-gray-50 font-medium py-4">
-                      Sell price: 2484 FIL
+                      Sell price: 2651 FIL
                     </span>
 
                     <button
