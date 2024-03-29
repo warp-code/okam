@@ -10,7 +10,7 @@ const client = new NFTStorage({ token: process.env.NFT_STORAGE_API_KEY });
 
 
 export async function calculateBuyPrice(quadraticParam: number, linearParam: number, constantParam: number, quantity: number): Promise<number> {
-  return (quadraticParam * Math.pow(quantity, 2)) + (linearParam * quantity) + constantParam;
+  return Math.floor((quadraticParam * Math.pow(quantity, 2)) + (linearParam * quantity) + constantParam);
 }
 
 export async function calculateSellPrice(buyPrice: number) {
