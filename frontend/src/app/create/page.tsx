@@ -9,26 +9,14 @@ import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useAccount } from "wagmi";
-import { create, getAll } from "@/utils/actions/serverActions";
-import { Category, CreateModel, Dataset, OkamFile } from "@/app/types";
+import { getAll } from "@/utils/actions/serverActions";
+import { Category, CreateModel, OkamFile } from "@/app/types";
 import { useLayoutEffect } from "react";
 import LoadingIndicator from "@/app/_components/LoadingIndicator";
-import {
-  writeContract,
-  waitForTransactionReceipt,
-  watchContractEvent,
-} from "@wagmi/core";
+import { writeContract, waitForTransactionReceipt } from "@wagmi/core";
 import { wagmiConfig } from "@/lib/config";
 import { ownershipTokenAbi } from "@/contracts/ownershipTokenAbi";
-import { config, env } from "process";
-import {
-  ContractFunctionExecutionError,
-  decodeEventLog,
-  parseAbi,
-  parseAbiItem,
-  parseEventLogs,
-} from "viem";
-import { getTransaction, getTransactionReceipt } from "wagmi/actions";
+import { decodeEventLog } from "viem";
 
 export default function Create() {
   const { push } = useRouter();
@@ -41,40 +29,28 @@ export default function Create() {
   }, [isDisconnected, push]);
 
   const createDataset = async (model: CreateModel) => {
-    const tx = await writeContract(wagmiConfig, {
+    const txHash = await writeContract(wagmiConfig, {
       abi: ownershipTokenAbi,
       address: process.env.NEXT_PUBLIC_OWNERSHIP_CONTRACT_ADDRESS,
       functionName: "registerOwner",
       args: [BigInt(0), BigInt(0), BigInt(10000), model.file.cid],
-    }).catch((err) => {
-      debugger;
-      if (err instanceof ContractFunctionExecutionError) {
-        const cause = err.cause
-          .walk()
-          .message.split(":")[2]
-          .split("\n")[0]
-          .trim();
-        console.log(cause);
-      }
-      throw err;
     });
-    const a = await waitForTransactionReceipt(wagmiConfig, {
-      hash: tx,
+
+    const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+      hash: txHash,
       confirmations: 2,
     });
-    console.log("a", a.logs);
 
-    for (const log of a.logs) {
-      const decoded = decodeEventLog({
+    for (const log of txReceipt.logs) {
+      const transferEvent = decodeEventLog({
         abi: ownershipTokenAbi,
         topics: log.topics,
         data: log.data,
         eventName: "Transfer",
       });
-      console.log(decoded);
+      console.log(transferEvent);
     }
 
-    console.log("asdf");
     return;
     // const dataset = {
     //   name: model.name,
