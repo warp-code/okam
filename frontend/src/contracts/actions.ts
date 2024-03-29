@@ -8,13 +8,13 @@ import { useState } from "react";
 
 type Result<T, E = any> =
   | {
-      ok: true;
-      data: T;
-    }
+    ok: true;
+    data: T;
+  }
   | {
-      ok: false;
-      error: E;
-    };
+    ok: false;
+    error: E;
+  };
 
 export function useMintOwnershipToken() {
   const [loading, setLoading] = useState(false);
