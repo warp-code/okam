@@ -146,7 +146,7 @@ export default function Home() {
             </form>
 
             <div className="flex flex-row flex-wrap py-8 sm:gap-3 gap-y-3">
-              {datasetQuery.isLoading ? (
+              {datasetQuery.isFetching ? (
                 <div className="h-24 w-24 mx-auto mt-40">
                   <LoadingIndicator />
                 </div>
