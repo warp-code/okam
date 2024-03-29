@@ -119,6 +119,25 @@ export const accessTokenAbi = [
   },
   {
     type: "function",
+    name: "getSupply",
+    inputs: [
+      {
+        name: "ownershipTokenId",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "isApprovedForAll",
     inputs: [
       {

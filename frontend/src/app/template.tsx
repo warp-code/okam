@@ -8,7 +8,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
 
   const { connectors, connect } = useConnect();
   const { disconnect } = useDisconnect();
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
 
   return (
     <>
@@ -37,7 +37,8 @@ export default function Template({ children }: { children: React.ReactNode }) {
                 Disconnect
               </button>
 
-              <span>
+              <span className="flex items-center gap-2">
+                <span className="text-white">{address}</span>
                 <svg
                   width="40"
                   height="40"

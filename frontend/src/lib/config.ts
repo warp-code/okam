@@ -6,7 +6,7 @@ export const wagmiConfig = createConfig({
   chains: [anvil, sepolia],
   transports: {
     [anvil.id]: http(),
-    [sepolia.id]: http(),
+    [sepolia.id]: http("https://sepolia.infura.io/v3/333b44e5477f41c192d8e22288a0434f"),
   },
   connectors: [injected({ shimDisconnect: true })],
   ssr: true,
