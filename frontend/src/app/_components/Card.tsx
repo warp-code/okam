@@ -20,8 +20,8 @@ export default function Card({
   const router = useRouter();
 
   return (
-    <div className="max-h-98 max-w-88 rounded-lg flex flex-col">
-      <div className="relative max-w-88 max-h-40 bg-okam-card-gray">
+    <div className="max-h-98 max-w-88 w-full rounded-lg flex flex-col">
+      <div className="relative flex max-w-88 max-h-40 w-full h-full bg-okam-card-gray rounded-t-lg">
         <Image
           alt={image.name}
           src={image.url}
