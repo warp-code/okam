@@ -13,11 +13,21 @@ import { create, getAll } from "@/utils/actions/serverActions";
 import { Category, CreateModel, Dataset, OkamFile } from "@/app/types";
 import { useLayoutEffect } from "react";
 import LoadingIndicator from "@/app/_components/LoadingIndicator";
-import { writeContract, waitForTransactionReceipt, watchContractEvent } from "@wagmi/core";
+import {
+  writeContract,
+  waitForTransactionReceipt,
+  watchContractEvent,
+} from "@wagmi/core";
 import { wagmiConfig } from "@/lib/config";
 import { ownershipTokenAbi } from "@/contracts/ownershipTokenAbi";
 import { config, env } from "process";
-import { ContractFunctionExecutionError } from "viem";
+import {
+  ContractFunctionExecutionError,
+  decodeEventLog,
+  parseAbi,
+  parseAbiItem,
+  parseEventLogs,
+} from "viem";
 import { getTransaction, getTransactionReceipt } from "wagmi/actions";
 
 export default function Create() {
@@ -36,7 +46,7 @@ export default function Create() {
       address: process.env.NEXT_PUBLIC_OWNERSHIP_CONTRACT_ADDRESS,
       functionName: "registerOwner",
       args: [BigInt(0), BigInt(0), BigInt(10000), model.file.cid],
-    }).catch(err => {
+    }).catch((err) => {
       debugger;
       if (err instanceof ContractFunctionExecutionError) {
         const cause = err.cause
@@ -48,11 +58,22 @@ export default function Create() {
       }
       throw err;
     });
-    const a =  await waitForTransactionReceipt(wagmiConfig, {
+    const a = await waitForTransactionReceipt(wagmiConfig, {
       hash: tx,
       confirmations: 2,
-    })
+    });
     console.log("a", a.logs);
+
+    for (const log of a.logs) {
+      const decoded = decodeEventLog({
+        abi: ownershipTokenAbi,
+        topics: log.topics,
+        data: log.data,
+        eventName: "Transfer",
+      });
+      console.log(decoded);
+    }
+
     console.log("asdf");
     return;
     // const dataset = {
