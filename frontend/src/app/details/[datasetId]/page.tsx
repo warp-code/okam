@@ -7,7 +7,6 @@ import LoadingIndicator from "@/app/_components/LoadingIndicator";
 import { useAccount } from "wagmi";
 import { getOne } from "@/utils/actions/serverActions";
 import { Dataset } from "@/app/types";
-import { nftStorageIpfsHost } from "@/app/constants";
 import DatasetChart from "@/app/details/[datasetId]/DatasetChart";
 
 export default function Details() {
@@ -55,7 +54,7 @@ export default function Details() {
                 <div className="rounded-lg max-w-131 h-64 bg-okam-card-gray">
                   <Image
                     alt={data.cover_image.name}
-                    src={nftStorageIpfsHost + data.cover_image.cid}
+                    src={data.cover_image.url}
                     width="0"
                     height="0"
                     sizes="100vw"

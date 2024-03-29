@@ -10,7 +10,13 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useAccount } from "wagmi";
 import { create, getAll } from "@/utils/actions/serverActions";
-import { Category, CreateModel, Dataset, OkamFile } from "@/app/types";
+import {
+  Category,
+  CreateModel,
+  Dataset,
+  OkamCoverImage,
+  OkamFile,
+} from "@/app/types";
 import { useLayoutEffect } from "react";
 import LoadingIndicator from "@/app/_components/LoadingIndicator";
 import { mintOwnershipToken } from "@/contracts/actions";
@@ -76,7 +82,7 @@ export default function Create() {
       coverImage: {
         name: "",
         mimeType: "",
-        cid: "",
+        url: "",
       },
       description: "",
       categories: categoriesQuery.isFetching
@@ -143,7 +149,7 @@ export default function Create() {
             name="coverImage"
             validators={{
               onChange: ({ value: coverImage }) =>
-                !coverImage.cid.length ? "Cover image is required." : undefined,
+                !coverImage.url.length ? "Cover image is required." : undefined,
             }}
           >
             {(field) => (
@@ -151,7 +157,9 @@ export default function Create() {
                 label="Cover image"
                 name={field.name}
                 value={field.state.value}
-                handleOnChange={(file: OkamFile) => field.handleChange(file)}
+                handleOnChange={(file: OkamCoverImage) =>
+                  field.handleChange(file)
+                }
                 errors={field.state.meta.errors}
               />
             )}

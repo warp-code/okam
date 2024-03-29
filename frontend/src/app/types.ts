@@ -4,6 +4,12 @@ export type OkamFile = {
   cid: string;
 };
 
+export type OkamCoverImage = {
+  name: string;
+  mimeType: string;
+  url: string;
+};
+
 export type Category = {
   id: number;
   text: string;
@@ -18,11 +24,7 @@ export type CategoryModel = {
 export type Dataset = {
   id: number;
   name: string;
-  cover_image: {
-    name: string;
-    mimeType: string;
-    cid: string;
-  };
+  cover_image: OkamCoverImage;
   description: string;
   file_cid: string;
   author: string;
@@ -40,7 +42,7 @@ export type SearchModel = {
 
 export type CreateModel = {
   name: string;
-  coverImage: OkamFile;
+  coverImage: OkamCoverImage;
   description: string;
   categories: CategoryModel[];
   file: OkamFile;

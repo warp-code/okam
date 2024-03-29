@@ -1,7 +1,6 @@
 "use client";
 
-import { nftStorageIpfsHost } from "@/app/constants";
-import { OkamFile } from "@/app/types";
+import { OkamCoverImage } from "@/app/types";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -13,7 +12,7 @@ export default function Card({
   buyPrice,
 }: {
   id: number;
-  image: OkamFile;
+  image: OkamCoverImage;
   title: string;
   description: string;
   buyPrice: number;
@@ -25,7 +24,7 @@ export default function Card({
       <div className="relative max-w-88 max-h-40 bg-okam-card-gray">
         <Image
           alt={image.name}
-          src={nftStorageIpfsHost + image.cid}
+          src={image.url}
           width="0"
           height="0"
           sizes="100vw"
