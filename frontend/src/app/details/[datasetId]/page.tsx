@@ -52,7 +52,7 @@ export default function Details() {
 
             <div className="flex sm:flex-row sm:flex-wrap flex-col sm:gap-x-8 gap-y-8">
               <div className="max-w-131 rounded-lg flex flex-col gap-y-4">
-                <div className=" rounded-lg max-w-131 h-64">
+                <div className="rounded-lg max-w-131 h-64 bg-okam-card-gray">
                   <Image
                     alt={data.cover_image.name}
                     src={nftStorageIpfsHost + data.cover_image.cid}
@@ -121,11 +121,11 @@ export default function Details() {
                 </div>
               </div>
 
-              <div className="max-h-115 max-w-131 rounded-lg flex flex-col">
-                <div className="rounded-t-lg max-w-131 max-h-64 bg-okam-chart-gray py-5 sm:px-10 px-5 items-center">
+              <div className="max-w-131 w-full h-full rounded-lg flex flex-col">
+                <div className="rounded-t-lg max-w-131 w-full h-64 bg-okam-card-gray py-5 sm:px-10 px-5 items-center">
                   {true && (
                     <DatasetChart
-                      currentSupply={20}
+                      currentSupply={31}
                       quadraticParam={data.quadratic_param}
                       linearParam={data.linear_param}
                       constantParam={data.constant_param}
@@ -135,12 +135,12 @@ export default function Details() {
 
                 <div className="max-w-131 rounded-b-lg pt-6 pb-8 px-6 flex flex-col gap-y-4 bg-okam-dark-green">
                   <div className="text-green-500 text-sm/7 font-semibold">
-                    Current supply: 120
+                    Current supply: 30
                   </div>
 
                   <div className="flex flex-row justify-between">
                     <span className="text-gray-50 font-medium py-4">
-                      Buy price: X FIL
+                      Buy price: 2761 FIL
                     </span>
 
                     <button
@@ -154,7 +154,7 @@ export default function Details() {
 
                   <div className="flex flex-row justify-between">
                     <span className="text-gray-50 font-medium py-4">
-                      Sell price: Y FIL
+                      Sell price: 2484 FIL
                     </span>
 
                     <button

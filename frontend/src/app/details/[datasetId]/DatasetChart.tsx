@@ -36,16 +36,13 @@ export default function DatasetChart({
     useState<ChartData<"line", (number | Point | null)[], unknown>>();
 
   const calculateQuantities = (currentSupply: number) => {
-    const datapointIncrement = Math.floor(currentSupply / 5);
+    const datapointIncrement = currentSupply / 5;
 
     const datapoints: number[] = [];
 
-    for (let i = 0; i <= 11; i++) {
+    for (let i = 0; i <= 8; i++) {
       datapoints.push(datapointIncrement * i);
     }
-
-    //just so that we're absolutely sure this is the number in this position
-    datapoints[5] = currentSupply;
 
     return datapoints;
   };
@@ -71,11 +68,14 @@ export default function DatasetChart({
         sellPrices.push(sellPrice);
       }
 
-      console.log(buyPrices);
-      console.log(sellPrices);
+      console.log("quantities: ", datapoints);
+      console.log("buy prices:", buyPrices);
+      console.log("sell prices:", sellPrices);
+
+      const labels = datapoints.map((x) => x.toString);
 
       setChartData({
-        labels: datapoints.map((x) => x.toString),
+        labels: labels,
         datasets: [
           {
             data: buyPrices,
@@ -145,7 +145,7 @@ export default function DatasetChart({
             label: {
               display: true,
               position: "start",
-              xAdjust: 10,
+              xAdjust: -12,
               padding: 1,
               color: "#333741",
               content: `${currentSupply}`,

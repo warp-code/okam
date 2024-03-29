@@ -22,7 +22,7 @@ export default function Card({
 
   return (
     <div className="max-h-98 max-w-88 rounded-lg flex flex-col">
-      <div className="relative max-w-88 max-h-40">
+      <div className="relative max-w-88 max-h-40 bg-okam-card-gray">
         <Image
           alt={image.name}
           src={nftStorageIpfsHost + image.cid}
