@@ -1,4 +1,7 @@
-import { calculateBuyPrice, calculateSellPrice } from "@/app/actions";
+import {
+  calculateBuyPrice,
+  calculateSellPrice,
+} from "@/utils/actions/clientActions";
 import {
   ChartData,
   Point,
@@ -48,54 +51,50 @@ export default function DatasetChart({
   };
 
   useEffect(() => {
-    const calculateDatasets = async () => {
-      const datapoints = calculateQuantities(currentSupply);
+    const datapoints = calculateQuantities(currentSupply);
 
-      const buyPrices: number[] = [];
-      const sellPrices: number[] = [];
+    const buyPrices: number[] = [];
+    const sellPrices: number[] = [];
 
-      for (const datapoint of datapoints) {
-        const buyPrice = await calculateBuyPrice(
-          quadraticParam,
-          linearParam,
-          constantParam,
-          datapoint
-        );
+    for (const datapoint of datapoints) {
+      const buyPrice = calculateBuyPrice(
+        quadraticParam,
+        linearParam,
+        constantParam,
+        datapoint
+      );
 
-        const sellPrice = await calculateSellPrice(buyPrice);
+      const sellPrice = calculateSellPrice(buyPrice);
 
-        buyPrices.push(buyPrice);
-        sellPrices.push(sellPrice);
-      }
+      buyPrices.push(buyPrice);
+      sellPrices.push(sellPrice);
+    }
 
-      console.log("quantities: ", datapoints);
-      console.log("buy prices:", buyPrices);
-      console.log("sell prices:", sellPrices);
+    console.log("quantities: ", datapoints);
+    console.log("buy prices:", buyPrices);
+    console.log("sell prices:", sellPrices);
 
-      const labels = datapoints.map((x) => x.toString);
+    const labels = datapoints.map((x) => x.toString);
 
-      setChartData({
-        labels: labels,
-        datasets: [
-          {
-            data: buyPrices,
-            borderColor: "#2ED3B7",
-            label: "Buy price",
-            borderWidth: 1,
-            pointRadius: 0,
-          },
-          {
-            data: sellPrices,
-            borderColor: "#FFFFFF",
-            label: "Sell price",
-            borderWidth: 1,
-            pointRadius: 0,
-          },
-        ],
-      });
-    };
-
-    calculateDatasets();
+    setChartData({
+      labels: labels,
+      datasets: [
+        {
+          data: buyPrices,
+          borderColor: "#2ED3B7",
+          label: "Buy price",
+          borderWidth: 1,
+          pointRadius: 0,
+        },
+        {
+          data: sellPrices,
+          borderColor: "#FFFFFF",
+          label: "Sell price",
+          borderWidth: 1,
+          pointRadius: 0,
+        },
+      ],
+    });
   }, [currentSupply, quadraticParam, linearParam, constantParam]);
 
   const options: ChartOptions<"line"> = {

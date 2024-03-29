@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import LoadingIndicator from "@/app/_components/LoadingIndicator";
 import { useAccount } from "wagmi";
-import { getOne } from "@/app/actions";
+import { getOne } from "@/utils/actions/serverActions";
 import { Dataset } from "@/app/types";
 import { nftStorageIpfsHost } from "@/app/constants";
 import DatasetChart from "@/app/details/[datasetId]/DatasetChart";

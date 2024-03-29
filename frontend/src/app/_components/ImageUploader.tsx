@@ -1,6 +1,6 @@
 "use client";
 
-import { uploadFile } from "@/app/actions";
+import { uploadFile } from "@/utils/actions/serverActions";
 import { nftStorageIpfsHost } from "@/app/constants";
 import { OkamFile } from "@/app/types";
 import { ValidationError } from "@tanstack/react-form";
