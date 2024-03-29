@@ -13,6 +13,7 @@ import { create, getAll } from "@/utils/actions/serverActions";
 import { Category, CreateModel, Dataset, OkamFile } from "@/app/types";
 import { useLayoutEffect } from "react";
 import LoadingIndicator from "@/app/_components/LoadingIndicator";
+import { mintOwnershipToken } from "@/contracts/actions";
 
 export default function Create() {
   const { push } = useRouter();
@@ -25,18 +26,21 @@ export default function Create() {
   }, [isDisconnected, push]);
 
   const createDataset = async (model: CreateModel) => {
+    const tokenId = await mintOwnershipToken(model.file.cid);
+
     const dataset = {
       name: model.name,
       cover_image: model.coverImage,
       description: model.description,
       file_cid: model.file.cid,
       author: address,
-      quadratic_param: 3,
-      linear_param: 2,
-      constant_param: 1,
+      quadratic_param: 0,
+      linear_param: 0,
+      constant_param: 10000,
       categories: model.categories
         .filter((category) => category.checked)
         .map((category) => category.id),
+      token_id: tokenId,
     } as Dataset;
 
     const { data, error } = await create<Dataset>("datasets", [dataset]);

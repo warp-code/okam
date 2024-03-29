@@ -26,8 +26,6 @@
         "solidity.monoRepoSupport": true,
         "solidity.compileUsingRemoteVersion": "v0.8.20+commit.a1b79de6",
         "solidity.compileUsingLocalVersion": "v0.8.20+commit.a1b79de6",
-        "solidity.packageDefaultDependenciesContractsDirectory": "src",
-        "solidity.packageDefaultDependenciesDirectory": "lib",
         "slither.solcPath": "",
         "slither.hiddenDetectors": [],
         "[typescriptreact]": {
