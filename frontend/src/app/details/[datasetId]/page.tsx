@@ -5,33 +5,14 @@ import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import LoadingIndicator from "@/app/_components/LoadingIndicator";
 import { useAccount } from "wagmi";
-import { getOne } from "@/app/actions";
+import { getOne } from "@/utils/actions/serverActions";
 import { Dataset } from "@/app/types";
 import { nftStorageIpfsHost } from "@/app/constants";
-import { Line } from "react-chartjs-2";
-import {
-  ChartData,
-  Point,
-  Chart,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  ChartOptions,
-} from "chart.js";
-import annotationPlugin from "chartjs-plugin-annotation";
+import DatasetChart from "@/app/details/[datasetId]/DatasetChart";
 
 export default function Details() {
   const params = useParams();
   const { address, isDisconnected } = useAccount();
-
-  Chart.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    annotationPlugin
-  );
 
   const { isLoading, error, data } = useQuery({
     queryKey: ["datasets", params.datasetId],
@@ -54,83 +35,6 @@ export default function Details() {
     return console.error(error);
   }
 
-  const chartData: ChartData<"line", (number | Point | null)[], unknown> = {
-    labels: ["", "", "", "", "5", "", "", ""],
-    datasets: [
-      {
-        data: [2, 4, 6, 8, 10, 12, 14, 16],
-        borderColor: "#2ED3B7",
-        label: "Buy price",
-        borderWidth: 2,
-        fill: "start",
-        pointRadius: 0,
-      },
-      {
-        data: [1, 2, 3, 4, 5, 6, 7, 8],
-        borderColor: "#FFFFFF",
-        label: "Sell price",
-        borderWidth: 2,
-        fill: "start",
-        pointRadius: 0,
-      },
-    ],
-  };
-
-  const options: ChartOptions<"line"> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    backgroundColor: "#131615",
-    color: "#333741",
-    borderColor: "#333741",
-    scales: {
-      x: {
-        grid: {
-          color: "#333741",
-        },
-        ticks: {
-          display: false,
-          color: "#333741",
-          precision: 0,
-        },
-        beginAtZero: true,
-      },
-      y: {
-        grid: {
-          color: "#333741",
-        },
-        ticks: {
-          precision: 0,
-          color: "#333741",
-        },
-        beginAtZero: true,
-      },
-    },
-    plugins: {
-      legend: {
-        display: false,
-      },
-      annotation: {
-        annotations: [
-          {
-            type: "line",
-            scaleID: "x",
-            value: 4,
-            borderColor: "#333741",
-            borderWidth: 2,
-            label: {
-              display: true,
-              position: `${110}%`,
-              padding: 1,
-              color: "#333741",
-              content: "5",
-              backgroundColor: "transparent",
-            },
-          },
-        ],
-      },
-    },
-  };
-
   return (
     <div className="h-full max-w-270 flex flex-col gap-y-12 mx-auto">
       <div className="min-w-full">
@@ -148,13 +52,14 @@ export default function Details() {
 
             <div className="flex sm:flex-row sm:flex-wrap flex-col sm:gap-x-8 gap-y-8">
               <div className="max-w-131 rounded-lg flex flex-col gap-y-4">
-                <div className=" rounded-lg max-w-131 h-64">
+                <div className="rounded-lg max-w-131 h-64 bg-okam-card-gray">
                   <Image
                     alt={data.cover_image.name}
                     src={nftStorageIpfsHost + data.cover_image.cid}
                     width="0"
                     height="0"
                     sizes="100vw"
+                    priority={true}
                     className="block mx-auto rounded-lg h-full w-auto"
                   />
                 </div>
@@ -216,21 +121,26 @@ export default function Details() {
                 </div>
               </div>
 
-              <div className="max-h-115 max-w-131 rounded-lg flex flex-col">
-                {/* chart goes here instead of the image */}
-                <div className="rounded-t-lg max-w-131 max-h-64 bg-okam-chart-gray py-5 sm:px-10 items-center">
-                  {chartData && options && (
-                    <Line data={chartData} options={options} />
+              <div className="max-w-131 w-full h-full rounded-lg flex flex-col">
+                <div className="rounded-t-lg max-w-131 w-full h-64 bg-okam-card-gray py-5 sm:px-10 px-5 items-center">
+                  {true && (
+                    <DatasetChart
+                      currentSupply={31}
+                      quadraticParam={data.quadratic_param}
+                      linearParam={data.linear_param}
+                      constantParam={data.constant_param}
+                    />
                   )}
                 </div>
+
                 <div className="max-w-131 rounded-b-lg pt-6 pb-8 px-6 flex flex-col gap-y-4 bg-okam-dark-green">
                   <div className="text-green-500 text-sm/7 font-semibold">
-                    Current supply: 120
+                    Current supply: 31
                   </div>
 
                   <div className="flex flex-row justify-between">
                     <span className="text-gray-50 font-medium py-4">
-                      Buy price: X FIL
+                      Buy price: 994 FIL
                     </span>
 
                     <button
@@ -244,7 +154,7 @@ export default function Details() {
 
                   <div className="flex flex-row justify-between">
                     <span className="text-gray-50 font-medium py-4">
-                      Sell price: Y FIL
+                      Sell price: 894 FIL
                     </span>
 
                     <button

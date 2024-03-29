@@ -4,6 +4,7 @@ import * as LitJsSdk from "@lit-protocol/lit-node-client";
 const client = new LitJsSdk.LitNodeClient({
   litNetwork: litConfig.litNetwork,
 });
+
 const chain = litConfig.ethChain;
 
 class Lit {
@@ -65,7 +66,9 @@ class Lit {
       chain: chain,
       nonce: "",
     });
+
     console.log(authSig);
+
     const decryptedString = await LitJsSdk.decryptToString(
       {
         accessControlConditions,
@@ -80,4 +83,6 @@ class Lit {
   }
 }
 
-export default new Lit();
+const lit = new Lit();
+
+export default lit;

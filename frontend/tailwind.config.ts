@@ -63,7 +63,7 @@ const config: Config = {
         },
         "okam-black": "#191919",
         "okam-dark-green": "#1C2120",
-        "okam-chart-gray": "#131615"
+        "okam-card-gray": "#131615"
       }
     },
   },

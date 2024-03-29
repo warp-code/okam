@@ -4,7 +4,7 @@ import Card from "@/app/_components/Card";
 import CategoryCheckbox from "@/app/_components/CategoryCheckbox";
 import LoadingIndicator from "@/app/_components/LoadingIndicator";
 import TextInput from "@/app/_components/TextInput";
-import { getAll } from "@/app/actions";
+import { getAll } from "@/utils/actions/serverActions";
 import { Category, Dataset, SearchModel } from "@/app/types";
 import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
