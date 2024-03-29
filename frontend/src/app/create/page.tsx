@@ -9,14 +9,11 @@ import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useAccount } from "wagmi";
-import { getAll } from "@/utils/actions/serverActions";
-import { Category, CreateModel, OkamFile } from "@/app/types";
+import { create, getAll } from "@/utils/actions/serverActions";
+import { Category, CreateModel, Dataset, OkamFile } from "@/app/types";
 import { useLayoutEffect } from "react";
 import LoadingIndicator from "@/app/_components/LoadingIndicator";
-import { writeContract, waitForTransactionReceipt } from "@wagmi/core";
-import { wagmiConfig } from "@/lib/config";
-import { ownershipTokenAbi } from "@/contracts/ownershipTokenAbi";
-import { decodeEventLog } from "viem";
+import { mintOwnershipToken } from "@/contracts/actions";
 
 export default function Create() {
   const { push } = useRouter();
@@ -29,52 +26,31 @@ export default function Create() {
   }, [isDisconnected, push]);
 
   const createDataset = async (model: CreateModel) => {
-    const txHash = await writeContract(wagmiConfig, {
-      abi: ownershipTokenAbi,
-      address: process.env.NEXT_PUBLIC_OWNERSHIP_CONTRACT_ADDRESS,
-      functionName: "registerOwner",
-      args: [BigInt(0), BigInt(0), BigInt(10000), model.file.cid],
-    });
+    const tokenId = await mintOwnershipToken(model.file.cid);
 
-    const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
-      hash: txHash,
-      confirmations: 2,
-    });
+    const dataset = {
+      name: model.name,
+      cover_image: model.coverImage,
+      description: model.description,
+      file_cid: model.file.cid,
+      author: address,
+      quadratic_param: 0,
+      linear_param: 0,
+      constant_param: 10000,
+      categories: model.categories
+        .filter((category) => category.checked)
+        .map((category) => category.id),
+      token_id: tokenId,
+    } as Dataset;
 
-    for (const log of txReceipt.logs) {
-      const transferEvent = decodeEventLog({
-        abi: ownershipTokenAbi,
-        topics: log.topics,
-        data: log.data,
-        eventName: "Transfer",
-      });
-      console.log(transferEvent);
+    const { data, error } = await create<Dataset>("datasets", [dataset]);
+
+    if (error) {
+      console.error(error);
+      return;
     }
 
-    return;
-    // const dataset = {
-    //   name: model.name,
-    //   cover_image: model.coverImage,
-    //   description: model.description,
-    //   file_cid: model.file.cid,
-    //   author: address,
-    //   quadratic_param: 0,
-    //   linear_param: 0,
-    //   constant_param: 10000,
-    //   categories: model.categories
-    //     .filter((category) => category.checked)
-    //     .map((category) => category.id),
-    //   token_id: tokenId,
-    // } as Dataset;
-
-    // const { data, error } = await create<Dataset>("datasets", [dataset]);
-
-    // if (error) {
-    //   console.error(error);
-    //   return;
-    // }
-
-    // push(`/details/${data[0].id}`);
+    push(`/details/${data[0].id}`);
   };
 
   const categoriesQuery = useQuery({
