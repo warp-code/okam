@@ -11,12 +11,12 @@ const client = new NFTStorage({ token: process.env.NFT_STORAGE_API_KEY });
 export async function uploadFileToSupabase(formData: FormData): Promise<OkamCoverImage> {
   const file = formData.get("file") as File;
 
-  const extension = file.name.split(".")[1];
+  const extension = file.name.slice(file.name.lastIndexOf("."));
   const fileName = crypto.randomUUID();
 
   const { data, error } = await supabase.storage
     .from("test")
-    .upload(`cover-images/${fileName}.${extension}`, file);
+    .upload(`cover-images/${fileName}${extension}`, file);
 
   if (error) {
     console.error("An error occured while uploading the file to supabase: ", error);
@@ -33,7 +33,7 @@ export async function uploadFileToSupabase(formData: FormData): Promise<OkamCove
     .getPublicUrl(data.path);
 
   return {
-    name: `${fileName}.${extension}`,
+    name: `${fileName}${extension}`,
     mimeType: file.type,
     url: storedFile.publicUrl
   };
