@@ -36,7 +36,7 @@ export type Dataset = {
 };
 
 export type SearchModel = {
-  search: string,
+  search: string;
   categories: CategoryModel[];
 };
 
@@ -46,4 +46,10 @@ export type CreateModel = {
   description: string;
   categories: CategoryModel[];
   file: OkamFile;
+};
+
+export type DatasetTradingInfo = {
+  currentSupply: bigint;
+  buyPrice: bigint;
+  sellPrice: bigint;
 };
