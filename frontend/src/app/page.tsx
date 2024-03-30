@@ -5,14 +5,15 @@ import CategoryCheckbox from "@/app/_components/CategoryCheckbox";
 import LoadingIndicator from "@/app/_components/LoadingIndicator";
 import TextInput from "@/app/_components/TextInput";
 import { getAll } from "@/utils/actions/serverActions";
-import { Category, Dataset, SearchModel } from "@/app/types";
+import { Category, Dataset, DatasetModel, SearchModel } from "@/app/types";
 import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { getBuyPrice } from "@/contracts/actions";
 
 export default function Home() {
-  const [datasets, setDatasets] = useState<Dataset[]>([]);
-  const [filteredDatasets, setFilteredDatasets] = useState<Dataset[]>([]);
+  const [datasets, setDatasets] = useState<DatasetModel[]>([]);
+  const [filteredDatasets, setFilteredDatasets] = useState<DatasetModel[]>([]);
 
   const filterDatasets = (model: SearchModel) => {
     let datasetsToReturn = datasets;
@@ -65,8 +66,16 @@ export default function Home() {
         return;
       }
 
-      setDatasets(data);
-      setFilteredDatasets(data);
+      await Promise.all(
+        (data as DatasetModel[]).map(async (datum) => {
+          const buyPrice = await getBuyPrice(BigInt(datum.token_id));
+
+          datum.buyPrice = buyPrice;
+        })
+      );
+
+      setDatasets(data as DatasetModel[]);
+      setFilteredDatasets(data as DatasetModel[]);
 
       return data;
     },
@@ -154,12 +163,12 @@ export default function Home() {
                 filteredDatasets.map((dataset) => {
                   return (
                     <Card
-                      key={dataset?.id}
-                      id={dataset?.id}
+                      key={dataset.id}
+                      id={dataset.id}
                       image={dataset.cover_image}
                       title={dataset.name}
                       description={dataset.description}
-                      buyPrice={10}
+                      buyPrice={dataset.buyPrice.toString()}
                     />
                   );
                 })
