@@ -15,7 +15,7 @@ export default function Card({
   image: OkamCoverImage;
   title: string;
   description: string;
-  buyPrice: number;
+  buyPrice: string;
 }) {
   const router = useRouter();
 
