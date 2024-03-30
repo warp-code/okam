@@ -5,15 +5,25 @@ import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import LoadingIndicator from "@/app/_components/LoadingIndicator";
 import { useAccount } from "wagmi";
-import { getOne } from "@/utils/actions/serverActions";
-import { Dataset } from "@/app/types";
+import { create, getOne } from "@/utils/actions/serverActions";
+import { Dataset, DatasetTradingInfo, TokenHolder } from "@/app/types";
 import DatasetChart from "@/app/details/[datasetId]/DatasetChart";
+import {
+  getBuyPrice,
+  getSellPrice,
+  getSupply,
+  mintAccessToken,
+} from "@/contracts/actions";
 
 export default function Details() {
   const params = useParams();
   const { address, isDisconnected } = useAccount();
 
-  const { isFetching, error, data } = useQuery({
+  const {
+    isFetching: isDatasetQueryFetching,
+    error: datasetQueryError,
+    data: datasetQueryData,
+  } = useQuery({
     queryKey: ["datasets", params.datasetId],
     queryFn: async () => {
       const { data, error } = await getOne<Dataset>(
@@ -30,31 +40,99 @@ export default function Details() {
     },
   });
 
-  if (error) {
-    return console.error(error);
+  const {
+    isFetching: isDatasetTradingInfoFetching,
+    error: datasetTradingInfoError,
+    data: datasetTradingInfoData,
+  } = useQuery({
+    queryKey: ["datasetTradingInfo", datasetQueryData?.token_id],
+    queryFn: async () => {
+      if (datasetQueryData) {
+        const ownershipTokenId = BigInt(datasetQueryData.token_id);
+
+        const currentSupply = await getSupply(ownershipTokenId);
+        const buyPrice = await getBuyPrice(ownershipTokenId);
+        const sellPrice = await getSellPrice(ownershipTokenId);
+
+        return {
+          currentSupply: currentSupply,
+          buyPrice: buyPrice,
+          sellPrice: sellPrice,
+        } as DatasetTradingInfo;
+      }
+
+      return {} as DatasetTradingInfo;
+    },
+  });
+
+  if (datasetQueryError) {
+    return console.error(datasetQueryError);
   }
+
+  if (datasetTradingInfoError) {
+    return console.error(datasetTradingInfoError);
+  }
+
+  const buy = async () => {
+    const accessTokenId = await mintAccessToken(
+      BigInt(datasetQueryData?.token_id as string),
+      address as `0x${string}`,
+      BigInt(3)
+    );
+
+    const { data, error } = await create<TokenHolder>("token_holders", [
+      {
+        address: address,
+        token_id: accessTokenId,
+        dataset_id: datasetQueryData?.id,
+      } as TokenHolder,
+    ]);
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    console.log("token_holder:", data);
+
+    const ownershipTokenId = BigInt(datasetQueryData?.token_id as string);
+
+    const res = await Promise.all([
+      await getSupply(ownershipTokenId),
+      await getBuyPrice(ownershipTokenId),
+      await getSellPrice(ownershipTokenId),
+    ]);
+
+    console.log("token info stuff", res);
+
+    await getSupply(ownershipTokenId);
+    await getBuyPrice(ownershipTokenId);
+    await getSellPrice(ownershipTokenId);
+  };
 
   return (
     <div className="h-full max-w-270 flex flex-col gap-y-12 mx-auto">
       <div className="min-w-full">
-        {(isFetching || !data) && (
+        {(isDatasetQueryFetching ||
+          !datasetQueryData ||
+          isDatasetTradingInfoFetching) && (
           <div className="h-24 w-24 mx-auto mt-40">
             <LoadingIndicator />
           </div>
         )}
 
-        {!isFetching && data && (
+        {!isDatasetQueryFetching && datasetQueryData && (
           <>
             <h2 className="text-gray-50 font-semibold text-3xl pb-6">
-              {data.name}
+              {datasetQueryData.name}
             </h2>
 
             <div className="flex sm:flex-row sm:flex-wrap flex-col sm:gap-x-8 gap-y-8">
               <div className="max-w-131 rounded-lg flex flex-col gap-y-4">
                 <div className="rounded-lg max-w-131 h-64 bg-okam-card-gray">
                   <Image
-                    alt={data.cover_image.name}
-                    src={data.cover_image.url}
+                    alt={datasetQueryData.cover_image.name}
+                    src={datasetQueryData.cover_image.url}
                     width="0"
                     height="0"
                     sizes="100vw"
@@ -67,7 +145,9 @@ export default function Details() {
                   Description
                 </h4>
 
-                <div className="text-gray-400">{data.description}</div>
+                <div className="text-gray-400">
+                  {datasetQueryData.description}
+                </div>
 
                 <h4 className="text-gray-50 font-semibold text-2xl">File</h4>
 
@@ -77,7 +157,7 @@ export default function Details() {
                       IPFS
                     </span>
                     <span className="text-sm font-medium text-gray-400 break-all my-auto">
-                      {data.file_cid}
+                      {datasetQueryData.file_cid}
                     </span>
                   </div>
                 </div>
@@ -115,37 +195,42 @@ export default function Details() {
                     </svg>
                   </span>
                   <span className="text-gray-400 font-semibold break-all my-auto ">
-                    {data.author}
+                    {datasetQueryData.author}
                   </span>
                 </div>
               </div>
 
               <div className="max-w-131 w-full h-full rounded-lg flex flex-col">
                 <div className="rounded-t-lg max-w-131 w-full h-64 bg-okam-card-gray py-5 sm:px-10 px-5 items-center">
-                  {true && (
+                  {
                     <DatasetChart
-                      currentSupply={31}
-                      quadraticParam={data.quadratic_param}
-                      linearParam={data.linear_param}
-                      constantParam={data.constant_param}
+                      currentSupply={Number(
+                        datasetTradingInfoData?.currentSupply
+                      )}
+                      quadraticParam={datasetQueryData.quadratic_param}
+                      linearParam={datasetQueryData.linear_param}
+                      constantParam={datasetQueryData.constant_param}
                     />
-                  )}
+                  }
                 </div>
 
                 <div className="max-w-131 rounded-b-lg pt-6 pb-8 px-6 flex flex-col gap-y-4 bg-okam-dark-green">
                   <div className="text-green-500 text-sm/7 font-semibold">
-                    Current supply: 31
+                    Current supply:{" "}
+                    {datasetTradingInfoData?.currentSupply.toString()} FIL
                   </div>
 
                   <div className="flex flex-row justify-between">
                     <span className="text-gray-50 font-medium py-4">
-                      Buy price: 994 FIL
+                      Buy price: {datasetTradingInfoData?.buyPrice.toString()}{" "}
+                      FIL
                     </span>
 
                     <button
                       type="button"
                       className="btn btn-primary my-auto min-w-25 py-2 text-lg font-semibold rounded-lg"
                       disabled={isDisconnected}
+                      onClick={async () => buy()}
                     >
                       Buy
                     </button>
@@ -153,7 +238,8 @@ export default function Details() {
 
                   <div className="flex flex-row justify-between">
                     <span className="text-gray-50 font-medium py-4">
-                      Sell price: 894 FIL
+                      Sell price: {datasetTradingInfoData?.sellPrice.toString()}{" "}
+                      FIL
                     </span>
 
                     <button

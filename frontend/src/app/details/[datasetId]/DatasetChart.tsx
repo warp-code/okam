@@ -71,9 +71,9 @@ export default function DatasetChart({
       sellPrices.push(sellPrice);
     }
 
-    console.log("quantities: ", datapoints);
-    console.log("buy prices:", buyPrices);
-    console.log("sell prices:", sellPrices);
+    // console.log("quantities: ", datapoints);
+    // console.log("buy prices:", buyPrices);
+    // console.log("sell prices:", sellPrices);
 
     const labels = datapoints.map((x) => x.toString);
 

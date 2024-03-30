@@ -7,9 +7,10 @@ import {
   waitForTransactionReceipt,
   writeContract,
   readContract,
+  simulateContract,
 } from "wagmi/actions";
 import { useState } from "react";
-import { decodeEventLog } from "viem";
+import { decodeEventLog, parseEther } from "viem";
 
 type Result<T, E = any> =
   | {
@@ -46,12 +47,12 @@ export async function mintOwnershipToken(fileCid: string): Promise<string> {
     abi: ownershipTokenAbi,
     address: process.env.NEXT_PUBLIC_OWNERSHIP_CONTRACT_ADDRESS,
     functionName: "registerOwner",
-    args: [BigInt(0), BigInt(0), BigInt(10000), fileCid],
+    args: [BigInt(1), BigInt(1), BigInt(1), fileCid],
   });
 
   const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
     hash: txHash,
-    confirmations: 2,
+    confirmations: 1,
   });
 
   let tokenId: string | undefined = undefined;
@@ -102,14 +103,27 @@ export async function getSellPrice(ownerhipTokenId: bigint) {
 
 export async function mintAccessToken(
   ownerhipTokenId: bigint,
-  address: `0x${string}`
+  address: `0x${string}`,
+  buyPrice: bigint
 ) {
-  const txHash = await writeContract(wagmiConfig, {
+  const { request, result, chainId } = await simulateContract(wagmiConfig, {
     abi: accessTokenAbi,
     address: process.env.NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS,
     functionName: "mint",
     args: [ownerhipTokenId, address],
+    account: address,
+    value: buyPrice,
   });
+
+  if (!request) {
+    return;
+  }
+
+  console.log(request);
+  console.log(result);
+  console.log(chainId);
+
+  const txHash = await writeContract(wagmiConfig, request);
 
   const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
     hash: txHash,
