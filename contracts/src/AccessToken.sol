@@ -33,9 +33,6 @@ contract AccessToken is ERC721 {
             revert PriceMismatch(msg.value, price);
         }
 
-        // Transfer the price of the token to contract
-        payable(address(this)).transfer(price);
-
         _supplyPerOwnershipToken[ownershipTokenId]++;
         _relatedOwnershipTokens[tokenId] = ownershipTokenId;
 
@@ -57,6 +54,10 @@ contract AccessToken is ERC721 {
         _earningsPerOwnershipToken[ownershipTokenId] += saleEarnings;
 
         _burn(tokenId);
+    }
+
+    function getBalance() external view returns (uint256) {
+        return address(this).balance;
     }
 
     function getSupply(uint256 ownershipTokenId) external view returns (uint256) {
