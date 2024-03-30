@@ -3,7 +3,7 @@ export const accessTokenAbi = [
     type: "constructor",
     inputs: [
       {
-        name: "ownerTokenContractAddress",
+        name: "ownershipTokenContractAddress",
         type: "address",
         internalType: "address",
       },
