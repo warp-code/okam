@@ -7,7 +7,7 @@ import {OwnershipToken} from "./OwnershipToken.sol";
 error PriceMismatch(uint256 received, uint256 expected);
 
 contract AccessToken is ERC721 {
-    address private immutable _ownerTokenContractAddress;
+    address private immutable _ownershipTokenContractAddress;
 
     uint256 private _nextTokenId;
 
@@ -15,12 +15,12 @@ contract AccessToken is ERC721 {
     mapping(uint256 => uint256) private _supplyPerOwnershipToken;
     mapping(uint256 => uint256) private _earningsPerOwnershipToken;
 
-    constructor(address ownerTokenContractAddress) ERC721("AccessToken", "ACC") {
-        if (ownerTokenContractAddress == address(0)) {
-            revert ERC721InvalidOwner(ownerTokenContractAddress);
+    constructor(address ownershipTokenContractAddress) ERC721("AccessToken", "ACC") {
+        if (ownershipTokenContractAddress == address(0)) {
+            revert ERC721InvalidOwner(ownershipTokenContractAddress);
         }
 
-        _ownerTokenContractAddress = ownerTokenContractAddress;
+        _ownershipTokenContractAddress = ownershipTokenContractAddress;
     }
 
     function mint(uint256 ownershipTokenId, address to) external payable {
@@ -65,7 +65,7 @@ contract AccessToken is ERC721 {
 
     function buyPrice(uint256 ownershipTokenId) public view returns (uint256) {
         (uint256 quadratic, uint256 linear, uint256 const) =
-            OwnershipToken(_ownerTokenContractAddress).getCurveParams(ownershipTokenId);
+            OwnershipToken(_ownershipTokenContractAddress).getCurveParams(ownershipTokenId);
 
         return _currentPrice(_supplyPerOwnershipToken[ownershipTokenId], quadratic, linear, const);
     }
