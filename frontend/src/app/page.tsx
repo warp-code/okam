@@ -62,7 +62,7 @@ export default function Home() {
       const { data, error } = await getAll<Dataset>(query.queryKey[0]);
 
       if (error) {
-        console.log(error);
+        console.error(error);
         return;
       }
 
