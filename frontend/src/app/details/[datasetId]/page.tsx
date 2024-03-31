@@ -15,6 +15,7 @@ import {
   getSupply,
   mintAccessToken,
 } from "@/contracts/actions";
+import { formatEther } from "viem";
 
 export default function Details() {
   const params = useParams();
@@ -245,13 +246,15 @@ export default function Details() {
                 <div className="max-w-131 rounded-b-lg pt-6 pb-8 px-6 flex flex-col gap-y-4 bg-okam-dark-green">
                   <div className="text-green-500 text-sm/7 font-semibold">
                     Current supply:{" "}
-                    {datasetTradingInfoData?.currentSupply.toString()} FIL
+                    {datasetTradingInfoData?.currentSupply.toString()}
                   </div>
 
                   <div className="flex flex-row justify-between">
                     <span className="text-gray-50 font-medium py-4">
-                      Buy price: {datasetTradingInfoData?.buyPrice.toString()}{" "}
-                      FIL
+                      Buy price:{" "}
+                      {!!datasetTradingInfoData?.buyPrice &&
+                        formatEther(datasetTradingInfoData.buyPrice)}{" "}
+                      ETH
                     </span>
 
                     <button
@@ -266,8 +269,10 @@ export default function Details() {
 
                   <div className="flex flex-row justify-between">
                     <span className="text-gray-50 font-medium py-4">
-                      Sell price: {datasetTradingInfoData?.sellPrice.toString()}{" "}
-                      FIL
+                      Sell price:{" "}
+                      {!!datasetTradingInfoData?.sellPrice &&
+                        formatEther(datasetTradingInfoData.sellPrice)}{" "}
+                      ETH
                     </span>
 
                     <button

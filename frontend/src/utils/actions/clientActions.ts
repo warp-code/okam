@@ -1,11 +1,20 @@
 "use client";
 
-export function calculateBuyPrice(quadraticParam: number, linearParam: number, constantParam: number, quantity: number): number {
+export function calculateBuyPrice(
+  quadraticParam: number,
+  linearParam: number,
+  constantParam: number,
+  quantity: number
+): number {
   if (quantity === 0) {
     return 0;
   }
 
-  return Math.floor((quadraticParam * Math.pow(quantity, 2)) + (linearParam * quantity) + constantParam);
+  return Math.floor(
+    quadraticParam * Math.pow(quantity, 2) +
+      linearParam * quantity +
+      constantParam
+  );
 }
 
 export function calculateSellPrice(buyPrice: number): number {
@@ -13,5 +22,5 @@ export function calculateSellPrice(buyPrice: number): number {
     return 0;
   }
 
-  return Math.floor(buyPrice * 9 / 10);
+  return Math.floor((buyPrice * 9) / 10);
 }

@@ -168,7 +168,7 @@ export default function Home() {
                       image={dataset.cover_image}
                       title={dataset.name}
                       description={dataset.description}
-                      buyPrice={dataset.buyPrice.toString()}
+                      buyPrice={dataset.buyPrice}
                     />
                   );
                 })
