@@ -85,3 +85,10 @@ export async function create<T>(
 ): Promise<PostgrestSingleResponse<T[]>> {
   return await supabase.from(tableName).insert<T>(data).select<"*", T>();
 }
+
+export async function deleteOne(
+  tableName: string,
+  id: number
+): Promise<PostgrestSingleResponse<null>> {
+  return await supabase.from(tableName).delete().eq("id", id);
+}

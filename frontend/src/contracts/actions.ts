@@ -7,10 +7,9 @@ import {
   waitForTransactionReceipt,
   writeContract,
   readContract,
-  simulateContract,
 } from "wagmi/actions";
 import { useState } from "react";
-import { decodeEventLog, parseEther } from "viem";
+import { decodeEventLog } from "viem";
 
 type Result<T, E = any> =
   | {
@@ -106,24 +105,13 @@ export async function mintAccessToken(
   address: `0x${string}`,
   buyPrice: bigint
 ) {
-  const { request, result, chainId } = await simulateContract(wagmiConfig, {
+  const txHash = await writeContract(wagmiConfig, {
     abi: accessTokenAbi,
     address: process.env.NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS,
     functionName: "mint",
     args: [ownerhipTokenId, address],
-    account: address,
     value: buyPrice,
   });
-
-  if (!request) {
-    return;
-  }
-
-  console.log(request);
-  console.log(result);
-  console.log(chainId);
-
-  const txHash = await writeContract(wagmiConfig, request);
 
   const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
     hash: txHash,

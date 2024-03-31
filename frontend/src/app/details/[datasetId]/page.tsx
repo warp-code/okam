@@ -5,10 +5,11 @@ import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import LoadingIndicator from "@/app/_components/LoadingIndicator";
 import { useAccount } from "wagmi";
-import { create, getOne } from "@/utils/actions/serverActions";
+import { create, deleteOne, getOne } from "@/utils/actions/serverActions";
 import { Dataset, DatasetTradingInfo, TokenHolder } from "@/app/types";
 import DatasetChart from "@/app/details/[datasetId]/DatasetChart";
 import {
+  burnAccessToken,
   getBuyPrice,
   getSellPrice,
   getSupply,
@@ -44,20 +45,34 @@ export default function Details() {
     isFetching: isDatasetTradingInfoFetching,
     error: datasetTradingInfoError,
     data: datasetTradingInfoData,
+    refetch: refetchDataTradingInfo,
   } = useQuery({
     queryKey: ["datasetTradingInfo", datasetQueryData?.token_id],
     queryFn: async () => {
       if (datasetQueryData) {
         const ownershipTokenId = BigInt(datasetQueryData.token_id);
 
-        const currentSupply = await getSupply(ownershipTokenId);
-        const buyPrice = await getBuyPrice(ownershipTokenId);
-        const sellPrice = await getSellPrice(ownershipTokenId);
+        let res;
+
+        try {
+          res = await Promise.all([
+            await getSupply(ownershipTokenId),
+            await getBuyPrice(ownershipTokenId),
+            await getSellPrice(ownershipTokenId),
+          ]);
+        } catch (error) {
+          console.error(
+            "An error occured while fetching dateset trading info: ",
+            error
+          );
+
+          return {} as DatasetTradingInfo;
+        }
 
         return {
-          currentSupply: currentSupply,
-          buyPrice: buyPrice,
-          sellPrice: sellPrice,
+          currentSupply: res[0],
+          buyPrice: res[1],
+          sellPrice: res[2],
         } as DatasetTradingInfo;
       }
 
@@ -74,13 +89,20 @@ export default function Details() {
   }
 
   const buy = async () => {
-    const accessTokenId = await mintAccessToken(
-      BigInt(datasetQueryData?.token_id as string),
-      address as `0x${string}`,
-      BigInt(3)
-    );
+    let accessTokenId;
 
-    const { data, error } = await create<TokenHolder>("token_holders", [
+    try {
+      accessTokenId = await mintAccessToken(
+        BigInt(datasetQueryData?.token_id as string),
+        address as `0x${string}`,
+        datasetTradingInfoData?.buyPrice as bigint
+      );
+    } catch (error) {
+      console.error("An error occured while minting access token: ", error);
+      return;
+    }
+
+    const { error } = await create<TokenHolder>("token_holders", [
       {
         address: address,
         token_id: accessTokenId,
@@ -89,25 +111,31 @@ export default function Details() {
     ]);
 
     if (error) {
-      console.error(error);
+      console.error("An error occured while saving token holder: ", error);
       return;
     }
 
-    console.log("token_holder:", data);
+    await refetchDataTradingInfo();
+  };
 
-    const ownershipTokenId = BigInt(datasetQueryData?.token_id as string);
+  const sell = async () => {
+    let accessTokenId;
 
-    const res = await Promise.all([
-      await getSupply(ownershipTokenId),
-      await getBuyPrice(ownershipTokenId),
-      await getSellPrice(ownershipTokenId),
-    ]);
+    try {
+      accessTokenId = await burnAccessToken(BigInt(1));
+    } catch (error) {
+      console.error("An error occured while burning access token: ", error);
+      return;
+    }
 
-    console.log("token info stuff", res);
+    const { error } = await deleteOne("token_holders", 1);
 
-    await getSupply(ownershipTokenId);
-    await getBuyPrice(ownershipTokenId);
-    await getSellPrice(ownershipTokenId);
+    if (error) {
+      console.error("An error occured while deleting token holder: ", error);
+      return;
+    }
+
+    await refetchDataTradingInfo();
   };
 
   return (
@@ -246,6 +274,7 @@ export default function Details() {
                       type="button"
                       className="btn btn-tertiary my-auto min-w-25 py-2 text-lg font-semibold rounded-lg"
                       disabled={isDisconnected}
+                      onClick={async () => await sell()}
                     >
                       Sell
                     </button>
