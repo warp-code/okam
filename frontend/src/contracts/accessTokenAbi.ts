@@ -182,11 +182,6 @@ export const accessTokenAbi = [
         type: "uint256",
         internalType: "uint256",
       },
-      {
-        name: "to",
-        type: "address",
-        internalType: "address",
-      },
     ],
     outputs: [],
     stateMutability: "payable",

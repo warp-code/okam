@@ -181,11 +181,6 @@
         "name": "ownershipTokenId",
         "type": "uint256",
         "internalType": "uint256"
-      },
-      {
-        "name": "to",
-        "type": "address",
-        "internalType": "address"
       }
     ],
     "outputs": [],
