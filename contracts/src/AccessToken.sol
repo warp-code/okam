@@ -52,6 +52,7 @@ contract AccessToken is ERC721 {
         payable(msg.sender).transfer(price);
 
         _earningsPerOwnershipToken[ownershipTokenId] += saleEarnings;
+        _supplyPerOwnershipToken[ownershipTokenId]--;
 
         _burn(tokenId);
     }
