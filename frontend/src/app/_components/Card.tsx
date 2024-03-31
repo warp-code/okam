@@ -44,7 +44,7 @@ export default function Card({
 
         <div className="flex flex-row justify-between">
           <span className="text-gray-50 font-medium py-4">
-            {formatEther(buyPrice)} ETH
+            {formatEther(buyPrice).slice(0, 6)} ETH
           </span>
 
           <button
