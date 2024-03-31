@@ -23,7 +23,7 @@ contract AccessToken is ERC721 {
         _ownershipTokenContractAddress = ownershipTokenContractAddress;
     }
 
-    function mint(uint256 ownershipTokenId, address to) external payable {
+    function mint(uint256 ownershipTokenId) external payable {
         uint256 tokenId = _nextTokenId++;
 
         uint256 price = buyPrice(ownershipTokenId);
@@ -36,7 +36,7 @@ contract AccessToken is ERC721 {
         _supplyPerOwnershipToken[ownershipTokenId]++;
         _relatedOwnershipTokens[tokenId] = ownershipTokenId;
 
-        _safeMint(to, tokenId);
+        _safeMint(msg.sender, tokenId);
     }
 
     function burn(uint256 tokenId) external {
