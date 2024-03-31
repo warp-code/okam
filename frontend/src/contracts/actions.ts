@@ -63,6 +63,7 @@ export async function mintOwnershipToken(fileCid: string): Promise<string> {
       data: log.data,
       eventName: "Transfer",
     });
+
     tokenId = transferEvent.args.tokenId.toString();
   }
 
@@ -127,6 +128,7 @@ export async function mintAccessToken(
       data: log.data,
       eventName: "Transfer",
     });
+
     tokenId = transferEvent.args.tokenId.toString();
   }
 
@@ -159,6 +161,7 @@ export async function burnAccessToken(tokenIdToBurn: bigint) {
       data: log.data,
       eventName: "Transfer",
     });
+
     tokenId = transferEvent.args.tokenId.toString();
   }
 
