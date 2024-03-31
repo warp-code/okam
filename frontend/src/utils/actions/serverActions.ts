@@ -1,6 +1,6 @@
 "use server";
 
-import { OkamCoverImage, OkamFile } from "@/app/types";
+import { OkamCoverImage, OkamFile, TokenHolder } from "@/app/types";
 import { createClient } from "@/utils/supabase/server";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { NFTStorage } from "nft.storage";
@@ -91,4 +91,15 @@ export async function deleteOne(
   id: number
 ): Promise<PostgrestSingleResponse<null>> {
   return await supabase.from(tableName).delete().eq("id", id);
+}
+
+export async function getTokensForAddress(
+  address: `0x${string}`,
+  datasetId: number
+): Promise<PostgrestSingleResponse<TokenHolder[]>> {
+  return await supabase
+    .from("token_holders")
+    .select<"*", TokenHolder>("*")
+    .eq("address", address)
+    .eq("dataset_id", datasetId);
 }

@@ -46,7 +46,7 @@ export async function mintOwnershipToken(fileCid: string): Promise<string> {
     abi: ownershipTokenAbi,
     address: process.env.NEXT_PUBLIC_OWNERSHIP_CONTRACT_ADDRESS,
     functionName: "registerOwner",
-    args: [BigInt(1), BigInt(1), BigInt(1), fileCid],
+    args: [BigInt(3), BigInt(1e14), BigInt(1e14), fileCid],
   });
 
   const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
@@ -110,7 +110,7 @@ export async function mintAccessToken(
     abi: accessTokenAbi,
     address: process.env.NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS,
     functionName: "mint",
-    args: [ownerhipTokenId, address],
+    args: [ownerhipTokenId],
     value: buyPrice,
   });
 
@@ -137,6 +137,14 @@ export async function mintAccessToken(
   }
 
   return tokenId;
+}
+
+export async function getAccessTokenBalance() {
+  return await readContract(wagmiConfig, {
+    abi: accessTokenAbi,
+    address: process.env.NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS,
+    functionName: "getBalance",
+  });
 }
 
 export async function burnAccessToken(tokenIdToBurn: bigint) {

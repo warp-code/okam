@@ -5,7 +5,12 @@ import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import LoadingIndicator from "@/app/_components/LoadingIndicator";
 import { useAccount } from "wagmi";
-import { create, deleteOne, getOne } from "@/utils/actions/serverActions";
+import {
+  create,
+  deleteOne,
+  getTokensForAddress,
+  getOne,
+} from "@/utils/actions/serverActions";
 import { Dataset, DatasetTradingInfo, TokenHolder } from "@/app/types";
 import DatasetChart from "@/app/details/[datasetId]/DatasetChart";
 import {
@@ -36,6 +41,32 @@ export default function Details() {
       if (error) {
         console.error(error);
         return {} as Dataset;
+      }
+
+      return data;
+    },
+  });
+
+  const {
+    isFetching: isTokenHolderQueryFetching,
+    error: tokenHolderQueryError,
+    data: tokenHolderQueryData,
+    refetch: tokenHolderQueryRefetch,
+  } = useQuery({
+    queryKey: ["token_holders", params.datasetId, address],
+    queryFn: async () => {
+      const { data, error } = await getTokensForAddress(
+        address as `0x${string}`,
+        Number.parseInt(params.datasetId as string)
+      );
+
+      if (error) {
+        console.error(
+          "An error occured while fetching tokens for address: ",
+          error
+        );
+
+        return [] as TokenHolder[];
       }
 
       return data;
@@ -82,11 +113,18 @@ export default function Details() {
   });
 
   if (datasetQueryError) {
-    return console.error(datasetQueryError);
+    console.error(datasetQueryError);
+    return;
   }
 
   if (datasetTradingInfoError) {
-    return console.error(datasetTradingInfoError);
+    console.error(datasetTradingInfoError);
+    return;
+  }
+
+  if (tokenHolderQueryError) {
+    console.error(tokenHolderQueryError);
+    return;
   }
 
   const buy = async () => {
@@ -117,26 +155,30 @@ export default function Details() {
     }
 
     await refetchDataTradingInfo();
+    await tokenHolderQueryRefetch();
   };
 
   const sell = async () => {
-    let accessTokenId;
+    if (!!tokenHolderQueryData?.length) {
+      const tokenHolder = tokenHolderQueryData[0];
 
-    try {
-      accessTokenId = await burnAccessToken(BigInt(1));
-    } catch (error) {
-      console.error("An error occured while burning access token: ", error);
-      return;
+      try {
+        await burnAccessToken(BigInt(tokenHolder.token_id));
+      } catch (error) {
+        console.error("An error occured while burning access token: ", error);
+        return;
+      }
+
+      const { error } = await deleteOne("token_holders", tokenHolder.id);
+
+      if (error) {
+        console.error("An error occured while deleting token holder: ", error);
+        return;
+      }
+
+      await refetchDataTradingInfo();
+      await tokenHolderQueryRefetch();
     }
-
-    const { error } = await deleteOne("token_holders", 1);
-
-    if (error) {
-      console.error("An error occured while deleting token holder: ", error);
-      return;
-    }
-
-    await refetchDataTradingInfo();
   };
 
   return (
@@ -278,7 +320,12 @@ export default function Details() {
                     <button
                       type="button"
                       className="btn btn-tertiary my-auto min-w-25 py-2 text-lg font-semibold rounded-lg"
-                      disabled={isDisconnected}
+                      disabled={
+                        isDisconnected ||
+                        !!tokenHolderQueryError ||
+                        isTokenHolderQueryFetching ||
+                        !tokenHolderQueryData?.length
+                      }
                       onClick={async () => await sell()}
                     >
                       Sell
