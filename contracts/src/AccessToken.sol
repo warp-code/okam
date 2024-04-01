@@ -66,21 +66,30 @@ contract AccessToken is ERC721 {
     }
 
     function buyPrice(uint256 ownershipTokenId) public view returns (uint256) {
-        (uint256 quadratic, uint256 linear, uint256 const) =
-            OwnershipToken(_ownershipTokenContractAddress).getCurveParams(ownershipTokenId);
+        (uint256 quadratic, uint256 linear, uint256 const) = _getCurveParams(ownershipTokenId);
 
         return _currentPrice(_supplyPerOwnershipToken[ownershipTokenId], quadratic, linear, const);
     }
 
     function sellPrice(uint256 ownershipTokenId) public view returns (uint256) {
-        return (buyPrice(ownershipTokenId) * 9) / 10;
+        if (_supplyPerOwnershipToken[ownershipTokenId] == 0) {
+            return 0;
+        }
+
+        (uint256 quadratic, uint256 linear, uint256 const) = _getCurveParams(ownershipTokenId);
+
+        return (_currentPrice(_supplyPerOwnershipToken[ownershipTokenId] - 1, quadratic, linear, const) * 9) / 10;
     }
 
     function earnings(uint256 ownershipTokenId) public view returns (uint256) {
         return _earningsPerOwnershipToken[ownershipTokenId];
     }
 
-    function _currentPrice(uint256 supply, uint256 quad, uint256 lin, uint256 const) internal pure returns (uint256) {
+    function _getCurveParams(uint256 ownershipTokenId) private view returns (uint256, uint256, uint256) {
+        return OwnershipToken(_ownershipTokenContractAddress).getCurveParams(ownershipTokenId);
+    }
+
+    function _currentPrice(uint256 supply, uint256 quad, uint256 lin, uint256 const) private pure returns (uint256) {
         return quad * (supply * supply) + lin * supply + const;
     }
 }
