@@ -71,8 +71,6 @@ export default function DatasetChart({
 
       const sellPrice = calculateSellPrice(buyPrice);
 
-      console.log(Number.parseFloat(formatEther(BigInt(buyPrice)).slice(0, 7)));
-
       buyPrices.push(
         Number.parseFloat(formatEther(BigInt(buyPrice)).slice(0, 7))
       );
