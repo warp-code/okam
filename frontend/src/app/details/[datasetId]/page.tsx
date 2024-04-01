@@ -312,8 +312,9 @@ export default function Details() {
                   <div className="flex flex-row justify-between">
                     <span className="text-gray-50 font-medium py-4">
                       Sell price:{" "}
-                      {!!datasetTradingInfoData?.sellPrice &&
-                        formatEther(datasetTradingInfoData.sellPrice)}{" "}
+                      {!!datasetTradingInfoData?.sellPrice
+                        ? formatEther(datasetTradingInfoData.sellPrice)
+                        : "-"}{" "}
                       ETH
                     </span>
 
