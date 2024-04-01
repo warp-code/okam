@@ -56,6 +56,7 @@ export default function DatasetChart({
     if (isNaN(currentSupply)) {
       return;
     }
+
     const datapoints = calculateQuantities(currentSupply);
 
     const buyPrices: number[] = [];
@@ -69,7 +70,7 @@ export default function DatasetChart({
         datapoint
       );
 
-      const sellPrice = calculateSellPrice(buyPrice);
+      const sellPrice = datapoint == 0 ? 0 : calculateSellPrice(buyPrice);
 
       buyPrices.push(
         Number.parseFloat(formatEther(BigInt(buyPrice)).slice(0, 7))
