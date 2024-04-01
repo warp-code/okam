@@ -31,6 +31,10 @@ export default function ImageUploader({
       } as OkamCoverImage;
     }
 
+    if (file.size > 10485760) {
+      console.error("File size is greater than 10 MB");
+    }
+
     const formData = new FormData();
 
     formData.append("file", file as File);
