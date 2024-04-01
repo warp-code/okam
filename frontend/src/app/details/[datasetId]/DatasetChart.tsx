@@ -70,7 +70,7 @@ export default function DatasetChart({
         datapoint
       );
 
-      const sellPrice = datapoint == 0 ? 0 : calculateSellPrice(buyPrice);
+      const sellPrice = datapoint === 0 ? 0 : calculateSellPrice(buyPrice);
 
       buyPrices.push(
         Number.parseFloat(formatEther(BigInt(buyPrice)).slice(0, 7))
