@@ -46,7 +46,7 @@ export async function mintOwnershipToken(fileCid: string): Promise<string> {
     abi: ownershipTokenAbi,
     address: process.env.NEXT_PUBLIC_OWNERSHIP_CONTRACT_ADDRESS,
     functionName: "registerOwner",
-    args: [BigInt(3), BigInt(1e14), BigInt(1e14), fileCid],
+    args: [BigInt(1e9), BigInt(1e14), BigInt(1e14), fileCid],
   });
 
   const txReceipt = await waitForTransactionReceipt(wagmiConfig, {

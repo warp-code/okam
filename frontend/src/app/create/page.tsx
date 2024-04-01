@@ -40,7 +40,7 @@ export default function Create() {
       description: model.description,
       file_cid: model.file.cid,
       author: address,
-      quadratic_param: 3,
+      quadratic_param: 1e9,
       linear_param: 1e14,
       constant_param: 1e14,
       categories: model.categories

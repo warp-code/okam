@@ -6,10 +6,6 @@ export function calculateBuyPrice(
   constantParam: number,
   quantity: number
 ): number {
-  if (quantity === 0) {
-    return 0;
-  }
-
   return Math.floor(
     quadraticParam * Math.pow(quantity, 2) +
       linearParam * quantity +
@@ -18,9 +14,5 @@ export function calculateBuyPrice(
 }
 
 export function calculateSellPrice(buyPrice: number): number {
-  if (buyPrice === 0) {
-    return 0;
-  }
-
   return Math.floor((buyPrice * 9) / 10);
 }

@@ -16,6 +16,7 @@ import {
 import annotationPlugin from "chartjs-plugin-annotation";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
+import { formatEther } from "viem";
 
 export default function DatasetChart({
   currentSupply,
@@ -52,6 +53,9 @@ export default function DatasetChart({
   };
 
   useEffect(() => {
+    if (isNaN(currentSupply)) {
+      return;
+    }
     const datapoints = calculateQuantities(currentSupply);
 
     const buyPrices: number[] = [];
@@ -67,18 +71,18 @@ export default function DatasetChart({
 
       const sellPrice = calculateSellPrice(buyPrice);
 
-      buyPrices.push(buyPrice);
-      sellPrices.push(sellPrice);
+      console.log(Number.parseFloat(formatEther(BigInt(buyPrice)).slice(0, 7)));
+
+      buyPrices.push(
+        Number.parseFloat(formatEther(BigInt(buyPrice)).slice(0, 7))
+      );
+      sellPrices.push(
+        Number.parseFloat(formatEther(BigInt(sellPrice)).slice(0, 7))
+      );
     }
 
-    // console.log("quantities: ", datapoints);
-    // console.log("buy prices:", buyPrices);
-    // console.log("sell prices:", sellPrices);
-
-    const labels = datapoints.map((x) => x.toString);
-
     setChartData({
-      labels: labels,
+      labels: datapoints.map((x) => x.toString()),
       datasets: [
         {
           data: buyPrices,
@@ -120,7 +124,7 @@ export default function DatasetChart({
           color: "#333741",
         },
         ticks: {
-          precision: 0,
+          precision: 7,
           color: "#333741",
           font: {
             lineHeight: "18px",
@@ -137,6 +141,7 @@ export default function DatasetChart({
       annotation: {
         annotations: [
           {
+            display: currentSupply > 0,
             type: "line",
             scaleID: "x",
             value: 5,
