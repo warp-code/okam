@@ -15,11 +15,7 @@ export type Category = {
   text: string;
 };
 
-export type CategoryModel = {
-  id: number;
-  text: string;
-  checked: boolean;
-};
+export type CategoryModel = Category & { checked: boolean };
 
 export type Dataset = {
   id: number;
@@ -63,4 +59,16 @@ export type TokenHolder = {
   address: `0x${string}`;
   token_id: string;
   dataset_id: number;
+};
+
+export type FormModel = {
+  name: string;
+  coverImage: {
+    name: string;
+    mimeType: string;
+    url: string;
+  };
+  description: string;
+  categories: CategoryModel[] | undefined;
+  file: File | undefined;
 };
