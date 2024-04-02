@@ -18,14 +18,17 @@ contract CounterScript is Script {
     }
 
     function run() public {
+        address awaiterAddr = 0xa83797616bCcDF090D659114C3d4630DA2926467;
+
         uint256 deployerPrivateKey = 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;
+
         vm.startBroadcast(deployerPrivateKey);
 
-        // uint256 ownershipTokenId = ownershipToken.registerOwner(0, 0, 100, "asdf");
+        uint256 ownershipTokenId = ownershipToken.registerOwner(0, 0, 100, "asdf");
 
-        // usageToken.mint{value: 100}(ownershipTokenId);
+        uint256 usageTokenId = usageToken.mint{value: 100}(ownershipTokenId);
 
-        // accessToken.mint(address(0xD4d0533E58ae1Ec26d68d4aaf335A40BE776dc2B));
-        // vm.stopBroadcast();
+        accessToken.mint(awaiterAddr, usageTokenId);
+        vm.stopBroadcast();
     }
 }

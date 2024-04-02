@@ -1,7 +1,18 @@
 [
   {
     "type": "constructor",
-    "inputs": [],
+    "inputs": [
+      {
+        "name": "ownershipTokenAddress",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "usageTokenAddress",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
     "stateMutability": "nonpayable"
   },
   {
@@ -62,6 +73,44 @@
   },
   {
     "type": "function",
+    "name": "getFileCid",
+    "inputs": [
+      {
+        "name": "tokenId",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "string",
+        "internalType": "string"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getUsageTokenId",
+    "inputs": [
+      {
+        "name": "tokenId",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "isApprovedForAll",
     "inputs": [
       {
@@ -92,6 +141,11 @@
         "name": "to",
         "type": "address",
         "internalType": "address"
+      },
+      {
+        "name": "usageTokenId",
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "outputs": [
