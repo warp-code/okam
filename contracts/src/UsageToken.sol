@@ -23,7 +23,7 @@ contract UsageToken is ERC721 {
         _ownershipTokenContractAddress = ownershipTokenContractAddress;
     }
 
-    function mint(uint256 ownershipTokenId) external payable {
+    function mint(uint256 ownershipTokenId) external payable returns (uint256){
         uint256 tokenId = _nextTokenId++;
 
         uint256 price = buyPrice(ownershipTokenId);
@@ -37,6 +37,8 @@ contract UsageToken is ERC721 {
         _relatedOwnershipTokens[tokenId] = ownershipTokenId;
 
         _safeMint(msg.sender, tokenId);
+
+        return tokenId;
     }
 
     function burn(uint256 tokenId) external {
@@ -91,5 +93,9 @@ contract UsageToken is ERC721 {
 
     function _currentPrice(uint256 supply, uint256 quad, uint256 lin, uint256 const) private pure returns (uint256) {
         return quad * (supply * supply) + lin * supply + const;
+    }
+
+    function getRelatedOwnershipTokenId(uint256 tokenId) external view returns (uint256) {
+        return _relatedOwnershipTokens[tokenId];
     }
 }

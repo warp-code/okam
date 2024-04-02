@@ -54,10 +54,6 @@ contract OwnershipToken is ERC721 {
     }
 
     function getFileCid(uint256 tokenId) external view returns (string memory) {
-        if (!_isAuthorized(ownerOf(tokenId), msg.sender, tokenId)) {
-            revert ERC721IncorrectOwner(msg.sender, tokenId, ownerOf(tokenId));
-        }
-
         return _details[tokenId].fileCid;
     }
 }

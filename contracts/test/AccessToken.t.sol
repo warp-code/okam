@@ -1,18 +1,40 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.20;
 
-import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "forge-std/Test.sol";
+import {UsageToken} from "../src/UsageToken.sol";
+import {OwnershipToken} from "../src/OwnershipToken.sol";
+import {AccessToken} from "../src/AccessToken.sol";
 
-contract AccessToken is ERC721 {
-    uint256 _nextTokenId = 0;
+contract AccessTokenTest is Test {
+    UsageToken usageToken;
+    OwnershipToken ownershipToken;
+    AccessToken accessToken;
 
-    constructor() ERC721("AccessToken", "ASDF") {}
+    function setUp() public {
+        ownershipToken = new OwnershipToken();
+        usageToken = new UsageToken(address(ownershipToken));
+        accessToken = new AccessToken(address(ownershipToken), address(usageToken));
+    }
 
-    function mint(address to) external returns (uint256) {
-        uint256 tokenId = _nextTokenId++;
+    function test_shouldMint() public {
+        string memory testCid = "asdfgh";
 
-        _safeMint(to, tokenId);
+        address caller = address(1337);
+        deal(caller, 100 ether);
 
-        return tokenId;
+        vm.startPrank(caller);
+
+        uint256 ot = ownershipToken.registerOwner(1, 1, 1, testCid);
+
+        uint256 usageTokenId = usageToken.mint{value: 1}(ot);
+
+        uint256 accessTokenId = accessToken.mint(caller, usageTokenId);
+
+        string memory actualCid = accessToken.getFileCid(accessTokenId);
+
+        vm.stopPrank();
+
+        assertEq(actualCid, testCid);
     }
 }

@@ -25,7 +25,7 @@ contract CounterScript is Script {
 
         // usageToken.mint{value: 100}(ownershipTokenId);
 
-        accessToken.mint(address(0xD4d0533E58ae1Ec26d68d4aaf335A40BE776dc2B));
-        vm.stopBroadcast();
+        // accessToken.mint(address(0xD4d0533E58ae1Ec26d68d4aaf335A40BE776dc2B));
+        // vm.stopBroadcast();
     }
 }
