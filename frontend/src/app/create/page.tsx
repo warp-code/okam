@@ -56,10 +56,10 @@ export default function Create() {
 
     const tokenId = await mintOwnershipToken(cid);
 
-    const formData = new FormData();
-
     const { ciphertext, dataToEncryptHash, accessControlConditions } =
       await lit.encryptForOwnershipToken(model.file!, tokenId);
+
+      const formData = new FormData();
 
     formData.append(
       "file",
@@ -77,9 +77,9 @@ export default function Create() {
       description: model.description,
       file_cid: uploadedFile.cid,
       author: address,
-      quadratic_param: 0,
-      linear_param: 0,
-      constant_param: 10000,
+      quadratic_param: 1e9,
+      linear_param: 1e14,
+      constant_param: 1e14,
       categories: model.categories
         ?.filter((category) => category.checked)
         .map((category) => category.id),
@@ -158,6 +158,14 @@ export default function Create() {
             Create dataset
           </h2>
 
+          {form.state.isSubmitting && (
+            <div className="min-w-full text-center">
+              <div className="h-24 w-24 mx-auto mt-40">
+                <LoadingIndicator />
+              </div>
+            </div>
+          )}
+
           <form.Field
             name="name"
             validators={{
@@ -173,6 +181,7 @@ export default function Create() {
                 handleOnChange={(event) =>
                   field.handleChange(event.target.value)
                 }
+                disabled={form.state.isSubmitting}
                 errors={field.state.meta.errors}
               />
             )}
@@ -193,6 +202,7 @@ export default function Create() {
                 handleOnChange={(file: OkamCoverImage) =>
                   field.handleChange(file)
                 }
+                disabled={form.state.isSubmitting}
                 errors={field.state.meta.errors}
               />
             )}
@@ -246,6 +256,7 @@ export default function Create() {
                                 subField.handleChange(event.target.checked);
                                 field.handleChange(field.state.value);
                               }}
+                              disabled={form.state.isSubmitting}
                             />
                           );
                         }}
@@ -278,6 +289,7 @@ export default function Create() {
                 handleOnChange={(file: File) => field.handleChange(file)}
                 handleClear={() => field.setValue(undefined)}
                 errors={field.state.meta.errors}
+                disabled={false}
               />
             )}
           </form.Field>

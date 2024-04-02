@@ -4,27 +4,29 @@ pragma solidity ^0.8.13;
 import {Script, console} from "forge-std/Script.sol";
 import {OwnershipToken} from "../src/OwnershipToken.sol";
 import {AccessToken} from "../src/AccessToken.sol";
+import {AsdfToken} from "../src/AsdfToken.sol";
 
 contract CounterScript is Script {
     OwnershipToken ownershipToken;
     AccessToken accessToken;
+    AsdfToken asdfToken;
 
 
     function setUp() public {
         ownershipToken = OwnershipToken(address(0x5FbDB2315678afecb367f032d93F642f64180aa3));
         accessToken = AccessToken(address(0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512));
-        
+        asdfToken = AsdfToken(address(0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0));
     }
 
     function run() public {
-        uint256 deployerPrivateKey = 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d;
+        uint256 deployerPrivateKey = 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;
         vm.startBroadcast(deployerPrivateKey);
 
-        address to = address(0x0ED22E365887E7c349fB1eF49972510d0587a6fd);
-        uint256 ownershipTokenId = ownershipToken.registerOwner(0, 0, 100, "asdf");
+        // uint256 ownershipTokenId = ownershipToken.registerOwner(0, 0, 100, "asdf");
 
-        accessToken.mint{value: 100}(ownershipTokenId, to);
+        // accessToken.mint{value: 100}(ownershipTokenId);
 
+        asdfToken.mint(address(0xD4d0533E58ae1Ec26d68d4aaf335A40BE776dc2B));
         vm.stopBroadcast();
     }
 }

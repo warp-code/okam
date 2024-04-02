@@ -11,6 +11,7 @@ export default function FileUploader({
   label,
   handleOnChange,
   handleClear,
+  disabled,
   errors,
 }: {
   name: string;
@@ -18,6 +19,7 @@ export default function FileUploader({
   label?: string | undefined;
   handleOnChange: Function;
   handleClear: MouseEventHandler<HTMLButtonElement>;
+  disabled: boolean;
   errors?: ValidationError[];
 }) {
   // const uploadFormData = async (file: File | undefined): Promise<OkamFile> => {
@@ -62,6 +64,7 @@ export default function FileUploader({
             type="button"
             className="text-gray-400 text-sm"
             onClick={handleClear}
+            disabled={disabled}
           >
             Delete
           </button>
@@ -111,6 +114,7 @@ export default function FileUploader({
                   return await handleOnChange(e.target.files[0]);
                 }
               }}
+              disabled={disabled}
               className="sr-only"
             />
           </div>

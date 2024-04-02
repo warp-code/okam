@@ -11,12 +11,14 @@ export default function ImageUploader({
   label,
   handleOnChange,
   errors,
+  disabled,
 }: {
   name: string;
   value?: OkamCoverImage | undefined;
   label?: string | undefined;
   errors?: ValidationError[];
   handleOnChange: Function;
+  disabled: boolean;
 }) {
   const uploadFormData = async (
     file: File | undefined
@@ -29,6 +31,10 @@ export default function ImageUploader({
         mimeType: "",
         url: "",
       } as OkamCoverImage;
+    }
+
+    if (file.size > 10485760) {
+      console.error("File size is greater than 10 MB");
     }
 
     const formData = new FormData();
@@ -102,6 +108,7 @@ export default function ImageUploader({
 
                 return await handleOnChange(fileInfo);
               }}
+              disabled={disabled}
               className="sr-only"
             />
           </>

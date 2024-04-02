@@ -1,13 +1,7 @@
-export const accessTokenAbi = [
+export const abi = [
   {
     type: "constructor",
-    inputs: [
-      {
-        name: "ownershipTokenContractAddress",
-        type: "address",
-        internalType: "address",
-      },
-    ],
+    inputs: [],
     stateMutability: "nonpayable",
   },
   {
@@ -49,57 +43,6 @@ export const accessTokenAbi = [
   },
   {
     type: "function",
-    name: "burn",
-    inputs: [
-      {
-        name: "tokenId",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "buyPrice",
-    inputs: [
-      {
-        name: "ownershipTokenId",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "earnings",
-    inputs: [
-      {
-        name: "ownershipTokenId",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
     name: "getApproved",
     inputs: [
       {
@@ -113,38 +56,6 @@ export const accessTokenAbi = [
         name: "",
         type: "address",
         internalType: "address",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "getBalance",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "getSupply",
-    inputs: [
-      {
-        name: "ownershipTokenId",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
       },
     ],
     stateMutability: "view",
@@ -178,13 +89,19 @@ export const accessTokenAbi = [
     name: "mint",
     inputs: [
       {
-        name: "ownershipTokenId",
+        name: "to",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
         type: "uint256",
         internalType: "uint256",
       },
     ],
-    outputs: [],
-    stateMutability: "payable",
+    stateMutability: "nonpayable",
   },
   {
     type: "function",
@@ -268,25 +185,6 @@ export const accessTokenAbi = [
     ],
     outputs: [],
     stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "sellPrice",
-    inputs: [
-      {
-        name: "ownershipTokenId",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    stateMutability: "view",
   },
   {
     type: "function",
@@ -553,22 +451,6 @@ export const accessTokenAbi = [
     inputs: [
       {
         name: "tokenId",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-  },
-  {
-    type: "error",
-    name: "PriceMismatch",
-    inputs: [
-      {
-        name: "received",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "expected",
         type: "uint256",
         internalType: "uint256",
       },

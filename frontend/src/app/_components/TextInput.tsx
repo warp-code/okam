@@ -10,6 +10,7 @@ export default function TextInput({
   placeholder,
   handleOnChange,
   errors,
+  disabled,
 }: {
   name: string;
   value: string;
@@ -17,6 +18,7 @@ export default function TextInput({
   placeholder?: string | undefined;
   handleOnChange: ChangeEventHandler<HTMLInputElement>;
   errors?: ValidationError[];
+  disabled: boolean;
 }) {
   return (
     <div className="flex flex-col gap-y-6 min-w-full">
@@ -36,6 +38,7 @@ export default function TextInput({
         value={value}
         placeholder={placeholder}
         onChange={handleOnChange}
+        disabled={disabled}
         className="block w-full border border-green-700 focus:border-green-400 focus:outline-none rounded-2xl px-6 py-4 bg-okam-dark-green placeholder:text-gray-400 text-gray-50"
       />
 

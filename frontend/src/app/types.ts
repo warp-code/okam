@@ -35,8 +35,12 @@ export type Dataset = {
   token_id: string;
 };
 
+export type DatasetModel = Dataset & {
+  buyPrice: bigint;
+};
+
 export type SearchModel = {
-  search: string,
+  search: string;
   categories: CategoryModel[];
 };
 
@@ -46,4 +50,17 @@ export type CreateModel = {
   description: string;
   categories: CategoryModel[];
   file: OkamFile;
+};
+
+export type DatasetTradingInfo = {
+  currentSupply: bigint;
+  buyPrice: bigint;
+  sellPrice: bigint;
+};
+
+export type TokenHolder = {
+  id: number;
+  address: `0x${string}`;
+  token_id: string;
+  dataset_id: number;
 };

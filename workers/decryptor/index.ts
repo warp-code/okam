@@ -1,5 +1,6 @@
-import { ethers, Network, Wallet } from "ethers";
+import { ethers, Interface, Network, Wallet } from "ethers";
 import dotenv from "dotenv";
+import { abi } from "./abi"
 
 // Load environment variables from .env file
 dotenv.config();
@@ -19,10 +20,16 @@ async function waitForNFTMint(
   contractAddress: string
 ): Promise<void> {
   console.log(process.env.RPC_PROVIDER_URL);
-  const provider = new ethers.JsonRpcProvider(process.env.RPC_PROVIDER_URL);
+  const network = new ethers.Network("anvil", 31337);
+  const provider = new ethers.JsonRpcProvider(
+    process.env.RPC_PROVIDER_URL,
+    network,
+    { polling: true, pollingInterval: 4000 }
+  );
+  const iface = new Interface(abi);
   const contract = new ethers.Contract(
     contractAddress,
-    ["event Transfer(address,address,uint256)"],
+    iface,
     provider
   );
 
