@@ -1,14 +1,27 @@
 from transformers import pipeline;
-
 from transformers import AutoTokenizer, LlamaForCausalLM, LlamaTokenizer, GPT2LMHeadModel;
-#, local_files_only=True
-tokenizer = AutoTokenizer.from_pretrained("Geralt-Targaryen/FantasyGPT-tiny")
-model = GPT2LMHeadModel.from_pretrained("Geralt-Targaryen/FantasyGPT-tiny")
 
+from typing import Dict
+
+from ray import serve
+from starlette.requests import Request
+
+import os
+
+tokenizer = AutoTokenizer.from_pretrained(os.getcwd() + "/.model/", local_files_only=True)
+model = GPT2LMHeadModel.from_pretrained(os.getcwd() + "/.model/", local_files_only=True)
 run_gen = pipeline("text-generation", model=model, tokenizer=tokenizer)
 
-input = "The witcher sat, bloodied and weary,"
+@serve.deployment(num_replicas=1, ray_actor_options={"num_cpus": 1, "num_gpus": 1})
+class ModelDeployment:
+  def __init__(self):
+     self.run_gen = pipeline("text-generation", model=model, tokenizer=tokenizer)
+  
+  def generate(self, text: str):
+      return run_gen(text)
 
-ner_results = run_gen(input)
+  async def __call__(self, http_request: Request) -> Dict:
+     data = await http_request.json()
+     return self.generate(data["text"])
 
-print(ner_results)
+model_app = ModelDeployment.bind()
