@@ -18,7 +18,7 @@ export default function TextInput({
   placeholder?: string | undefined;
   handleOnChange: ChangeEventHandler<HTMLInputElement>;
   errors?: ValidationError[];
-  disabled: boolean;
+  disabled?: boolean;
 }) {
   return (
     <div className="flex flex-col gap-y-6 min-w-full">
