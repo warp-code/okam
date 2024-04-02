@@ -90,7 +90,7 @@ export async function assignOwnershipTokenFile(
 export async function getSupply(ownerhipTokenId: bigint) {
   return await readContract(wagmiConfig, {
     abi: usageTokenAbi,
-    address: process.env.NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS,
+    address: process.env.NEXT_PUBLIC_USAGE_CONTRACT_ADDRESS,
     functionName: "getSupply",
     args: [ownerhipTokenId],
   });
@@ -99,7 +99,7 @@ export async function getSupply(ownerhipTokenId: bigint) {
 export async function getBuyPrice(ownerhipTokenId: bigint) {
   return await readContract(wagmiConfig, {
     abi: usageTokenAbi,
-    address: process.env.NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS,
+    address: process.env.NEXT_PUBLIC_USAGE_CONTRACT_ADDRESS,
     functionName: "buyPrice",
     args: [ownerhipTokenId],
   });
@@ -108,7 +108,7 @@ export async function getBuyPrice(ownerhipTokenId: bigint) {
 export async function getSellPrice(ownerhipTokenId: bigint) {
   return await readContract(wagmiConfig, {
     abi: usageTokenAbi,
-    address: process.env.NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS,
+    address: process.env.NEXT_PUBLIC_USAGE_CONTRACT_ADDRESS,
     functionName: "sellPrice",
     args: [ownerhipTokenId],
   });
@@ -121,7 +121,7 @@ export async function mintAccessToken(
 ) {
   const txHash = await writeContract(wagmiConfig, {
     abi: usageTokenAbi,
-    address: process.env.NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS,
+    address: process.env.NEXT_PUBLIC_USAGE_CONTRACT_ADDRESS,
     functionName: "mint",
     args: [ownerhipTokenId],
     value: buyPrice,
@@ -155,7 +155,7 @@ export async function mintAccessToken(
 export async function getAccessTokenBalance() {
   return await readContract(wagmiConfig, {
     abi: usageTokenAbi,
-    address: process.env.NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS,
+    address: process.env.NEXT_PUBLIC_USAGE_CONTRACT_ADDRESS,
     functionName: "getBalance",
   });
 }
@@ -163,7 +163,7 @@ export async function getAccessTokenBalance() {
 export async function burnAccessToken(tokenIdToBurn: bigint) {
   const txHash = await writeContract(wagmiConfig, {
     abi: usageTokenAbi,
-    address: process.env.NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS,
+    address: process.env.NEXT_PUBLIC_USAGE_CONTRACT_ADDRESS,
     functionName: "burn",
     args: [tokenIdToBurn],
   });
