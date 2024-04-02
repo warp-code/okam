@@ -11,6 +11,10 @@
         {
             "path": "./contracts",
             "name": "Contracts"
+        },
+        {
+            "path": "./workers",
+            "name": "Workers"
         }
     ],
     "settings": {

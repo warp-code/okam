@@ -9,7 +9,11 @@ import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useAccount } from "wagmi";
-import { create, getAll } from "@/utils/actions/serverActions";
+import {
+  create,
+  getAll,
+  uploadFileToIpfs,
+} from "@/utils/actions/serverActions";
 import {
   Category,
   CreateModel,
@@ -19,7 +23,23 @@ import {
 } from "@/app/types";
 import { useLayoutEffect } from "react";
 import LoadingIndicator from "@/app/_components/LoadingIndicator";
-import { mintOwnershipToken } from "@/contracts/actions";
+import {
+  assignOwnershipTokenFile,
+  mintOwnershipToken,
+} from "@/contracts/actions";
+import { lit } from "@/lib/lit";
+
+type FormModel = {
+  name: string;
+  coverImage: {
+    name: string;
+    mimeType: string;
+    url: string;
+  };
+  description: string;
+  categories: (Category & { checked: boolean })[] | undefined;
+  file: File | undefined;
+};
 
 export default function Create() {
   const { push } = useRouter();
@@ -31,20 +51,37 @@ export default function Create() {
     }
   }, [isDisconnected, push]);
 
-  const createDataset = async (model: CreateModel) => {
-    const tokenId = await mintOwnershipToken(model.file.cid);
+  const createDataset = async (model: FormModel) => {
+    let cid = "";
+
+    const tokenId = await mintOwnershipToken(cid);
+
+    const formData = new FormData();
+
+    const { ciphertext, dataToEncryptHash, accessControlConditions } =
+      await lit.encryptForOwnershipToken(model.file!, tokenId);
+
+    formData.append(
+      "file",
+      new File([ciphertext], model.file!.name, { type: model.file?.type })
+    );
+
+    const uploadedFile = await uploadFileToIpfs(formData);
+    // TODO: upload encrypted file
+
+    await assignOwnershipTokenFile(tokenId, uploadedFile.cid);
 
     const dataset = {
       name: model.name,
       cover_image: model.coverImage,
       description: model.description,
-      file_cid: model.file.cid,
+      file_cid: uploadedFile.cid,
       author: address,
       quadratic_param: 0,
       linear_param: 0,
       constant_param: 10000,
       categories: model.categories
-        .filter((category) => category.checked)
+        ?.filter((category) => category.checked)
         .map((category) => category.id),
       token_id: tokenId,
     } as Dataset;
@@ -76,7 +113,7 @@ export default function Create() {
     },
   });
 
-  const form = useForm({
+  const form = useForm<FormModel>({
     defaultValues: {
       name: "",
       coverImage: {
@@ -94,12 +131,8 @@ export default function Create() {
               checked: false,
             };
           }),
-      file: {
-        name: "",
-        mimeType: "",
-        cid: "",
-      },
-    } as CreateModel,
+      file: undefined,
+    },
     onSubmit: (event) => createDataset(event.value),
   });
 
@@ -193,7 +226,7 @@ export default function Create() {
               mode="array"
               validators={{
                 onChange: ({ value: categories }) =>
-                  !categories.some((category) => category.checked)
+                  !categories?.some((category) => category.checked)
                     ? "At least one category is required."
                     : undefined,
               }}
@@ -234,7 +267,7 @@ export default function Create() {
             name="file"
             validators={{
               onChange: ({ value: file }) =>
-                !file.cid.length ? "File is required." : undefined,
+                !file ? "File is required." : undefined,
             }}
           >
             {(field) => (
@@ -242,14 +275,8 @@ export default function Create() {
                 label="File"
                 name={field.name}
                 value={field.state.value}
-                handleOnChange={(file: OkamFile) => field.handleChange(file)}
-                handleClear={() =>
-                  field.setValue({
-                    name: "",
-                    cid: "",
-                    mimeType: "",
-                  } as OkamFile)
-                }
+                handleOnChange={(file: File) => field.handleChange(file)}
+                handleClear={() => field.setValue(undefined)}
                 errors={field.state.meta.errors}
               />
             )}

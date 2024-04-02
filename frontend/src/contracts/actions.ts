@@ -8,13 +8,13 @@ import { useState } from "react";
 
 type Result<T, E = any> =
   | {
-    ok: true;
-    data: T;
-  }
+      ok: true;
+      data: T;
+    }
   | {
-    ok: false;
-    error: E;
-  };
+      ok: false;
+      error: E;
+    };
 
 export function useMintOwnershipToken() {
   const [loading, setLoading] = useState(false);
@@ -66,4 +66,16 @@ export async function mintOwnershipToken(fileCid: string): Promise<string> {
   }
 
   return tokenId;
+}
+
+export async function assignOwnershipTokenFile(
+  tokenId: string,
+  fileCid: string
+): Promise<void> {
+  const txHash = await writeContract(wagmiConfig, {
+    abi: ownershipTokenAbi,
+    address: process.env.NEXT_PUBLIC_OWNERSHIP_CONTRACT_ADDRESS,
+    functionName: "assignFile",
+    args: [BigInt(tokenId), fileCid],
+  });
 }

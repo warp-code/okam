@@ -1,3 +1,5 @@
+"use client";
+
 import { litConfig } from "@/lib/config";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 
@@ -7,12 +9,57 @@ const client = new LitJsSdk.LitNodeClient({
 
 const chain = litConfig.ethChain;
 
+function getAccessControlConditions(tokenId: string) {
+  return [
+    {
+      chain: chain,
+      method: "ownerOf",
+      contractAddress: process.env.NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS,
+      standardContractType: "ERC721",
+      parameters: [tokenId],
+      returnValueTest: {
+        comparator: "=",
+        value: ":userAddress",
+      },
+    },
+  ];
+}
+
 class Lit {
   private litNodeClient: any;
 
   async connect() {
     await client.connect();
     this.litNodeClient = client;
+  }
+
+  async encryptForOwnershipToken(file: File, tokenId: string) {
+    if (!this.litNodeClient) {
+      await this.connect();
+    }
+
+    const authSig = await LitJsSdk.checkAndSignAuthMessage({
+      chain: chain,
+      nonce: "bepis",
+    });
+
+    const accessControlConditions = getAccessControlConditions(tokenId);
+
+    const { ciphertext, dataToEncryptHash } = await LitJsSdk.encryptFile(
+      {
+        authSig: authSig,
+        chain: chain,
+        file: file,
+        accessControlConditions: accessControlConditions,
+      },
+      this.litNodeClient
+    );
+
+    return {
+      ciphertext,
+      dataToEncryptHash,
+      accessControlConditions,
+    };
   }
 
   async encrypt(message: string) {
@@ -49,8 +96,35 @@ class Lit {
     return {
       ciphertext,
       dataToEncryptHash,
-      accessControlConditions
+      accessControlConditions,
     };
+  }
+
+  async decryptForOwnershipToken(
+    ciphertext: string,
+    dataToEncryptHash: string,
+    tokenId: string
+  ) {
+    if (!this.litNodeClient) {
+      await this.connect();
+    }
+
+    const authSig = await LitJsSdk.checkAndSignAuthMessage({
+      chain: chain,
+      nonce: "",
+    });
+
+    const decryptedBytes = await LitJsSdk.decryptToFile(
+      {
+        accessControlConditions: getAccessControlConditions(tokenId),
+        ciphertext,
+        dataToEncryptHash,
+        authSig,
+        chain: chain,
+      },
+      this.litNodeClient
+    );
+    return { decryptedBytes };
   }
 
   async decrypt(
@@ -85,4 +159,4 @@ class Lit {
 
 const lit = new Lit();
 
-export default lit;
+export { lit, getAccessControlConditions };

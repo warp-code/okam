@@ -24,6 +24,24 @@ export const ownershipTokenAbi = [
   },
   {
     type: "function",
+    name: "assignFile",
+    inputs: [
+      {
+        name: "tokenId",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "fileCid",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     name: "balanceOf",
     inputs: [
       {
