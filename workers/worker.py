@@ -1,14 +1,14 @@
 from transformers import pipeline;
 
-from transformers import AutoTokenizer, LlamaForCausalLM, LlamaTokenizer;
+from transformers import AutoTokenizer, LlamaForCausalLM, LlamaTokenizer, GPT2LMHeadModel;
 #, local_files_only=True
-tokenizer = LlamaTokenizer.from_pretrained("mrsteyk/memepp-llama-512v-6l-8h-256e")
-model = LlamaForCausalLM.from_pretrained("mrsteyk/memepp-llama-512v-6l-8h-256e")
+tokenizer = AutoTokenizer.from_pretrained("Geralt-Targaryen/FantasyGPT-tiny")
+model = GPT2LMHeadModel.from_pretrained("Geralt-Targaryen/FantasyGPT-tiny")
 
-nlp = pipeline("text-generation", model=model, tokenizer=tokenizer)
+run_gen = pipeline("text-generation", model=model, tokenizer=tokenizer)
 
-example = "Funny penguin"
+input = "The witcher sat, bloodied and weary,"
 
-ner_results = nlp(example, max_new_tokens=7)
+ner_results = run_gen(input)
 
 print(ner_results)
