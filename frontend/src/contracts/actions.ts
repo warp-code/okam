@@ -52,7 +52,7 @@ export async function mintOwnershipToken(fileCid: string): Promise<string> {
 
   const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
     hash: txHash,
-    confirmations: 2,
+    confirmations: 1,
   });
 
   let tokenId: string | undefined = undefined;
@@ -129,7 +129,7 @@ export async function mintAccessToken(
 
   const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
     hash: txHash,
-    confirmations: 2,
+    confirmations: 1,
   });
 
   let tokenId: string | undefined = undefined;
@@ -170,7 +170,7 @@ export async function burnAccessToken(tokenIdToBurn: bigint) {
 
   const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
     hash: txHash,
-    confirmations: 2,
+    confirmations: 1,
   });
 
   let tokenId: string | undefined = undefined;

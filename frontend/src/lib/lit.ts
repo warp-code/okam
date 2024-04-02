@@ -40,7 +40,7 @@ class Lit {
 
     const authSig = await LitJsSdk.checkAndSignAuthMessage({
       chain: chain,
-      nonce: "bepis",
+      nonce: "",
     });
 
     const accessControlConditions = getAccessControlConditions(tokenId);
