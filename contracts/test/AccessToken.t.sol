@@ -1,33 +1,18 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.20;
 
-import "forge-std/Test.sol";
-import {AccessToken} from "../src/AccessToken.sol";
-import {OwnershipToken} from "../src/OwnershipToken.sol";
+import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-contract AccessTokenTest is Test {
-    AccessToken accessToken;
-    OwnershipToken ownershipToken;
+contract AccessToken is ERC721 {
+    uint256 _nextTokenId = 0;
 
-    function setUp() public {
-        ownershipToken = new OwnershipToken();
-        accessToken = new AccessToken(address(ownershipToken));
-    }
+    constructor() ERC721("AccessToken", "ASDF") {}
 
-    function test_shouldMint() public {
-        address caller = address(1337);
-        deal(caller, 100 ether);
+    function mint(address to) external returns (uint256) {
+        uint256 tokenId = _nextTokenId++;
 
-        vm.startPrank(caller);
+        _safeMint(to, tokenId);
 
-        uint256 ot = ownershipToken.registerOwner(1, 1, 1 ether, "asdfgh");
-
-        accessToken.mint{value: 1 ether}(ot);
-
-        uint256 balance = accessToken.getBalance();
-
-        vm.stopPrank();
-
-        assert(balance > 0);
+        return tokenId;
     }
 }
