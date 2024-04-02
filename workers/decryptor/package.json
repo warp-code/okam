@@ -1,0 +1,16 @@
+{
+  "name": "workers",
+  "version": "1.0.0",
+  "license": "AGPLv3",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "ethers": "^6.11.1"
+  },
+  "scripts": {
+    "dev": "ts-node index.ts"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.3"
+  }
+}
