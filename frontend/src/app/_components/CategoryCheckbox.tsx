@@ -13,7 +13,7 @@ export default function CategoryCheckbox({
   label: string;
   value?: boolean;
   handleOnChange: ChangeEventHandler<HTMLInputElement>;
-  disabled: boolean;
+  disabled?: boolean;
 }) {
   return (
     <label

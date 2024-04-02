@@ -19,7 +19,7 @@ export default function FileUploader({
   label?: string | undefined;
   handleOnChange: Function;
   handleClear: MouseEventHandler<HTMLButtonElement>;
-  disabled: boolean;
+  disabled?: boolean;
   errors?: ValidationError[];
 }) {
   const uploadFormData = async (file: File | undefined): Promise<OkamFile> => {

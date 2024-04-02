@@ -18,7 +18,7 @@ export default function ImageUploader({
   label?: string | undefined;
   errors?: ValidationError[];
   handleOnChange: Function;
-  disabled: boolean;
+  disabled?: boolean;
 }) {
   const uploadFormData = async (
     file: File | undefined
