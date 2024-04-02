@@ -63,11 +63,7 @@ export type TokenHolder = {
 
 export type FormModel = {
   name: string;
-  coverImage: {
-    name: string;
-    mimeType: string;
-    url: string;
-  };
+  coverImage: OkamCoverImage;
   description: string;
   categories: CategoryModel[] | undefined;
   file: File | undefined;
