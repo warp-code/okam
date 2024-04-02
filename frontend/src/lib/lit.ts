@@ -14,7 +14,7 @@ function getAccessControlConditions(tokenId: string) {
     {
       chain: chain,
       method: "ownerOf",
-      contractAddress: process.env.NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS,
+      contractAddress: process.env.NEXT_PUBLIC_USAGE_CONTRACT_ADDRESS,
       standardContractType: "ERC721",
       parameters: [tokenId],
       returnValueTest: {
@@ -40,7 +40,7 @@ class Lit {
 
     const authSig = await LitJsSdk.checkAndSignAuthMessage({
       chain: chain,
-      nonce: "bepis",
+      nonce: "",
     });
 
     const accessControlConditions = getAccessControlConditions(tokenId);

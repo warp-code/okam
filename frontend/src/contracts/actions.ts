@@ -3,6 +3,7 @@
 import { wagmiConfig } from "@/lib/config";
 import { accessTokenAbi } from "@/contracts/accessTokenAbi";
 import { ownershipTokenAbi } from "@/contracts/ownershipTokenAbi";
+import { usageTokenAbi } from "@/contracts/usageTokenAbi";
 import {
   waitForTransactionReceipt,
   writeContract,
@@ -51,7 +52,7 @@ export async function mintOwnershipToken(fileCid: string): Promise<string> {
 
   const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
     hash: txHash,
-    confirmations: 2,
+    confirmations: 1,
   });
 
   let tokenId: string | undefined = undefined;
@@ -88,8 +89,8 @@ export async function assignOwnershipTokenFile(
 
 export async function getSupply(ownerhipTokenId: bigint) {
   return await readContract(wagmiConfig, {
-    abi: accessTokenAbi,
-    address: process.env.NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS,
+    abi: usageTokenAbi,
+    address: process.env.NEXT_PUBLIC_USAGE_CONTRACT_ADDRESS,
     functionName: "getSupply",
     args: [ownerhipTokenId],
   });
@@ -97,8 +98,8 @@ export async function getSupply(ownerhipTokenId: bigint) {
 
 export async function getBuyPrice(ownerhipTokenId: bigint) {
   return await readContract(wagmiConfig, {
-    abi: accessTokenAbi,
-    address: process.env.NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS,
+    abi: usageTokenAbi,
+    address: process.env.NEXT_PUBLIC_USAGE_CONTRACT_ADDRESS,
     functionName: "buyPrice",
     args: [ownerhipTokenId],
   });
@@ -106,8 +107,8 @@ export async function getBuyPrice(ownerhipTokenId: bigint) {
 
 export async function getSellPrice(ownerhipTokenId: bigint) {
   return await readContract(wagmiConfig, {
-    abi: accessTokenAbi,
-    address: process.env.NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS,
+    abi: usageTokenAbi,
+    address: process.env.NEXT_PUBLIC_USAGE_CONTRACT_ADDRESS,
     functionName: "sellPrice",
     args: [ownerhipTokenId],
   });
@@ -119,8 +120,8 @@ export async function mintAccessToken(
   buyPrice: bigint
 ) {
   const txHash = await writeContract(wagmiConfig, {
-    abi: accessTokenAbi,
-    address: process.env.NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS,
+    abi: usageTokenAbi,
+    address: process.env.NEXT_PUBLIC_USAGE_CONTRACT_ADDRESS,
     functionName: "mint",
     args: [ownerhipTokenId],
     value: buyPrice,
@@ -128,7 +129,7 @@ export async function mintAccessToken(
 
   const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
     hash: txHash,
-    confirmations: 2,
+    confirmations: 1,
   });
 
   let tokenId: string | undefined = undefined;
@@ -153,23 +154,23 @@ export async function mintAccessToken(
 
 export async function getAccessTokenBalance() {
   return await readContract(wagmiConfig, {
-    abi: accessTokenAbi,
-    address: process.env.NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS,
+    abi: usageTokenAbi,
+    address: process.env.NEXT_PUBLIC_USAGE_CONTRACT_ADDRESS,
     functionName: "getBalance",
   });
 }
 
 export async function burnAccessToken(tokenIdToBurn: bigint) {
   const txHash = await writeContract(wagmiConfig, {
-    abi: accessTokenAbi,
-    address: process.env.NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS,
+    abi: usageTokenAbi,
+    address: process.env.NEXT_PUBLIC_USAGE_CONTRACT_ADDRESS,
     functionName: "burn",
     args: [tokenIdToBurn],
   });
 
   const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
     hash: txHash,
-    confirmations: 2,
+    confirmations: 1,
   });
 
   let tokenId: string | undefined = undefined;

@@ -14,13 +14,7 @@ import {
   getAll,
   uploadFileToIpfs,
 } from "@/utils/actions/serverActions";
-import {
-  Category,
-  CreateModel,
-  Dataset,
-  OkamCoverImage,
-  OkamFile,
-} from "@/app/types";
+import { Category, Dataset, FormModel, OkamCoverImage } from "@/app/types";
 import { useLayoutEffect } from "react";
 import LoadingIndicator from "@/app/_components/LoadingIndicator";
 import {
@@ -28,18 +22,6 @@ import {
   mintOwnershipToken,
 } from "@/contracts/actions";
 import { lit } from "@/lib/lit";
-
-type FormModel = {
-  name: string;
-  coverImage: {
-    name: string;
-    mimeType: string;
-    url: string;
-  };
-  description: string;
-  categories: (Category & { checked: boolean })[] | undefined;
-  file: File | undefined;
-};
 
 export default function Create() {
   const { push } = useRouter();
@@ -52,14 +34,14 @@ export default function Create() {
   }, [isDisconnected, push]);
 
   const createDataset = async (model: FormModel) => {
-    let cid = "";
+    const cid = "";
 
     const tokenId = await mintOwnershipToken(cid);
 
     const { ciphertext, dataToEncryptHash, accessControlConditions } =
       await lit.encryptForOwnershipToken(model.file!, tokenId);
 
-      const formData = new FormData();
+    const formData = new FormData();
 
     formData.append(
       "file",
