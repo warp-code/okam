@@ -17,4 +17,19 @@ contract OwnershipTokenTest is Test {
 
         assert(a == 0);
     }
+
+    function test_shouldAssignFile() public {
+        string memory expectedCid = "should be this";
+
+        vm.startPrank(address(1337));
+        uint256 tokenId = ownershipToken.registerOwner(0, 0, 10000, "asdfgh");
+
+        ownershipToken.assignFile(tokenId, expectedCid);
+
+        string memory registeredCid = ownershipToken.getFileCid(tokenId);
+
+        assertEq(registeredCid, expectedCid);
+
+        vm.stopPrank();
+    }
 }

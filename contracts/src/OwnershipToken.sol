@@ -34,6 +34,14 @@ contract OwnershipToken is ERC721 {
         return tokenId;
     }
 
+    function assignFile(uint256 tokenId, string calldata fileCid) external {
+        if (!_isAuthorized(ownerOf(tokenId), msg.sender, tokenId)) {
+            revert ERC721IncorrectOwner(msg.sender, tokenId, ownerOf(tokenId));
+        }
+
+        _details[tokenId].fileCid = fileCid;
+    }
+
     /**
      * @dev Return a tuple of quadratic, linear and constant curve params
      */

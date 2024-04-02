@@ -74,6 +74,18 @@ export async function mintOwnershipToken(fileCid: string): Promise<string> {
   return tokenId;
 }
 
+export async function assignOwnershipTokenFile(
+  tokenId: string,
+  fileCid: string
+): Promise<void> {
+  const txHash = await writeContract(wagmiConfig, {
+    abi: ownershipTokenAbi,
+    address: process.env.NEXT_PUBLIC_OWNERSHIP_CONTRACT_ADDRESS,
+    functionName: "assignFile",
+    args: [BigInt(tokenId), fileCid],
+  });
+}
+
 export async function getSupply(ownerhipTokenId: bigint) {
   return await readContract(wagmiConfig, {
     abi: accessTokenAbi,

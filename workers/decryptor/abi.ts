@@ -1,4 +1,4 @@
-export const ownershipTokenAbi = [
+export const abi = [
   {
     type: "constructor",
     inputs: [],
@@ -17,24 +17,6 @@ export const ownershipTokenAbi = [
         name: "tokenId",
         type: "uint256",
         internalType: "uint256",
-      },
-    ],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "assignFile",
-    inputs: [
-      {
-        name: "tokenId",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "fileCid",
-        type: "string",
-        internalType: "string",
       },
     ],
     outputs: [],
@@ -80,54 +62,6 @@ export const ownershipTokenAbi = [
   },
   {
     type: "function",
-    name: "getCurveParams",
-    inputs: [
-      {
-        name: "tokenId",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "getFileCid",
-    inputs: [
-      {
-        name: "tokenId",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "string",
-        internalType: "string",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
     name: "isApprovedForAll",
     inputs: [
       {
@@ -149,6 +83,25 @@ export const ownershipTokenAbi = [
       },
     ],
     stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "mint",
+    inputs: [
+      {
+        name: "to",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
   },
   {
     type: "function",
@@ -181,40 +134,6 @@ export const ownershipTokenAbi = [
       },
     ],
     stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "registerOwner",
-    inputs: [
-      {
-        name: "quadraticParam",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "linearParam",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "constantParam",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "fileCid",
-        type: "string",
-        internalType: "string",
-      },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
   },
   {
     type: "function",

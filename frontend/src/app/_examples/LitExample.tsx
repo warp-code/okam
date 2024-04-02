@@ -2,7 +2,7 @@
 
 // Lit
 import { useState } from "react";
-import lit from "@/lib/lit";
+import { lit } from "@/lib/lit";
 
 export default function LitExample() {
   // LIT
