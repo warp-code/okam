@@ -3,7 +3,7 @@ export const accessTokenAbi = [
     type: "constructor",
     inputs: [
       {
-        name: "ownerTokenContractAddress",
+        name: "ownershipTokenContractAddress",
         type: "address",
         internalType: "address",
       },
@@ -119,6 +119,19 @@ export const accessTokenAbi = [
   },
   {
     type: "function",
+    name: "getBalance",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "getSupply",
     inputs: [
       {
@@ -168,11 +181,6 @@ export const accessTokenAbi = [
         name: "ownershipTokenId",
         type: "uint256",
         internalType: "uint256",
-      },
-      {
-        name: "to",
-        type: "address",
-        internalType: "address",
       },
     ],
     outputs: [],

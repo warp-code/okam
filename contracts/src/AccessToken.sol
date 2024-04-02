@@ -7,7 +7,7 @@ import {OwnershipToken} from "./OwnershipToken.sol";
 error PriceMismatch(uint256 received, uint256 expected);
 
 contract AccessToken is ERC721 {
-    address private immutable _ownerTokenContractAddress;
+    address private immutable _ownershipTokenContractAddress;
 
     uint256 private _nextTokenId;
 
@@ -15,15 +15,15 @@ contract AccessToken is ERC721 {
     mapping(uint256 => uint256) private _supplyPerOwnershipToken;
     mapping(uint256 => uint256) private _earningsPerOwnershipToken;
 
-    constructor(address ownerTokenContractAddress) ERC721("AccessToken", "ACC") {
-        if (ownerTokenContractAddress == address(0)) {
-            revert ERC721InvalidOwner(ownerTokenContractAddress);
+    constructor(address ownershipTokenContractAddress) ERC721("AccessToken", "ACC") {
+        if (ownershipTokenContractAddress == address(0)) {
+            revert ERC721InvalidOwner(ownershipTokenContractAddress);
         }
 
-        _ownerTokenContractAddress = ownerTokenContractAddress;
+        _ownershipTokenContractAddress = ownershipTokenContractAddress;
     }
 
-    function mint(uint256 ownershipTokenId, address to) external payable {
+    function mint(uint256 ownershipTokenId) external payable {
         uint256 tokenId = _nextTokenId++;
 
         uint256 price = buyPrice(ownershipTokenId);
@@ -33,13 +33,10 @@ contract AccessToken is ERC721 {
             revert PriceMismatch(msg.value, price);
         }
 
-        // Transfer the price of the token to contract
-        payable(address(this)).transfer(price);
-
         _supplyPerOwnershipToken[ownershipTokenId]++;
         _relatedOwnershipTokens[tokenId] = ownershipTokenId;
 
-        _safeMint(to, tokenId);
+        _safeMint(msg.sender, tokenId);
     }
 
     function burn(uint256 tokenId) external {
@@ -55,8 +52,13 @@ contract AccessToken is ERC721 {
         payable(msg.sender).transfer(price);
 
         _earningsPerOwnershipToken[ownershipTokenId] += saleEarnings;
+        _supplyPerOwnershipToken[ownershipTokenId]--;
 
         _burn(tokenId);
+    }
+
+    function getBalance() external view returns (uint256) {
+        return address(this).balance;
     }
 
     function getSupply(uint256 ownershipTokenId) external view returns (uint256) {
@@ -64,21 +66,30 @@ contract AccessToken is ERC721 {
     }
 
     function buyPrice(uint256 ownershipTokenId) public view returns (uint256) {
-        (uint256 quadratic, uint256 linear, uint256 const) =
-            OwnershipToken(_ownerTokenContractAddress).getCurveParams(ownershipTokenId);
+        (uint256 quadratic, uint256 linear, uint256 const) = _getCurveParams(ownershipTokenId);
 
         return _currentPrice(_supplyPerOwnershipToken[ownershipTokenId], quadratic, linear, const);
     }
 
     function sellPrice(uint256 ownershipTokenId) public view returns (uint256) {
-        return (buyPrice(ownershipTokenId) * 9) / 10;
+        if (_supplyPerOwnershipToken[ownershipTokenId] == 0) {
+            return 0;
+        }
+
+        (uint256 quadratic, uint256 linear, uint256 const) = _getCurveParams(ownershipTokenId);
+
+        return (_currentPrice(_supplyPerOwnershipToken[ownershipTokenId] - 1, quadratic, linear, const) * 9) / 10;
     }
 
     function earnings(uint256 ownershipTokenId) public view returns (uint256) {
         return _earningsPerOwnershipToken[ownershipTokenId];
     }
 
-    function _currentPrice(uint256 supply, uint256 quad, uint256 lin, uint256 const) internal pure returns (uint256) {
+    function _getCurveParams(uint256 ownershipTokenId) private view returns (uint256, uint256, uint256) {
+        return OwnershipToken(_ownershipTokenContractAddress).getCurveParams(ownershipTokenId);
+    }
+
+    function _currentPrice(uint256 supply, uint256 quad, uint256 lin, uint256 const) private pure returns (uint256) {
         return quad * (supply * supply) + lin * supply + const;
     }
 }

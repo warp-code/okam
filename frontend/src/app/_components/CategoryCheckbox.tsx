@@ -7,11 +7,13 @@ export default function CategoryCheckbox({
   label,
   value,
   handleOnChange,
+  disabled,
 }: {
   name: string;
   label: string;
   value?: boolean;
   handleOnChange: ChangeEventHandler<HTMLInputElement>;
+  disabled: boolean;
 }) {
   return (
     <label
@@ -28,6 +30,7 @@ export default function CategoryCheckbox({
         className="sr-only"
         checked={value ?? false}
         onChange={handleOnChange}
+        disabled={disabled}
       />
     </label>
   );

@@ -3,6 +3,7 @@
 import { OkamCoverImage } from "@/app/types";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { formatEther } from "viem";
 
 export default function Card({
   id,
@@ -15,7 +16,7 @@ export default function Card({
   image: OkamCoverImage;
   title: string;
   description: string;
-  buyPrice: number;
+  buyPrice: bigint;
 }) {
   const router = useRouter();
 
@@ -42,7 +43,9 @@ export default function Card({
         </div>
 
         <div className="flex flex-row justify-between">
-          <span className="text-gray-50 font-medium py-4">{buyPrice} FIL</span>
+          <span className="text-gray-50 font-medium py-4">
+            {formatEther(buyPrice).slice(0, 6)} ETH
+          </span>
 
           <button
             type="button"
