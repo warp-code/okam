@@ -111,30 +111,6 @@ export const accessTokenAbi = [
   },
   {
     type: "function",
-    name: "hasAccess",
-    inputs: [
-      {
-        name: "userAddress",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "usageTokenId",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "bool",
-        internalType: "bool",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
     name: "isApprovedForAll",
     inputs: [
       {

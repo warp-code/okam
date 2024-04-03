@@ -13,13 +13,36 @@ function getAccessControlConditions(tokenId: string) {
   return [
     {
       chain: chain,
-      method: "ownerOf",
-      contractAddress: process.env.NEXT_PUBLIC_USAGE_CONTRACT_ADDRESS,
-      standardContractType: "ERC721",
-      parameters: [tokenId],
+      functionName: "hasAccess",
+      contractAddress: process.env.NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS,
+      functionParams: [":userAddress", tokenId],
       returnValueTest: {
         comparator: "=",
-        value: ":userAddress",
+        value: "true",
+      },
+      functionAbi: {
+        type: "function",
+        name: "hasAccess",
+        inputs: [
+          {
+            name: "userAddress",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "usageTokenId",
+            type: "uint256",
+            internalType: "uint256",
+          },
+        ],
+        outputs: [
+          {
+            name: "",
+            type: "bool",
+            internalType: "bool",
+          },
+        ],
+        stateMutability: "view",
       },
     },
   ];
@@ -62,6 +85,33 @@ class Lit {
     };
   }
 
+  async decryptForOwnershipToken(
+    ciphertext: string,
+    dataToEncryptHash: string,
+    tokenId: string
+  ) {
+    if (!this.litNodeClient) {
+      await this.connect();
+    }
+
+    const authSig = await LitJsSdk.checkAndSignAuthMessage({
+      chain: chain,
+      nonce: "",
+    });
+
+    const decryptedBytes = await LitJsSdk.decryptToFile(
+      {
+        accessControlConditions: getAccessControlConditions(tokenId),
+        ciphertext,
+        dataToEncryptHash,
+        authSig,
+        chain: chain,
+      },
+      this.litNodeClient
+    );
+    return { decryptedBytes };
+  }
+
   async encrypt(message: string) {
     if (!this.litNodeClient) {
       await this.connect();
@@ -98,33 +148,6 @@ class Lit {
       dataToEncryptHash,
       accessControlConditions,
     };
-  }
-
-  async decryptForOwnershipToken(
-    ciphertext: string,
-    dataToEncryptHash: string,
-    tokenId: string
-  ) {
-    if (!this.litNodeClient) {
-      await this.connect();
-    }
-
-    const authSig = await LitJsSdk.checkAndSignAuthMessage({
-      chain: chain,
-      nonce: "",
-    });
-
-    const decryptedBytes = await LitJsSdk.decryptToFile(
-      {
-        accessControlConditions: getAccessControlConditions(tokenId),
-        ciphertext,
-        dataToEncryptHash,
-        authSig,
-        chain: chain,
-      },
-      this.litNodeClient
-    );
-    return { decryptedBytes };
   }
 
   async decrypt(

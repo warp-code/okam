@@ -1,6 +1,6 @@
 import { ethers, Interface, Network, Wallet } from "ethers";
 import dotenv from "dotenv";
-import { abi } from "./abi"
+import { accessTokenAbi } from "./accessTokenAbi";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -26,12 +26,8 @@ async function waitForNFTMint(
     network,
     { polling: true, pollingInterval: 4000 }
   );
-  const iface = new Interface(abi);
-  const contract = new ethers.Contract(
-    contractAddress,
-    iface,
-    provider
-  );
+  const iface = new Interface(accessTokenAbi);
+  const contract = new ethers.Contract(contractAddress, iface, provider);
 
   console.log("Waiting for NFT mint...");
 
