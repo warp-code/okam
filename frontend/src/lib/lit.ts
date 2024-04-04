@@ -1,7 +1,18 @@
-"use client";
-
-import { litConfig } from "@/lib/config";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
+
+type LitConfig = {
+  ethChain: "sepolia",
+  litNetwork: "cayenne",
+  standardContractType: "",
+  comparator: "="
+}
+
+const litConfig: LitConfig = {
+  ethChain: "sepolia",
+  litNetwork: "cayenne",
+  standardContractType: "",
+  comparator: "="
+};
 
 const client = new LitJsSdk.LitNodeClient({
   litNetwork: litConfig.litNetwork,
@@ -14,13 +25,14 @@ function getAccessControlConditions(tokenId: string) {
     {
       chain: chain,
       method: "hasAccess",
+      standardContractType: litConfig.standardContractType,
       contractAddress: process.env.NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS,
       parameters: [":userAddress", tokenId],
       returnValueTest: {
-        comparator: "=",
+        comparator: litConfig.comparator,
         value: "true",
       },
-      functionAbi: {
+      methodAbi: {
         type: "function",
         name: "hasAccess",
         inputs: [
@@ -110,73 +122,6 @@ class Lit {
       this.litNodeClient
     );
     return { decryptedBytes };
-  }
-
-  async encrypt(message: string) {
-    if (!this.litNodeClient) {
-      await this.connect();
-    }
-
-    const authSig = await LitJsSdk.checkAndSignAuthMessage({
-      chain: chain,
-      nonce: "",
-    });
-
-    const accessControlConditions = [
-      {
-        chain: chain,
-        method: "eth_getBalance",
-        contractAddress: "",
-        standardContractType: "",
-        parameters: [":userAddress", "latest"],
-        returnValueTest: { comparator: ">=", value: "1" },
-      },
-    ];
-
-    const { ciphertext, dataToEncryptHash } = await LitJsSdk.encryptString(
-      {
-        authSig,
-        chain: chain,
-        dataToEncrypt: message,
-        accessControlConditions,
-      },
-      this.litNodeClient
-    );
-
-    return {
-      ciphertext,
-      dataToEncryptHash,
-      accessControlConditions,
-    };
-  }
-
-  async decrypt(
-    ciphertext: string,
-    dataToEncryptHash: string,
-    accessControlConditions: any
-  ) {
-    if (!this.litNodeClient) {
-      await this.connect();
-    }
-
-    const authSig = await LitJsSdk.checkAndSignAuthMessage({
-      chain: chain,
-      nonce: "",
-    });
-
-    console.log(authSig);
-
-    const decryptedString = await LitJsSdk.decryptToString(
-      {
-        accessControlConditions,
-        ciphertext,
-        dataToEncryptHash,
-        authSig,
-        chain: chain,
-      },
-      this.litNodeClient
-    );
-    return { decryptedString };
   }
 }
 
