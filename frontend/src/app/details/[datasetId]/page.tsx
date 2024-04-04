@@ -359,7 +359,7 @@ export default function Details() {
 
                   {tokenHolderQueryData?.length && (
                     <form
-                      className="flex flex-row justify-between"
+                      className="flex flex-row gap-x-4"
                       onSubmit={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -367,36 +367,38 @@ export default function Details() {
                         void form.handleSubmit();
                       }}
                     >
-                      <form.Field
-                        name="address"
-                        validators={{
-                          onChange: ({ value: address }) =>
-                            !address.length
-                              ? "Address is required."
-                              : undefined,
-                        }}
-                      >
-                        {(field) => (
-                          <TextInput
-                            name={field.name}
-                            value={field.state.value}
-                            handleOnChange={(event) =>
-                              field.handleChange(
-                                event.target.value as `0x${string}`
-                              )
-                            }
-                            disabled={form.state.isSubmitting}
-                            errors={field.state.meta.errors}
-                            label="Address"
-                          />
-                        )}
-                      </form.Field>
+                      <div className="flex flex-grow">
+                        <form.Field
+                          name="address"
+                          validators={{
+                            onChange: ({ value: address }) =>
+                              !address.length
+                                ? "Address is required."
+                                : undefined,
+                          }}
+                        >
+                          {(field) => (
+                            <TextInput
+                              name={field.name}
+                              value={field.state.value}
+                              handleOnChange={(event) =>
+                                field.handleChange(
+                                  event.target.value as `0x${string}`
+                                )
+                              }
+                              disabled={form.state.isSubmitting}
+                              errors={field.state.meta.errors}
+                              label="Address"
+                            />
+                          )}
+                        </form.Field>
+                      </div>
 
                       <form.Subscribe>
                         {(formState) => (
                           <button
                             type="submit"
-                            className="btn btn-sm btn-primary"
+                            className="btn btn-sm btn-primary mt-auto"
                             disabled={!formState.canSubmit}
                           >
                             Mint usage token
