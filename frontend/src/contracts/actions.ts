@@ -198,7 +198,7 @@ export async function mintAccessToken(
 ) {
   const txHash = await writeContract(wagmiConfig, {
     abi: accessTokenAbi,
-    address: process.env.NEXT_PUBLIC_USAGE_CONTRACT_ADDRESS,
+    address: process.env.NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS,
     functionName: "mint",
     args: [address, usageTokenId],
   });
