@@ -1,6 +1,7 @@
 import { ethers, Interface, Network, Wallet } from "ethers";
 import dotenv from "dotenv";
 import { accessTokenAbi } from "./accessTokenAbi";
+import { lit } from "./lit";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -14,20 +15,21 @@ async function generateWallet(): Promise<ethers.HDNodeWallet> {
   return wallet;
 }
 
+const contractAddress = process.env.CONTRACT_ADDRESS;
+
+const network = new ethers.Network("sepolia", 11155111);
+const provider = new ethers.JsonRpcProvider(
+  process.env.RPC_PROVIDER_URL,
+  network,
+  { polling: true, pollingInterval: 5000 }
+);
+
+const iface = new Interface(accessTokenAbi);
+const contract = new ethers.Contract(contractAddress, iface, provider);
+
 // Function to wait for an NFT to be minted to the given wallet address
-async function waitForNFTMint(
-  wallet: ethers.HDNodeWallet,
-  contractAddress: string
-): Promise<void> {
+async function waitForNFTMint(wallet: ethers.HDNodeWallet): Promise<void> {
   console.log(process.env.RPC_PROVIDER_URL);
-  const network = new ethers.Network("sepolia", 11155111);
-  const provider = new ethers.JsonRpcProvider(
-    process.env.RPC_PROVIDER_URL,
-    network,
-    { polling: true, pollingInterval: 5000 }
-  );
-  const iface = new Interface(accessTokenAbi);
-  const contract = new ethers.Contract(contractAddress, iface, provider);
 
   console.log("Waiting for NFT mint...");
 
@@ -45,17 +47,20 @@ function run() {
   // Populate this function with your logic
   console.log("NFT received. Running your logic...");
   console.log("Bepis");
+
+  process.exit(0);
 }
 
 // Main function to generate wallet and wait for NFT mint
 async function main() {
   const wallet = await generateWallet();
-  const contractAddress = process.env.CONTRACT_ADDRESS;
-  console.log(contractAddress);
+
+  console.log("Contract address:", contractAddress);
+
   if (!contractAddress) {
     throw new Error("CONTRACT_ADDRESS environment variable is not set.");
   }
-  await waitForNFTMint(wallet, contractAddress);
+  await waitForNFTMint(wallet);
 }
 
 // Run the main function
