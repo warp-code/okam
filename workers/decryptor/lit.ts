@@ -1,20 +1,30 @@
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
+import { SiweMessage } from "siwe";
+import { ethers } from "ethers";
 
 import dotenv from "dotenv";
+
 dotenv.config();
 
 type LitConfig = {
-  ethChain: "sepolia",
-  litNetwork: "cayenne",
-  standardContractType: "",
-  comparator: "="
-}
+  ethChain: "sepolia";
+  litNetwork: "cayenne";
+  standardContractType: "";
+  comparator: "=";
+};
+
+export type AuthSig = {
+  sig: string;
+  derivedVia: string;
+  signedMessage: string;
+  address: string;
+};
 
 const litConfig: LitConfig = {
   ethChain: "sepolia",
   litNetwork: "cayenne",
   standardContractType: "",
-  comparator: "="
+  comparator: "=",
 };
 
 const client = new LitJsSdk.LitNodeClient({
@@ -88,7 +98,7 @@ class Lit {
         authSig: authSig,
         chain: chain,
         file: file,
-        evmContractConditions: accessControlConditions
+        evmContractConditions: accessControlConditions,
       },
       this.litNodeClient
     );
@@ -103,16 +113,12 @@ class Lit {
   async decryptForOwnershipToken(
     ciphertext: string,
     dataToEncryptHash: string,
-    tokenId: string
+    tokenId: string,
+    authSig: AuthSig
   ) {
     if (!this.litNodeClient) {
       await this.connect();
     }
-    
-    const authSig = await LitJsSdk.checkAndSignAuthMessage({
-      chain: chain,
-      nonce: "",
-    });
 
     const decryptedBytes = await LitJsSdk.decryptToFile(
       {
@@ -124,7 +130,49 @@ class Lit {
       },
       this.litNodeClient
     );
+    
     return { decryptedBytes };
+  }
+
+  async getSignedMessage(wallet: ethers.HDNodeWallet) {
+    if (!this.litNodeClient) {
+      await this.connect();
+    }
+
+    let nonce = this.litNodeClient.getLatestBlockhash();
+    console.log("WALLET ADDRESS:", wallet.address);
+    const address = wallet.address;
+
+    const domain = "localhost";
+    const origin = "http://localhost:3000/";
+    const statement = "Okam is awesome.";
+    const expirationTime = new Date(
+      Date.now() + 1000 * 60 * 60 * 6
+    ).toISOString(); //6 hours from now
+
+    const siweMessage = new SiweMessage({
+      domain,
+      address: address,
+      statement,
+      uri: origin,
+      version: "1",
+      chainId: 11155111,
+      nonce,
+      expirationTime,
+    });
+
+    const messageToSign = siweMessage.prepareMessage();
+
+    const signature = await wallet.signMessage(messageToSign);
+
+    const authSig = {
+      sig: signature,
+      derivedVia: `web3.eth.personal.sign`,
+      signedMessage: messageToSign,
+      address: address,
+    };
+
+    return authSig;
   }
 }
 

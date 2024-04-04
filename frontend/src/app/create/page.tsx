@@ -39,14 +39,11 @@ export default function Create() {
     const tokenId = await mintOwnershipToken(cid);
 
     const { ciphertext, dataToEncryptHash, accessControlConditions } =
-      await lit.encryptForOwnershipToken(model.file!, tokenId);
+      await lit.encryptForOwnershipToken(new Blob([model.file!]), tokenId);
 
     const formData = new FormData();
 
-    formData.append(
-      "file",
-      new File([ciphertext], model.file!.name, { type: model.file?.type })
-    );
+    formData.append("file", new Blob([ciphertext]));
 
     const uploadedFile = await uploadFileToIpfs(formData);
     // TODO: upload encrypted file

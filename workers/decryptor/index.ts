@@ -40,18 +40,20 @@ async function waitForNFTMint(wallet: ethers.HDNodeWallet): Promise<void> {
     console.log("Found transfer event to:", to);
     if (to === wallet.address) {
       console.log("NFT minted to your wallet!");
-      run(tokenId); // Call your run function once NFT is received
+      run(tokenId, wallet); // Call your run function once NFT is received
     }
   });
 }
 
 // Empty run function to be populated with actual logic
-async function run(tokenId: BigInt) {
+async function run(tokenId: BigInt, wallet: ethers.HDNodeWallet) {
   // Populate this function with your logic
   console.log("NFT received. Running your logic...");
 
   const ownershipTokenId = await contract.getOwnershipTokenId(tokenId);
   console.log("ownership token id", (ownershipTokenId as BigInt).toString());
+  const usageTokenId = await contract.getUsageTokenId(tokenId);
+  console.log("usage token id", (usageTokenId as BigInt).toString());
 
   const modelResp = await getOneByTokenId<Dataset>(
     "datasets",
@@ -59,17 +61,15 @@ async function run(tokenId: BigInt) {
   );
 
   const { data_to_encrypt_hash, file_cid } = modelResp.data;
-
   const fileResp = await axios.get(`https://nftstorage.link/ipfs/${file_cid}`);
 
   const fileContents = fileResp.data as string;
 
-  console.log(fileContents);
-
   const { decryptedBytes } = await lit.decryptForOwnershipToken(
     fileContents,
     data_to_encrypt_hash,
-    tokenId.toString()
+    usageTokenId.toString(),
+    await lit.getSignedMessage(wallet)
   );
 
   fs.writeFileSync("./test.jpg", decryptedBytes);

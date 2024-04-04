@@ -68,7 +68,7 @@ class Lit {
     this.litNodeClient = client;
   }
 
-  async encryptForOwnershipToken(file: File, tokenId: string) {
+  async encryptForOwnershipToken(file: File | Blob, tokenId: string) {
     if (!this.litNodeClient) {
       await this.connect();
     }
