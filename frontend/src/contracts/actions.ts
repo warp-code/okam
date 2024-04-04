@@ -114,9 +114,8 @@ export async function getSellPrice(ownerhipTokenId: bigint) {
   });
 }
 
-export async function mintAccessToken(
+export async function mintUsageToken(
   ownerhipTokenId: bigint,
-  address: `0x${string}`,
   buyPrice: bigint
 ) {
   const txHash = await writeContract(wagmiConfig, {
@@ -125,6 +124,83 @@ export async function mintAccessToken(
     functionName: "mint",
     args: [ownerhipTokenId],
     value: buyPrice,
+  });
+
+  const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+    hash: txHash,
+    confirmations: 1,
+  });
+
+  let tokenId: string | undefined = undefined;
+
+  for (const log of txReceipt.logs) {
+    const transferEvent = decodeEventLog({
+      abi: usageTokenAbi,
+      topics: log.topics,
+      data: log.data,
+      eventName: "Transfer",
+    });
+
+    tokenId = transferEvent.args.tokenId.toString();
+  }
+
+  if (!tokenId) {
+    throw "No Transfer event was emitted as part of Usage token minting.";
+  }
+
+  return tokenId;
+}
+
+export async function getUsageTokenBalance() {
+  return await readContract(wagmiConfig, {
+    abi: usageTokenAbi,
+    address: process.env.NEXT_PUBLIC_USAGE_CONTRACT_ADDRESS,
+    functionName: "getBalance",
+  });
+}
+
+export async function burnUsageToken(tokenIdToBurn: bigint) {
+  const txHash = await writeContract(wagmiConfig, {
+    abi: usageTokenAbi,
+    address: process.env.NEXT_PUBLIC_USAGE_CONTRACT_ADDRESS,
+    functionName: "burn",
+    args: [tokenIdToBurn],
+  });
+
+  const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+    hash: txHash,
+    confirmations: 1,
+  });
+
+  let tokenId: string | undefined = undefined;
+
+  for (const log of txReceipt.logs) {
+    const transferEvent = decodeEventLog({
+      abi: usageTokenAbi,
+      topics: log.topics,
+      data: log.data,
+      eventName: "Transfer",
+    });
+
+    tokenId = transferEvent.args.tokenId.toString();
+  }
+
+  if (!tokenId) {
+    throw "No Transfer event was emitted as part of Usage token burning.";
+  }
+
+  return tokenId;
+}
+
+export async function mintAccessToken(
+  address: `0x${string}`,
+  usageTokenId: bigint
+) {
+  const txHash = await writeContract(wagmiConfig, {
+    abi: accessTokenAbi,
+    address: process.env.NEXT_PUBLIC_USAGE_CONTRACT_ADDRESS,
+    functionName: "mint",
+    args: [address, usageTokenId],
   });
 
   const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
@@ -147,47 +223,6 @@ export async function mintAccessToken(
 
   if (!tokenId) {
     throw "No Transfer event was emitted as part of Access token minting.";
-  }
-
-  return tokenId;
-}
-
-export async function getAccessTokenBalance() {
-  return await readContract(wagmiConfig, {
-    abi: usageTokenAbi,
-    address: process.env.NEXT_PUBLIC_USAGE_CONTRACT_ADDRESS,
-    functionName: "getBalance",
-  });
-}
-
-export async function burnAccessToken(tokenIdToBurn: bigint) {
-  const txHash = await writeContract(wagmiConfig, {
-    abi: usageTokenAbi,
-    address: process.env.NEXT_PUBLIC_USAGE_CONTRACT_ADDRESS,
-    functionName: "burn",
-    args: [tokenIdToBurn],
-  });
-
-  const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
-    hash: txHash,
-    confirmations: 1,
-  });
-
-  let tokenId: string | undefined = undefined;
-
-  for (const log of txReceipt.logs) {
-    const transferEvent = decodeEventLog({
-      abi: accessTokenAbi,
-      topics: log.topics,
-      data: log.data,
-      eventName: "Transfer",
-    });
-
-    tokenId = transferEvent.args.tokenId.toString();
-  }
-
-  if (!tokenId) {
-    throw "No Transfer event was emitted as part of Access token burning.";
   }
 
   return tokenId;

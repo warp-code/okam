@@ -5,6 +5,7 @@ import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {OwnershipToken} from "./OwnershipToken.sol";
 
 error PriceMismatch(uint256 received, uint256 expected);
+error NoOwnershipTokenContractAddress(address ownershipTokenContractAddress);
 
 contract UsageToken is ERC721 {
     address private immutable _ownershipTokenContractAddress;
@@ -17,13 +18,13 @@ contract UsageToken is ERC721 {
 
     constructor(address ownershipTokenContractAddress) ERC721("UsageToken", "USG") {
         if (ownershipTokenContractAddress == address(0)) {
-            revert ERC721InvalidOwner(ownershipTokenContractAddress);
+            revert NoOwnershipTokenContractAddress(ownershipTokenContractAddress);
         }
 
         _ownershipTokenContractAddress = ownershipTokenContractAddress;
     }
 
-    function mint(uint256 ownershipTokenId) external payable returns (uint256){
+    function mint(uint256 ownershipTokenId) external payable returns (uint256) {
         uint256 tokenId = _nextTokenId++;
 
         uint256 price = buyPrice(ownershipTokenId);
