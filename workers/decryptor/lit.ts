@@ -20,19 +20,19 @@ const client = new LitJsSdk.LitNodeClient({
 
 const chain = litConfig.ethChain;
 
-function getAccessControlConditions(tokenId: string) {
+function getEvmContractConditions(tokenId: string) {
   return [
     {
       chain: chain,
-      method: "hasAccess",
-      standardContractType: litConfig.standardContractType,
+      functionName: "hasAccess",
       contractAddress: process.env.NEXT_PUBLIC_ACCESS_CONTRACT_ADDRESS,
-      parameters: [":userAddress", tokenId],
+      functionParams: [":userAddress", tokenId],
       returnValueTest: {
+        key: "",
         comparator: litConfig.comparator,
         value: "true",
       },
-      methodAbi: {
+      functionAbi: {
         type: "function",
         name: "hasAccess",
         inputs: [
@@ -78,14 +78,14 @@ class Lit {
       nonce: "",
     });
 
-    const accessControlConditions = getAccessControlConditions(tokenId);
+    const accessControlConditions = getEvmContractConditions(tokenId);
 
     const { ciphertext, dataToEncryptHash } = await LitJsSdk.encryptFile(
       {
         authSig: authSig,
         chain: chain,
         file: file,
-        accessControlConditions: accessControlConditions,
+        evmContractConditions: accessControlConditions
       },
       this.litNodeClient
     );
@@ -113,7 +113,7 @@ class Lit {
 
     const decryptedBytes = await LitJsSdk.decryptToFile(
       {
-        accessControlConditions: getAccessControlConditions(tokenId),
+        evmContractConditions: getEvmContractConditions(tokenId),
         ciphertext,
         dataToEncryptHash,
         authSig,
@@ -127,4 +127,4 @@ class Lit {
 
 const lit = new Lit();
 
-export { lit, getAccessControlConditions };
+export { lit, getEvmContractConditions };
