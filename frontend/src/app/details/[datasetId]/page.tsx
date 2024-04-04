@@ -14,13 +14,16 @@ import {
 import { Dataset, DatasetTradingInfo, TokenHolder } from "@/app/types";
 import DatasetChart from "@/app/details/[datasetId]/DatasetChart";
 import {
-  burnAccessToken,
+  burnUsageToken,
   getBuyPrice,
   getSellPrice,
   getSupply,
   mintAccessToken,
+  mintUsageToken,
 } from "@/contracts/actions";
 import { formatEther } from "viem";
+import TextInput from "@/app/_components/TextInput";
+import { useForm } from "@tanstack/react-form";
 
 export default function Details() {
   const params = useParams();
@@ -112,6 +115,28 @@ export default function Details() {
     },
   });
 
+  const mintAccessTokenToAddress = async ({
+    address,
+  }: {
+    address: `0x${string}`;
+  }) => {
+    if (tokenHolderQueryData?.length) {
+      const accessTokenId = await mintAccessToken(
+        address,
+        BigInt(tokenHolderQueryData[0].token_id)
+      );
+
+      console.log(accessTokenId);
+    }
+  };
+
+  const form = useForm({
+    defaultValues: {
+      address: "" as `0x${string}`,
+    },
+    onSubmit: async (event) => await mintAccessTokenToAddress(event.value),
+  });
+
   if (datasetQueryError) {
     console.error(datasetQueryError);
     return;
@@ -128,12 +153,11 @@ export default function Details() {
   }
 
   const buy = async () => {
-    let accessTokenId;
+    let usageTokenId;
 
     try {
-      accessTokenId = await mintAccessToken(
+      usageTokenId = await mintUsageToken(
         BigInt(datasetQueryData?.token_id as string),
-        address as `0x${string}`,
         datasetTradingInfoData?.buyPrice as bigint
       );
     } catch (error) {
@@ -144,7 +168,7 @@ export default function Details() {
     const { error } = await create<TokenHolder>("token_holders", [
       {
         address: address,
-        token_id: accessTokenId,
+        token_id: usageTokenId,
         dataset_id: datasetQueryData?.id,
       } as TokenHolder,
     ]);
@@ -163,7 +187,7 @@ export default function Details() {
       const tokenHolder = tokenHolderQueryData[0];
 
       try {
-        await burnAccessToken(BigInt(tokenHolder.token_id));
+        await burnUsageToken(BigInt(tokenHolder.token_id));
       } catch (error) {
         console.error("An error occured while burning access token: ", error);
         return;
@@ -332,6 +356,55 @@ export default function Details() {
                       Sell
                     </button>
                   </div>
+
+                  {tokenHolderQueryData?.length && (
+                    <form
+                      className="flex flex-row justify-between"
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        void form.handleSubmit();
+                      }}
+                    >
+                      <form.Field
+                        name="address"
+                        validators={{
+                          onChange: ({ value: address }) =>
+                            !address.length
+                              ? "Address is required."
+                              : undefined,
+                        }}
+                      >
+                        {(field) => (
+                          <TextInput
+                            name={field.name}
+                            value={field.state.value}
+                            handleOnChange={(event) =>
+                              field.handleChange(
+                                event.target.value as `0x${string}`
+                              )
+                            }
+                            disabled={form.state.isSubmitting}
+                            errors={field.state.meta.errors}
+                            label="Address"
+                          />
+                        )}
+                      </form.Field>
+
+                      <form.Subscribe>
+                        {(formState) => (
+                          <button
+                            type="submit"
+                            className="btn btn-sm btn-primary"
+                            disabled={!formState.canSubmit}
+                          >
+                            Mint usage token
+                          </button>
+                        )}
+                      </form.Subscribe>
+                    </form>
+                  )}
                 </div>
               </div>
             </div>
