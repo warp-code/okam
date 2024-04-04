@@ -12,15 +12,15 @@ contract CounterScript is Script {
     AccessToken accessToken;
 
     function setUp() public {
-        ownershipToken = OwnershipToken(address(0x5FbDB2315678afecb367f032d93F642f64180aa3));
-        usageToken = UsageToken(address(0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512));
-        accessToken = AccessToken(address(0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0));
+        ownershipToken = OwnershipToken(address(0x42A6a3d5e8651Ce1c56EC418301DDaf7513B8aAd));
+        usageToken = UsageToken(address(0xa612237E6302b07230bbe4aebE978eFcDbBAbA24));
+        accessToken = AccessToken(address(0x59fE0075F6AC7b8D9bFf8e36E814568ed45c30ad));
     }
 
     function run() public {
-        address awaiterAddr = 0xa83797616bCcDF090D659114C3d4630DA2926467;
+        address awaiterAddr = 0xa68868BDcFFE7B6fbb1637e72DC8a2959d426D13;
 
-        uint256 deployerPrivateKey = 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;
+        uint256 deployerPrivateKey = 1337;
 
         vm.startBroadcast(deployerPrivateKey);
 
@@ -29,6 +29,7 @@ contract CounterScript is Script {
         uint256 usageTokenId = usageToken.mint{value: 100}(ownershipTokenId);
 
         accessToken.mint(awaiterAddr, usageTokenId);
+
         vm.stopBroadcast();
     }
 }

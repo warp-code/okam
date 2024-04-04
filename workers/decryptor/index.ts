@@ -20,11 +20,11 @@ async function waitForNFTMint(
   contractAddress: string
 ): Promise<void> {
   console.log(process.env.RPC_PROVIDER_URL);
-  const network = new ethers.Network("anvil", 31337);
+  const network = new ethers.Network("sepolia", 11155111);
   const provider = new ethers.JsonRpcProvider(
     process.env.RPC_PROVIDER_URL,
     network,
-    { polling: true, pollingInterval: 4000 }
+    { polling: true, pollingInterval: 5000 }
   );
   const iface = new Interface(accessTokenAbi);
   const contract = new ethers.Contract(contractAddress, iface, provider);
