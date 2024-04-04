@@ -66,6 +66,7 @@ export default function Create() {
         ?.filter((category) => category.checked)
         .map((category) => category.id),
       token_id: tokenId,
+      data_to_encrypt_hash: dataToEncryptHash,
     } as Dataset;
 
     const { data, error } = await create<Dataset>("datasets", [dataset]);

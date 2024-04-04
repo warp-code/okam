@@ -29,6 +29,7 @@ export type Dataset = {
   constant_param: number;
   categories: number[];
   token_id: string;
+  data_to_encrypt_hash: string;
 };
 
 export type DatasetModel = Dataset & {
