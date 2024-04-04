@@ -6,6 +6,8 @@ import {UsageToken} from "./UsageToken.sol";
 import {OwnershipToken} from "./OwnershipToken.sol";
 
 error AccessTokenOwnershipRequired(uint256 tokenId);
+error NoOwnershipTokenContractAddress(address ownershipTokenContractAddress);
+error NoUsageTokenContractAddress(address usageTokenContractAddress);
 
 contract AccessToken is ERC721 {
     address private immutable _usageTokenAddress;
@@ -16,6 +18,14 @@ contract AccessToken is ERC721 {
     mapping(address => mapping(uint256 => uint256)) private assignedUsageTokenIds;
 
     constructor(address ownershipTokenAddress, address usageTokenAddress) ERC721("AccessToken", "ACC") {
+        if (ownershipTokenAddress == address(0)) {
+            revert NoOwnershipTokenContractAddress(ownershipTokenAddress);
+        }
+
+        if (usageTokenAddress == address(0)) {
+            revert NoUsageTokenContractAddress(usageTokenAddress);
+        }
+
         _usageTokenAddress = usageTokenAddress;
         _ownershipTokenAddress = ownershipTokenAddress;
     }

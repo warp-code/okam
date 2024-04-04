@@ -585,6 +585,17 @@ export const usageTokenAbi = [
   },
   {
     type: "error",
+    name: "NoOwnershipTokenContractAddress",
+    inputs: [
+      {
+        name: "ownershipTokenContractAddress",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+  },
+  {
+    type: "error",
     name: "PriceMismatch",
     inputs: [
       {

@@ -545,4 +545,26 @@ export const accessTokenAbi = [
       },
     ],
   },
+  {
+    type: "error",
+    name: "NoOwnershipTokenContractAddress",
+    inputs: [
+      {
+        name: "ownershipTokenContractAddress",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+  },
+  {
+    type: "error",
+    name: "NoUsageTokenContractAddress",
+    inputs: [
+      {
+        name: "usageTokenContractAddress",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+  },
 ] as const;
