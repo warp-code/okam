@@ -49,6 +49,10 @@ contract AccessToken is ERC721 {
         return relatedUsageTokenId[tokenId];
     }
 
+    function getOwnershipTokenId(uint256 tokenId) external view returns (uint256) {
+        return UsageToken(_usageTokenAddress).getRelatedOwnershipTokenId(relatedUsageTokenId[tokenId]);
+    }
+
     function getFileCid(uint256 tokenId) external view returns (string memory) {
         return OwnershipToken(_ownershipTokenAddress).getFileCid(
             UsageToken(_usageTokenAddress).getRelatedOwnershipTokenId(tokenId)

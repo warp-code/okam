@@ -92,6 +92,25 @@ export const accessTokenAbi = [
   },
   {
     type: "function",
+    name: "getOwnershipTokenId",
+    inputs: [
+      {
+        name: "tokenId",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "getUsageTokenId",
     inputs: [
       {
@@ -542,6 +561,28 @@ export const accessTokenAbi = [
         name: "tokenId",
         type: "uint256",
         internalType: "uint256",
+      },
+    ],
+  },
+  {
+    type: "error",
+    name: "NoOwnershipTokenContractAddress",
+    inputs: [
+      {
+        name: "ownershipTokenContractAddress",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+  },
+  {
+    type: "error",
+    name: "NoUsageTokenContractAddress",
+    inputs: [
+      {
+        name: "usageTokenContractAddress",
+        type: "address",
+        internalType: "address",
       },
     ],
   },

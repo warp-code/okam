@@ -2,6 +2,9 @@ import { ethers, Interface, Network, Wallet } from "ethers";
 import dotenv from "dotenv";
 import { accessTokenAbi } from "./accessTokenAbi";
 import { lit } from "./lit";
+import { Dataset, getOneByTokenId } from "./supabase";
+import axios from "axios";
+import fs from "fs";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -37,16 +40,39 @@ async function waitForNFTMint(wallet: ethers.HDNodeWallet): Promise<void> {
     console.log("Found transfer event to:", to);
     if (to === wallet.address) {
       console.log("NFT minted to your wallet!");
-      run(); // Call your run function once NFT is received
+      run(tokenId); // Call your run function once NFT is received
     }
   });
 }
 
 // Empty run function to be populated with actual logic
-function run() {
+async function run(tokenId: BigInt) {
   // Populate this function with your logic
   console.log("NFT received. Running your logic...");
-  console.log("Bepis");
+
+  const ownershipTokenId = await contract.getOwnershipTokenId(tokenId);
+  console.log("ownership token id", (ownershipTokenId as BigInt).toString());
+
+  const modelResp = await getOneByTokenId<Dataset>(
+    "datasets",
+    (ownershipTokenId as BigInt).toString()
+  );
+
+  const { data_to_encrypt_hash, file_cid } = modelResp.data;
+
+  const fileResp = await axios.get(`https://nftstorage.link/ipfs/${file_cid}`);
+
+  const fileContents = fileResp.data as string;
+
+  console.log(fileContents);
+
+  const { decryptedBytes } = await lit.decryptForOwnershipToken(
+    fileContents,
+    data_to_encrypt_hash,
+    tokenId.toString()
+  );
+
+  fs.writeFileSync("./test.jpg", decryptedBytes);
 
   process.exit(0);
 }

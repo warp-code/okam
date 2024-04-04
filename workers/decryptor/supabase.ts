@@ -1,15 +1,17 @@
 import { PostgrestSingleResponse, createClient } from "@supabase/supabase-js";
+import dotenv from "dotenv";
+dotenv.config();
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_KEY!
 );
 
-export async function getOne<T>(
+export async function getOneByTokenId<T>(
   tableName: string,
-  id: number
+  id: string
 ): Promise<PostgrestSingleResponse<T>> {
-  return await supabase.from(tableName).select("*").eq("id", id).single<T>();
+  return await supabase.from(tableName).select("*").eq("token_id", id).single<T>();
 }
 
 export type Dataset = {

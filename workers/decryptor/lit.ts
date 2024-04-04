@@ -1,5 +1,8 @@
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 
+import dotenv from "dotenv";
+dotenv.config();
+
 type LitConfig = {
   ethChain: "sepolia",
   litNetwork: "cayenne",
@@ -105,7 +108,7 @@ class Lit {
     if (!this.litNodeClient) {
       await this.connect();
     }
-
+    
     const authSig = await LitJsSdk.checkAndSignAuthMessage({
       chain: chain,
       nonce: "",
