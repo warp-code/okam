@@ -1,6 +1,10 @@
 import { ethers, Interface, Network, Wallet } from "ethers";
 import dotenv from "dotenv";
-import { abi } from "./abi"
+import { accessTokenAbi } from "./accessTokenAbi";
+import { lit } from "./lit";
+import { Dataset, getOneByTokenId } from "./supabase";
+import axios from "axios";
+import fs from "fs";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -14,24 +18,21 @@ async function generateWallet(): Promise<ethers.HDNodeWallet> {
   return wallet;
 }
 
+const contractAddress = process.env.CONTRACT_ADDRESS;
+
+const network = new ethers.Network("sepolia", 11155111);
+const provider = new ethers.JsonRpcProvider(
+  process.env.RPC_PROVIDER_URL,
+  network,
+  { polling: true, pollingInterval: 5000 }
+);
+
+const iface = new Interface(accessTokenAbi);
+const contract = new ethers.Contract(contractAddress, iface, provider);
+
 // Function to wait for an NFT to be minted to the given wallet address
-async function waitForNFTMint(
-  wallet: ethers.HDNodeWallet,
-  contractAddress: string
-): Promise<void> {
+async function waitForNFTMint(wallet: ethers.HDNodeWallet): Promise<void> {
   console.log(process.env.RPC_PROVIDER_URL);
-  const network = new ethers.Network("anvil", 31337);
-  const provider = new ethers.JsonRpcProvider(
-    process.env.RPC_PROVIDER_URL,
-    network,
-    { polling: true, pollingInterval: 4000 }
-  );
-  const iface = new Interface(abi);
-  const contract = new ethers.Contract(
-    contractAddress,
-    iface,
-    provider
-  );
 
   console.log("Waiting for NFT mint...");
 
@@ -39,27 +40,53 @@ async function waitForNFTMint(
     console.log("Found transfer event to:", to);
     if (to === wallet.address) {
       console.log("NFT minted to your wallet!");
-      run(); // Call your run function once NFT is received
+      run(tokenId, wallet); // Call your run function once NFT is received
     }
   });
 }
 
 // Empty run function to be populated with actual logic
-function run() {
+async function run(tokenId: BigInt, wallet: ethers.HDNodeWallet) {
   // Populate this function with your logic
   console.log("NFT received. Running your logic...");
-  console.log("Bepis");
+
+  const ownershipTokenId = await contract.getOwnershipTokenId(tokenId);
+  console.log("ownership token id", (ownershipTokenId as BigInt).toString());
+  const usageTokenId = await contract.getUsageTokenId(tokenId);
+  console.log("usage token id", (usageTokenId as BigInt).toString());
+
+  const modelResp = await getOneByTokenId<Dataset>(
+    "datasets",
+    (ownershipTokenId as BigInt).toString()
+  );
+
+  const { data_to_encrypt_hash, file_cid } = modelResp.data;
+  const fileResp = await axios.get(`https://nftstorage.link/ipfs/${file_cid}`);
+
+  const fileContents = fileResp.data as string;
+
+  const { decryptedBytes } = await lit.decryptForOwnershipToken(
+    fileContents,
+    data_to_encrypt_hash,
+    usageTokenId.toString(),
+    await lit.getSignedMessage(wallet)
+  );
+
+  fs.writeFileSync("./test.jpg", decryptedBytes);
+
+  process.exit(0);
 }
 
 // Main function to generate wallet and wait for NFT mint
 async function main() {
   const wallet = await generateWallet();
-  const contractAddress = process.env.CONTRACT_ADDRESS;
-  console.log(contractAddress);
+
+  console.log("Contract address:", contractAddress);
+
   if (!contractAddress) {
     throw new Error("CONTRACT_ADDRESS environment variable is not set.");
   }
-  await waitForNFTMint(wallet, contractAddress);
+  await waitForNFTMint(wallet);
 }
 
 // Run the main function

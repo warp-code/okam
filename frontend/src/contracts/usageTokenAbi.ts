@@ -132,6 +132,25 @@ export const usageTokenAbi = [
   },
   {
     type: "function",
+    name: "getRelatedOwnershipTokenId",
+    inputs: [
+      {
+        name: "tokenId",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "getSupply",
     inputs: [
       {
@@ -183,7 +202,13 @@ export const usageTokenAbi = [
         internalType: "uint256",
       },
     ],
-    outputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "payable",
   },
   {
@@ -555,6 +580,17 @@ export const usageTokenAbi = [
         name: "tokenId",
         type: "uint256",
         internalType: "uint256",
+      },
+    ],
+  },
+  {
+    type: "error",
+    name: "NoOwnershipTokenContractAddress",
+    inputs: [
+      {
+        name: "ownershipTokenContractAddress",
+        type: "address",
+        internalType: "address",
       },
     ],
   },
