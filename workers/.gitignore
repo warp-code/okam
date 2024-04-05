@@ -2,4 +2,5 @@
 _data
 node_modules
 .model
+.model_saved
 __pycache__

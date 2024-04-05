@@ -5,6 +5,11 @@ import { lit } from "./lit";
 import { Dataset, getOneByTokenId } from "./supabase";
 import axios from "axios";
 import fs from "fs";
+import decompress from "decompress";
+import https from "https";
+import path from "path";
+import { finished } from "stream/promises";
+import { Readable } from "stream";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -44,16 +49,45 @@ async function waitForNFTMint(wallet: ethers.HDNodeWallet): Promise<void> {
     }
   });
 }
+function downloadFile(url, filePath) {
+  return new Promise((resolve) => {
+    const writer = fs.createWriteStream(filePath);
+
+    axios({
+      method: "get",
+      url: url,
+      responseType: "stream",
+    }).then((response) => {
+      response.data.pipe(writer);
+    });
+    writer.on("finish", () => {
+      console.log("File downloaded successfully.");
+      resolve(null);
+    });
+    writer.on("error", (err) => {
+      console.error(err);
+    });
+  });
+}
+// async function downloadFile(url, filePath) {
+//   return new Promise((resolve, reject) => {
+//       const file = fs.createWriteStream(filePath);
+//       const request = https.get(url, function(response) {
+//         response.pipe(file);
+//         response.on("end", () => {
+//           resolve(null);
+//         });
+//       })
+//   });
+// }
 
 // Empty run function to be populated with actual logic
 async function run(tokenId: BigInt, wallet: ethers.HDNodeWallet) {
   // Populate this function with your logic
-  console.log("NFT received. Running your logic...");
-
   const ownershipTokenId = await contract.getOwnershipTokenId(tokenId);
-  console.log("ownership token id", (ownershipTokenId as BigInt).toString());
+  console.log("Ownership token id:", (ownershipTokenId as BigInt).toString());
   const usageTokenId = await contract.getUsageTokenId(tokenId);
-  console.log("usage token id", (usageTokenId as BigInt).toString());
+  console.log("Usage token id:", (usageTokenId as BigInt).toString());
 
   const modelResp = await getOneByTokenId<Dataset>(
     "datasets",
@@ -61,9 +95,31 @@ async function run(tokenId: BigInt, wallet: ethers.HDNodeWallet) {
   );
 
   const { data_to_encrypt_hash, file_cid } = modelResp.data;
-  const fileResp = await axios.get(`https://nftstorage.link/ipfs/${file_cid}`, {
-    responseType: "arraybuffer",
-  });
+  // const fileResp = await axios.get(`https://nftstorage.link/ipfs/${file_cid}`, {
+  //   responseType: "arraybuffer",
+  // });
+
+  if (fs.existsSync("./test.zip")) {
+    fs.rmSync("./test.zip");
+  }
+
+  await downloadFile(`https://nftstorage.link/ipfs/${file_cid}`, "test.zip");
+
+  console.log("downloaded zipped model, decompressing...");
+
+  if (fs.existsSync("../.model")) {
+    fs.rmSync("../.model", { recursive: true });
+  }
+
+  await decompress("./test.zip", "../.model");
+
+  console.log("Saved model to ./.model/");
+  console.log("Cleaning up...");
+
+  if (fs.existsSync("./test.zip")) {
+    fs.rmSync("./test.zip");
+  }
+
 
   // const fileContents = Buffer.from(fileResp.data, 'binary').toString("base64");
 
@@ -75,8 +131,6 @@ async function run(tokenId: BigInt, wallet: ethers.HDNodeWallet) {
   //   usageTokenId.toString(),
   //   await lit.getSignedMessage(wallet)
   // );
-
-  fs.writeFileSync("./test.jpg", fileResp.data);
 
   process.exit(0);
 }

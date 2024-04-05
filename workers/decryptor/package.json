@@ -6,6 +6,7 @@
     "@lit-protocol/lit-node-client": "^4.2.0",
     "@supabase/supabase-js": "^2.42.0",
     "axios": "^1.6.8",
+    "decompress": "^4.2.1",
     "dotenv": "^16.4.5",
     "ethers": "^6.11.1",
     "siwe": "^2.1.4"
