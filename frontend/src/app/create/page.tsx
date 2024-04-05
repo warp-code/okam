@@ -38,8 +38,11 @@ export default function Create() {
 
     const tokenId = await mintOwnershipToken(cid);
 
+    const ownershipTokenFormData = new FormData();
+    ownershipTokenFormData.append("file", new Blob([model.file!]));
+
     const { ciphertext, dataToEncryptHash, accessControlConditions } =
-      await lit.encryptForOwnershipToken(new Blob([model.file!]), tokenId);
+      await lit.encryptForOwnershipToken(ownershipTokenFormData, tokenId);
 
     const formData = new FormData();
 

@@ -70,7 +70,7 @@ class Lit {
     this.litNodeClient = client;
   }
 
-  async encryptForOwnershipToken(file: File | Blob, tokenId: string) {
+  async encryptForOwnershipToken(formData: FormData, tokenId: string) {
     if (!this.litNodeClient) {
       await this.connect();
     }
@@ -81,6 +81,8 @@ class Lit {
     });
 
     const accessControlConditions = getEvmContractConditions(tokenId);
+
+    const file = formData.get("file") as File;
 
     const { ciphertext, dataToEncryptHash } = await LitJsSdk.encryptFile(
       {
