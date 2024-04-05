@@ -1,5 +1,3 @@
-"use server";
-
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 
 type LitConfig = {
@@ -60,6 +58,38 @@ function getEvmContractConditions(tokenId: string) {
       },
     },
   ];
+}
+
+export async function encryptForOwnershipToken(
+  formData: FormData,
+  tokenId: string
+) {
+  const penis = await client.connect();
+
+  const authSig = await LitJsSdk.checkAndSignAuthMessage({
+    chain: chain,
+    nonce: "",
+  });
+
+  const accessControlConditions = getEvmContractConditions(tokenId);
+
+  const file = formData.get("file") as File;
+
+  const { ciphertext, dataToEncryptHash } = await LitJsSdk.encryptFile(
+    {
+      authSig: authSig,
+      chain: chain,
+      file: file,
+      evmContractConditions: accessControlConditions,
+    },
+    penis as any
+  );
+
+  return {
+    ciphertext,
+    dataToEncryptHash,
+    accessControlConditions,
+  };
 }
 
 class Lit {

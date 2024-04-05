@@ -20,29 +20,29 @@ export default function ImageUploader({
   handleOnChange: Function;
   disabled?: boolean;
 }) {
-  const uploadFormData = async (
-    file: File | undefined
-  ): Promise<OkamCoverImage> => {
-    if (!file) {
-      console.error("No file was uploaded.");
+  // const uploadFormData = async (
+  //   file: File | undefined
+  // ): Promise<OkamCoverImage> => {
+  //   if (!file) {
+  //     console.error("No file was uploaded.");
 
-      return {
-        name: "",
-        mimeType: "",
-        url: "",
-      } as OkamCoverImage;
-    }
+  //     return {
+  //       name: "",
+  //       mimeType: "",
+  //       url: "",
+  //     } as OkamCoverImage;
+  //   }
 
-    if (file.size > 10485760) {
-      console.error("File size is greater than 10 MB");
-    }
+  //   if (file.size > 10485760) {
+  //     console.error("File size is greater than 10 MB");
+  //   }
 
-    const formData = new FormData();
+  //   const formData = new FormData();
 
-    formData.append("file", file as File);
+  //   formData.append("file", file as File);
 
-    return await uploadFileToSupabase(formData);
-  };
+  //   return await uploadFileToSupabase(formData);
+  // };
 
   return (
     <div className="flex flex-col gap-y-6 min-w-full">
@@ -104,9 +104,13 @@ export default function ImageUploader({
               name={name}
               value={value?.name ?? ""}
               onChange={async (e) => {
-                const fileInfo = await uploadFormData(e.target.files?.[0]);
+                // const fileInfo = await uploadFormData(e.target.files?.[0]);
 
-                return await handleOnChange(fileInfo);
+                // return await handleOnChange(fileInfo);
+
+                if (e.target.files) {
+                  return await handleOnChange(e.target.files[0]);
+                }
               }}
               disabled={disabled}
               className="sr-only"
