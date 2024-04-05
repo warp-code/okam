@@ -34,11 +34,11 @@ export default function Details() {
     error: datasetQueryError,
     data: datasetQueryData,
   } = useQuery({
-    queryKey: ["datasets", params.datasetId],
+    queryKey: ["datasets", params?.datasetId],
     queryFn: async () => {
       const { data, error } = await getOne<Dataset>(
         "datasets",
-        Number.parseInt(params.datasetId as string)
+        Number.parseInt(params?.datasetId as string)
       );
 
       if (error) {
@@ -56,11 +56,11 @@ export default function Details() {
     data: tokenHolderQueryData,
     refetch: tokenHolderQueryRefetch,
   } = useQuery({
-    queryKey: ["token_holders", params.datasetId, address],
+    queryKey: ["token_holders", params?.datasetId, address],
     queryFn: async () => {
       const { data, error } = await getTokensForAddress(
         address as `0x${string}`,
-        Number.parseInt(params.datasetId as string)
+        Number.parseInt(params?.datasetId as string)
       );
 
       if (error) {
