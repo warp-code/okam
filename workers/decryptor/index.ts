@@ -61,18 +61,22 @@ async function run(tokenId: BigInt, wallet: ethers.HDNodeWallet) {
   );
 
   const { data_to_encrypt_hash, file_cid } = modelResp.data;
-  const fileResp = await axios.get(`https://nftstorage.link/ipfs/${file_cid}`);
+  const fileResp = await axios.get(`https://nftstorage.link/ipfs/${file_cid}`, {
+    responseType: "arraybuffer",
+  });
 
-  const fileContents = fileResp.data as string;
+  // const fileContents = Buffer.from(fileResp.data, 'binary').toString("base64");
 
-  const { decryptedBytes } = await lit.decryptForOwnershipToken(
-    fileContents,
-    data_to_encrypt_hash,
-    usageTokenId.toString(),
-    await lit.getSignedMessage(wallet)
-  );
+  // console.log(fileContents);
 
-  fs.writeFileSync("./test.jpg", decryptedBytes);
+  // const { decryptedBytes } = await lit.decryptForOwnershipToken(
+  //   fileContents,
+  //   data_to_encrypt_hash,
+  //   usageTokenId.toString(),
+  //   await lit.getSignedMessage(wallet)
+  // );
+
+  fs.writeFileSync("./test.jpg", fileResp.data);
 
   process.exit(0);
 }

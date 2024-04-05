@@ -38,12 +38,12 @@ export default function Create() {
 
     const tokenId = await mintOwnershipToken(cid);
 
-    const { ciphertext, dataToEncryptHash, accessControlConditions } =
-      await lit.encryptForOwnershipToken(new Blob([model.file!]), tokenId);
+    // const { ciphertext, dataToEncryptHash, accessControlConditions } =
+    //   await lit.encryptForOwnershipToken(new Blob([model.file!]), tokenId);
 
     const formData = new FormData();
 
-    formData.append("file", new Blob([ciphertext]));
+    formData.append("file", model.file!);
 
     const uploadedFile = await uploadFileToIpfs(formData);
     // TODO: upload encrypted file
@@ -63,7 +63,8 @@ export default function Create() {
         ?.filter((category) => category.checked)
         .map((category) => category.id),
       token_id: tokenId,
-      data_to_encrypt_hash: dataToEncryptHash,
+      // data_to_encrypt_hash: dataToEncryptHash,
+      data_to_encrypt_hash: "asdf"
     } as Dataset;
 
     const { data, error } = await create<Dataset>("datasets", [dataset]);

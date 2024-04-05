@@ -81,35 +81,6 @@ class Lit {
     this.litNodeClient = client;
   }
 
-  async encryptForOwnershipToken(file: File, tokenId: string) {
-    if (!this.litNodeClient) {
-      await this.connect();
-    }
-
-    const authSig = await LitJsSdk.checkAndSignAuthMessage({
-      chain: chain,
-      nonce: "",
-    });
-
-    const accessControlConditions = getEvmContractConditions(tokenId);
-
-    const { ciphertext, dataToEncryptHash } = await LitJsSdk.encryptFile(
-      {
-        authSig: authSig,
-        chain: chain,
-        file: file,
-        evmContractConditions: accessControlConditions,
-      },
-      this.litNodeClient
-    );
-
-    return {
-      ciphertext,
-      dataToEncryptHash,
-      accessControlConditions,
-    };
-  }
-
   async decryptForOwnershipToken(
     ciphertext: string,
     dataToEncryptHash: string,
@@ -129,8 +100,11 @@ class Lit {
         chain: chain,
       },
       this.litNodeClient
-    );
-    
+    ).catch((x) => {
+      console.log(JSON.stringify(x));
+      throw x;
+    });
+
     return { decryptedBytes };
   }
 
