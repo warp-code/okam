@@ -1,17 +1,19 @@
+"use server";
+
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 
 type LitConfig = {
-  ethChain: "sepolia",
-  litNetwork: "cayenne",
-  standardContractType: "",
-  comparator: "="
-}
+  ethChain: "sepolia";
+  litNetwork: "cayenne";
+  standardContractType: "";
+  comparator: "=";
+};
 
 const litConfig: LitConfig = {
   ethChain: "sepolia",
   litNetwork: "cayenne",
   standardContractType: "",
-  comparator: "="
+  comparator: "=",
 };
 
 const client = new LitJsSdk.LitNodeClient({
@@ -85,7 +87,7 @@ class Lit {
         authSig: authSig,
         chain: chain,
         file: file,
-        evmContractConditions: accessControlConditions
+        evmContractConditions: accessControlConditions,
       },
       this.litNodeClient
     );
