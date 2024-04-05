@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@lit-protocol/lit-node-client": "^4.2.0",
     "@supabase/ssr": "^0.1.0",
     "@supabase/storage-js": "^2.5.5",
     "@supabase/supabase-js": "^2.40.0",

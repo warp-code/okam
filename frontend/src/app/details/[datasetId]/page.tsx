@@ -357,7 +357,7 @@ export default function Details() {
                     </button>
                   </div>
 
-                  {tokenHolderQueryData?.length && (
+                  {!!tokenHolderQueryData?.length && (
                     <form
                       className="flex flex-row gap-x-4"
                       onSubmit={(e) => {

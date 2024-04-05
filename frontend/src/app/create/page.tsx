@@ -21,7 +21,6 @@ import {
   assignOwnershipTokenFile,
   mintOwnershipToken,
 } from "@/contracts/actions";
-import { lit } from "@/lib/lit";
 
 export default function Create() {
   const { push } = useRouter();
@@ -64,7 +63,7 @@ export default function Create() {
         .map((category) => category.id),
       token_id: tokenId,
       // data_to_encrypt_hash: dataToEncryptHash,
-      data_to_encrypt_hash: "asdf"
+      data_to_encrypt_hash: "asdf",
     } as Dataset;
 
     const { data, error } = await create<Dataset>("datasets", [dataset]);
