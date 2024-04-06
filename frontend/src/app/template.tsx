@@ -9,19 +9,19 @@ export default function Template({ children }: { children: React.ReactNode }) {
 
   const { connectors, connect } = useConnect();
   const { disconnect } = useDisconnect();
-  const { isConnected, address } = useAccount();
+  const { isConnected } = useAccount();
 
   return (
     <>
       <header className="flex h-18 w-full sm:px-16 px-8 gap-4 items-center justify-between">
-        <div className="flex flex-row gap-2">
+        <div
+          className="flex flex-row gap-2 cursor-pointer"
+          onClick={() => push("/")}
+        >
           <span className="h-6 w-6 my-auto">
             <Logo />
           </span>
-          <span
-            className="text-lg font-bold text-green-500 cursor-pointer"
-            onClick={() => push("/")}
-          >
+          <span className="text-lg font-bold text-green-500 cursor-pointer">
             OKAM
           </span>
         </div>
