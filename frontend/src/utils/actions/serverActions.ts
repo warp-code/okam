@@ -47,23 +47,13 @@ export async function uploadFileToSupabase(
 export async function uploadFileToIpfs(formData: FormData): Promise<OkamFile> {
   const file = formData.get("file") as Blob;
 
-  try {
-    const cid = await client.storeBlob(file);
+  const cid = await client.storeBlob(file);
 
-    return {
-      name: "",
-      mimeType: file.type,
-      cid: cid,
-    } as OkamFile;
-  } catch (e: any) {
-    console.error("An error occured while uploading the file: ", e);
-
-    return {
-      name: "",
-      mimeType: "",
-      cid: "",
-    } as OkamFile;
-  }
+  return {
+    name: "",
+    mimeType: file.type,
+    cid: cid,
+  } as OkamFile;
 }
 
 export async function getAll<T>(
