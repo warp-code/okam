@@ -78,7 +78,6 @@ export default function Details() {
   });
 
   const {
-    isFetching: isDatasetTradingInfoFetching,
     error: datasetTradingInfoError,
     data: datasetTradingInfoData,
     refetch: refetchDataTradingInfo,
@@ -415,7 +414,9 @@ export default function Details() {
                               className="btn btn-primary mt-auto min-w-25 py-2 px-4 text-lg font-semibold rounded-lg"
                               disabled={!canSubmit}
                             >
-                              {isSubmitting ? "Minting..." : "Mint usage token"}
+                              {isSubmitting
+                                ? "Minting..."
+                                : "Mint access token"}
                             </button>
                           )}
                         </form.Subscribe>
@@ -426,8 +427,8 @@ export default function Details() {
 
                 {token && form.state.isPristine && (
                   <div className="max-w-131 mt-8 px-6 text-gray-50">
-                    Successfully minted usage token {token} to address {address}
-                    .
+                    Successfully minted access token {token} to address{" "}
+                    {address}.
                   </div>
                 )}
               </div>
