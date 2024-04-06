@@ -186,7 +186,7 @@ export default function Details() {
 
   const sell = async () => {
     if (!!tokenHolderQueryData?.length) {
-      const tokenHolder = tokenHolderQueryData[0];
+      const tokenHolder = tokenHolderQueryData[tokenHolderQueryData.length - 1];
 
       try {
         await burnUsageToken(BigInt(tokenHolder.token_id));
