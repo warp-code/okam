@@ -5,6 +5,7 @@ import "./globals.css";
 import { cookieToInitialState } from "wagmi";
 import { headers } from "next/headers";
 import { wagmiConfig } from "@/lib/config";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -35,6 +36,7 @@ export default function RootLayout({
           suppressHydrationWarning={true}
         >
           {children}
+          <SpeedInsights />
         </body>
       </Providers>
     </html>
