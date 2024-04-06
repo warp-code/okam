@@ -9,12 +9,14 @@ import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useAccount } from "wagmi";
+import { create, getAll } from "@/utils/actions/serverActions";
 import {
-  create,
-  getAll,
-  uploadFileToIpfs,
-} from "@/utils/actions/serverActions";
-import { Category, Dataset, FormModel, OkamCoverImage } from "@/app/types";
+  Category,
+  Dataset,
+  FormModel,
+  OkamCoverImage,
+  OkamFile,
+} from "@/app/types";
 import { useLayoutEffect } from "react";
 import LoadingIndicator from "@/app/_components/LoadingIndicator";
 import {
@@ -37,23 +39,13 @@ export default function Create() {
 
     const tokenId = await mintOwnershipToken(cid);
 
-    // const { ciphertext, dataToEncryptHash, accessControlConditions } =
-    //   await lit.encryptForOwnershipToken(new Blob([model.file!]), tokenId);
-
-    const formData = new FormData();
-
-    formData.append("file", model.file!);
-
-    const uploadedFile = await uploadFileToIpfs(formData);
-    // TODO: upload encrypted file
-
-    await assignOwnershipTokenFile(tokenId, uploadedFile.cid);
+    await assignOwnershipTokenFile(tokenId, model.file.cid);
 
     const dataset = {
       name: model.name,
       cover_image: model.coverImage,
       description: model.description,
-      file_cid: uploadedFile.cid,
+      file_cid: model.file.cid,
       author: address,
       quadratic_param: 1,
       linear_param: 1,
@@ -62,8 +54,6 @@ export default function Create() {
         ?.filter((category) => category.checked)
         .map((category) => category.id),
       token_id: tokenId,
-      // data_to_encrypt_hash: dataToEncryptHash,
-      data_to_encrypt_hash: "asdf",
     } as Dataset;
 
     const { data, error } = await create<Dataset>("datasets", [dataset]);
@@ -111,193 +101,189 @@ export default function Create() {
               checked: false,
             };
           }),
-      file: undefined,
+      file: {
+        name: "",
+        mimeType: "",
+        cid: "",
+      },
     },
     onSubmit: (event) => createDataset(event.value),
   });
 
   return (
     <div className="max-w-192 flex flex-col mx-auto">
-      {categoriesQuery.isFetching ? (
+      {(categoriesQuery.isFetching || form.state.isSubmitting) && (
         <div className="min-w-full text-center">
           <div className="h-24 w-24 mx-auto mt-40">
             <LoadingIndicator />
           </div>
         </div>
-      ) : (
-        <form
-          className="flex flex-col min-w-full text-center gap-y-6"
-          onSubmit={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
+      )}
 
-            void form.handleSubmit();
+      <form
+        className={`${
+          (categoriesQuery.isFetching || form.state.isSubmitting) && "hidden"
+        } flex flex-col min-w-full text-center gap-y-6`}
+        onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          void form.handleSubmit();
+        }}
+      >
+        <h2 className="text-gray-50 font-semibold text-3xl/9.5 pb-6 text-left">
+          Create model
+        </h2>
+
+        <form.Field
+          name="name"
+          validators={{
+            onChange: ({ value: name }) =>
+              !name.length ? "Name is required." : undefined,
           }}
         >
-          <h2 className="text-gray-50 font-semibold text-3xl/9.5 pb-6 text-left">
-            Create model
-          </h2>
-
-          {form.state.isSubmitting && (
-            <div className="min-w-full text-center">
-              <div className="h-24 w-24 mx-auto mt-40">
-                <LoadingIndicator />
-              </div>
-            </div>
-          )}
-
-          <form.Field
-            name="name"
-            validators={{
-              onChange: ({ value: name }) =>
-                !name.length ? "Name is required." : undefined,
-            }}
-          >
-            {(field) => (
-              <TextInput
-                label="Name"
-                name={field.name}
-                value={field.state.value}
-                handleOnChange={(event) =>
-                  field.handleChange(event.target.value)
-                }
-                disabled={form.state.isSubmitting}
-                errors={field.state.meta.errors}
-              />
-            )}
-          </form.Field>
-
-          <form.Field
-            name="coverImage"
-            validators={{
-              onChange: ({ value: coverImage }) =>
-                !coverImage.url.length ? "Cover image is required." : undefined,
-            }}
-          >
-            {(field) => (
-              <ImageUploader
-                label="Cover image"
-                name={field.name}
-                value={field.state.value}
-                handleOnChange={(file: OkamCoverImage) =>
-                  field.handleChange(file)
-                }
-                disabled={form.state.isSubmitting}
-                errors={field.state.meta.errors}
-              />
-            )}
-          </form.Field>
-
-          <form.Field
-            name="description"
-            validators={{
-              onChange: ({ value: description }) =>
-                !description.length ? "Description is required." : undefined,
-            }}
-          >
-            {(field) => (
-              <TextareaInput
-                label="Description"
-                name={field.name}
-                value={field.state.value}
-                handleOnChange={(event) =>
-                  field.handleChange(event.target.value)
-                }
-                errors={field.state.meta.errors}
-              />
-            )}
-          </form.Field>
-
-          <h4 className="text-gray-50 text-lg text-left">Tags</h4>
-
-          <div className="flex flex-col gap-y-6 min-w-full">
-            <form.Field
-              name="categories"
-              mode="array"
-              validators={{
-                onChange: ({ value: categories }) =>
-                  !categories?.some((category) => category.checked)
-                    ? "At least one category is required."
-                    : undefined,
-              }}
-            >
-              {(field) => (
-                <>
-                  <div className="flex flex-row flex-wrap pt-4 gap-3">
-                    {field.state.value?.map((category, i) => (
-                      <form.Field key={i} name={`categories[${i}].checked`}>
-                        {(subField) => {
-                          return (
-                            <CategoryCheckbox
-                              name={subField.name}
-                              label={category.text}
-                              value={subField.state.value}
-                              handleOnChange={(event) => {
-                                subField.handleChange(event.target.checked);
-                                field.handleChange(field.state.value);
-                              }}
-                              disabled={form.state.isSubmitting}
-                            />
-                          );
-                        }}
-                      </form.Field>
-                    ))}
-                  </div>
-
-                  {(field.state.meta.errors?.length as number) > 0 && (
-                    <div className="text-left text-gray-400 text-sm">
-                      {field.state.meta.errors.join(" ")}
-                    </div>
-                  )}
-                </>
-              )}
-            </form.Field>
-          </div>
-
-          <form.Field
-            name="file"
-            validators={{
-              onChange: ({ value: file }) =>
-                !file ? "File is required." : undefined,
-            }}
-          >
-            {(field) => (
-              <FileUploader
-                label="File"
-                name={field.name}
-                value={field.state.value}
-                handleOnChange={(file: File) => field.handleChange(file)}
-                handleClear={() => field.setValue(undefined)}
-                errors={field.state.meta.errors}
-                disabled={false}
-              />
-            )}
-          </form.Field>
-
-          <div className="flex justify-end gap-x-2.5 py-2.5">
-            <button
-              type="button"
-              className="btn btn-sm btn-secondary"
-              onClick={() => push("/")}
+          {(field) => (
+            <TextInput
+              label="Name"
+              name={field.name}
+              value={field.state.value}
+              handleOnChange={(event) => field.handleChange(event.target.value)}
               disabled={form.state.isSubmitting}
-            >
-              Cancel
-            </button>
+              errors={field.state.meta.errors}
+            />
+          )}
+        </form.Field>
 
-            <form.Subscribe>
-              {({ canSubmit, isSubmitting }) => (
-                <button
-                  type="submit"
-                  className="btn btn-sm btn-primary"
-                  disabled={!canSubmit}
-                >
-                  {isSubmitting ? "Creating..." : "Create"}
-                </button>
-              )}
-            </form.Subscribe>
-          </div>
-        </form>
-      )}
+        <form.Field
+          name="coverImage"
+          validators={{
+            onChange: ({ value: coverImage }) =>
+              !coverImage.url.length ? "Cover image is required." : undefined,
+          }}
+        >
+          {(field) => (
+            <ImageUploader
+              label="Cover image"
+              name={field.name}
+              value={field.state.value}
+              handleOnChange={(file: OkamCoverImage) =>
+                field.handleChange(file)
+              }
+              disabled={form.state.isSubmitting}
+              errors={field.state.meta.errors}
+            />
+          )}
+        </form.Field>
+
+        <form.Field
+          name="description"
+          validators={{
+            onChange: ({ value: description }) =>
+              !description.length ? "Description is required." : undefined,
+          }}
+        >
+          {(field) => (
+            <TextareaInput
+              label="Description"
+              name={field.name}
+              value={field.state.value}
+              handleOnChange={(event) => field.handleChange(event.target.value)}
+              errors={field.state.meta.errors}
+            />
+          )}
+        </form.Field>
+
+        <h4 className="text-gray-50 text-lg text-left">Tags</h4>
+
+        <div className="flex flex-col gap-y-6 min-w-full">
+          <form.Field
+            name="categories"
+            mode="array"
+            validators={{
+              onChange: ({ value: categories }) =>
+                !categories?.some((category) => category.checked)
+                  ? "At least one category is required."
+                  : undefined,
+            }}
+          >
+            {(field) => (
+              <>
+                <div className="flex flex-row flex-wrap pt-4 gap-3">
+                  {field.state.value?.map((category, i) => (
+                    <form.Field key={i} name={`categories[${i}].checked`}>
+                      {(subField) => {
+                        return (
+                          <CategoryCheckbox
+                            name={subField.name}
+                            label={category.text}
+                            value={subField.state.value}
+                            handleOnChange={(event) => {
+                              subField.handleChange(event.target.checked);
+                              field.handleChange(field.state.value);
+                            }}
+                            disabled={form.state.isSubmitting}
+                          />
+                        );
+                      }}
+                    </form.Field>
+                  ))}
+                </div>
+
+                {(field.state.meta.errors?.length as number) > 0 && (
+                  <div className="text-left text-gray-400 text-sm">
+                    {field.state.meta.errors.join(" ")}
+                  </div>
+                )}
+              </>
+            )}
+          </form.Field>
+        </div>
+
+        <form.Field
+          name="file"
+          validators={{
+            onChange: ({ value: file }) =>
+              !file.cid.length ? "File is required." : undefined,
+          }}
+        >
+          {(field) => (
+            <FileUploader
+              label="File"
+              name={field.name}
+              value={field.state.value}
+              handleOnChange={(file: OkamFile) => field.handleChange(file)}
+              handleClear={() =>
+                field.setValue({ name: "", mimeType: "", cid: "" })
+              }
+              errors={field.state.meta.errors}
+              disabled={false}
+            />
+          )}
+        </form.Field>
+
+        <div className="flex justify-end gap-x-2.5 py-2.5">
+          <button
+            type="button"
+            className="btn btn-sm btn-secondary"
+            onClick={() => push("/")}
+            disabled={form.state.isSubmitting}
+          >
+            Cancel
+          </button>
+
+          <form.Subscribe>
+            {({ canSubmit, isSubmitting }) => (
+              <button
+                type="submit"
+                className="btn btn-sm btn-primary"
+                disabled={!canSubmit}
+              >
+                {isSubmitting ? "Creating..." : "Create"}
+              </button>
+            )}
+          </form.Subscribe>
+        </div>
+      </form>
     </div>
   );
 }

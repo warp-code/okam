@@ -78,7 +78,6 @@ export default function Details() {
   });
 
   const {
-    isFetching: isDatasetTradingInfoFetching,
     error: datasetTradingInfoError,
     data: datasetTradingInfoData,
     refetch: refetchDataTradingInfo,
@@ -211,9 +210,7 @@ export default function Details() {
   return (
     <div className="h-full max-w-270 flex flex-col gap-y-12 mx-auto">
       <div className="min-w-full">
-        {(isDatasetQueryFetching ||
-          !datasetQueryData ||
-          isDatasetTradingInfoFetching) && (
+        {(isDatasetQueryFetching || !datasetQueryData) && (
           <div className="h-24 w-24 mx-auto mt-40">
             <LoadingIndicator />
           </div>
@@ -300,16 +297,14 @@ export default function Details() {
 
               <div className="max-w-131 w-full h-full rounded-lg flex flex-col">
                 <div className="rounded-t-lg max-w-131 w-full h-64 bg-okam-card-gray py-5 sm:px-10 px-5 items-center">
-                  {
-                    <DatasetChart
-                      currentSupply={Number(
-                        datasetTradingInfoData?.currentSupply
-                      )}
-                      quadraticParam={datasetQueryData.quadratic_param}
-                      linearParam={datasetQueryData.linear_param}
-                      constantParam={datasetQueryData.constant_param}
-                    />
-                  }
+                  <DatasetChart
+                    currentSupply={Number(
+                      datasetTradingInfoData?.currentSupply
+                    )}
+                    quadraticParam={datasetQueryData.quadratic_param}
+                    linearParam={datasetQueryData.linear_param}
+                    constantParam={datasetQueryData.constant_param}
+                  />
                 </div>
 
                 <div className="max-w-131 rounded-b-lg pt-6 pb-8 px-6 flex flex-col gap-y-4 bg-okam-dark-green">
@@ -419,7 +414,9 @@ export default function Details() {
                               className="btn btn-primary mt-auto min-w-25 py-2 px-4 text-lg font-semibold rounded-lg"
                               disabled={!canSubmit}
                             >
-                              {isSubmitting ? "Minting..." : "Mint usage token"}
+                              {isSubmitting
+                                ? "Minting..."
+                                : "Mint access token"}
                             </button>
                           )}
                         </form.Subscribe>
@@ -430,8 +427,8 @@ export default function Details() {
 
                 {token && form.state.isPristine && (
                   <div className="max-w-131 mt-8 px-6 text-gray-50">
-                    Successfully minted usage token {token} to address {address}
-                    .
+                    Successfully minted access token {token} to address{" "}
+                    {address}.
                   </div>
                 )}
               </div>

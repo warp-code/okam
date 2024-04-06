@@ -15,30 +15,30 @@ export default function FileUploader({
   errors,
 }: {
   name: string;
-  value?: File | undefined;
+  value?: OkamFile | undefined;
   label?: string | undefined;
   handleOnChange: Function;
   handleClear: MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
   errors?: ValidationError[];
 }) {
-  // const uploadFormData = async (file: File | undefined): Promise<OkamFile> => {
-  //   if (!file) {
-  //     console.error("No file was uploaded.");
+  const uploadFormData = async (file: File | undefined): Promise<OkamFile> => {
+    if (!file) {
+      console.error("No file was uploaded.");
 
-  //     return {
-  //       name: "",
-  //       mimeType: "",
-  //       cid: "",
-  //     } as OkamFile;
-  //   }
+      return {
+        name: "",
+        mimeType: "",
+        cid: "",
+      } as OkamFile;
+    }
 
-  //   const formData = new FormData();
+    const formData = new FormData();
 
-  //   formData.append("file", file);
+    formData.append("file", file);
 
-  //   return await uploadFileToIpfs(formData);
-  // };
+    return await uploadFileToIpfs(formData);
+  };
 
   return (
     <div className="flex flex-col gap-y-6">
@@ -51,13 +51,15 @@ export default function FileUploader({
         </label>
       )}
 
-      {value?.name.length ? (
+      {value?.cid.length ? (
         <div className="flex flex-row justify-between gap-x-2.5">
           <div className="flex flex-row gap-x-2.5">
-            {/* <span className="btn btn-xs btn-secondary my-auto select-none">
+            <span className="btn btn-xs btn-secondary my-auto select-none">
               IPFS
-            </span> */}
-            <span className="text-gray-50 break-all my-auto">{value.name}</span>
+            </span>
+            <span className="text-sm font-medium text-white break-all my-auto">
+              {value.cid}
+            </span>
           </div>
 
           <button
@@ -111,7 +113,9 @@ export default function FileUploader({
               value={value?.name ?? ""}
               onChange={async (e) => {
                 if (e.target.files) {
-                  return await handleOnChange(e.target.files[0]);
+                  const uploadedFile = await uploadFormData(e.target.files[0]);
+
+                  return await handleOnChange(uploadedFile);
                 }
               }}
               disabled={disabled}
