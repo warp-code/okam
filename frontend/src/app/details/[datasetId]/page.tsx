@@ -298,16 +298,14 @@ export default function Details() {
 
               <div className="max-w-131 w-full h-full rounded-lg flex flex-col">
                 <div className="rounded-t-lg max-w-131 w-full h-64 bg-okam-card-gray py-5 sm:px-10 px-5 items-center">
-                  {
-                    <DatasetChart
-                      currentSupply={Number(
-                        datasetTradingInfoData?.currentSupply
-                      )}
-                      quadraticParam={datasetQueryData.quadratic_param}
-                      linearParam={datasetQueryData.linear_param}
-                      constantParam={datasetQueryData.constant_param}
-                    />
-                  }
+                  <DatasetChart
+                    currentSupply={Number(
+                      datasetTradingInfoData?.currentSupply
+                    )}
+                    quadraticParam={datasetQueryData.quadratic_param}
+                    linearParam={datasetQueryData.linear_param}
+                    constantParam={datasetQueryData.constant_param}
+                  />
                 </div>
 
                 <div className="max-w-131 rounded-b-lg pt-6 pb-8 px-6 flex flex-col gap-y-4 bg-okam-dark-green">
