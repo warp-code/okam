@@ -35,8 +35,8 @@ export default function RootLayout({
           className={`${poppins.className} antialiased flex flex-col min-h-screen`}
           suppressHydrationWarning={true}
         >
-          <SpeedInsights />
           {children}
+          <SpeedInsights />
         </body>
       </Providers>
     </html>
