@@ -127,6 +127,8 @@ export default function Details() {
       );
 
       console.log(accessTokenId);
+
+      form.reset();
     }
   };
 
