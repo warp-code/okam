@@ -20,7 +20,7 @@ export default function Home() {
 
     if (model.search.length) {
       datasetsToReturn = datasetsToReturn.filter((dataset) =>
-        dataset.name.includes(model.search)
+        dataset.name.toLowerCase().includes(model.search.toLocaleLowerCase())
       );
     }
 
