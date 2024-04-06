@@ -360,26 +360,51 @@ export default function Details() {
                   </div>
 
                   {!!tokenHolderQueryData?.length && (
-                    <form
-                      className="flex flex-row gap-x-4"
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
+                    <>
+                      <form
+                        className="flex flex-row gap-x-4"
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
 
-                        void form.handleSubmit();
-                      }}
-                    >
-                      <div className="flex flex-grow">
-                        <form.Field
-                          name="address"
-                          validators={{
-                            onChange: ({ value: address }) =>
-                              !address.length
-                                ? "Address is required."
-                                : undefined,
-                          }}
-                        >
-                          {(field) => (
+                          void form.handleSubmit();
+                        }}
+                      >
+                        <div className="flex flex-grow">
+                          <form.Field
+                            name="address"
+                            validators={{
+                              onChange: ({ value: address }) =>
+                                !address.length
+                                  ? "Address is required."
+                                  : undefined,
+                            }}
+                          >
+                            {(field) => (
+                              <div className="flex flex-col gap-y-4 min-w-full mt-auto">
+                                <label
+                                  htmlFor={field.name}
+                                  className="text-gray-50 font-medium text-left cursor-pointer mr-auto"
+                                >
+                                  Address
+                                </label>
+
+                                <input
+                                  type="text"
+                                  id={field.name}
+                                  name={field.name}
+                                  value={field.state.value}
+                                  onChange={(event) =>
+                                    field.handleChange(
+                                      event.target.value as `0x${string}`
+                                    )
+                                  }
+                                  disabled={form.state.isSubmitting}
+                                  className="block w-full border border-green-700 focus:border-green-400 focus:outline-none rounded-2xl px-6 py-3 bg-okam-dark-green placeholder:text-gray-400 text-gray-50 text-sm"
+                                />
+                              </div>
+                            )}
+                            {/* {(field) => (
                             <TextInput
                               name={field.name}
                               value={field.state.value}
@@ -392,22 +417,23 @@ export default function Details() {
                               errors={field.state.meta.errors}
                               label="Address"
                             />
-                          )}
-                        </form.Field>
-                      </div>
+                          )} */}
+                          </form.Field>
+                        </div>
 
-                      <form.Subscribe>
-                        {(formState) => (
-                          <button
-                            type="submit"
-                            className="btn btn-sm btn-primary mt-auto"
-                            disabled={!formState.canSubmit}
-                          >
-                            Mint usage token
-                          </button>
-                        )}
-                      </form.Subscribe>
-                    </form>
+                        <form.Subscribe>
+                          {(formState) => (
+                            <button
+                              type="submit"
+                              className="btn btn-primary mt-auto min-w-25 py-2 px-4 text-lg font-semibold rounded-lg"
+                              disabled={!formState.canSubmit}
+                            >
+                              Mint usage token
+                            </button>
+                          )}
+                        </form.Subscribe>
+                      </form>
+                    </>
                   )}
                 </div>
               </div>
