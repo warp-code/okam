@@ -20,7 +20,7 @@ export default function Home() {
 
     if (model.search.length) {
       datasetsToReturn = datasetsToReturn.filter((dataset) =>
-        dataset.name.includes(model.search)
+        dataset.name.toLowerCase().includes(model.search.toLocaleLowerCase())
       );
     }
 
@@ -174,10 +174,6 @@ export default function Home() {
                 })
               )}
             </div>
-
-            {/* <div className="py-8">
-              <Pagination elementsNum={90} setPage={setPage} />
-            </div> */}
           </>
         )}
       </div>

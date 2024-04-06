@@ -57,13 +57,16 @@ export default function ImageUploader({
 
       <div className="flex flex-col relative border border-green-800 rounded-lg w-full px-6 py-4 gap-y-3 items-center">
         {value?.name.length ? (
-          <Image
-            alt={value.name}
-            src={value.url}
-            width={524}
-            height={256}
-            className="rounded-lg"
-          />
+          <div className="max-w-full h-64">
+            <Image
+              alt={value.name}
+              src={value.url}
+              width="0"
+              height="0"
+              sizes="100vw"
+              className="block mx-auto rounded-lg h-full w-auto"
+            />
+          </div>
         ) : (
           <>
             <label
