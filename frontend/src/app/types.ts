@@ -67,5 +67,5 @@ export type FormModel = {
   coverImage: OkamCoverImage;
   description: string;
   categories: CategoryModel[] | undefined;
-  file: File | undefined;
+  file: OkamFile;
 };

@@ -14,7 +14,13 @@ import {
   getAll,
   uploadFileToIpfs,
 } from "@/utils/actions/serverActions";
-import { Category, Dataset, FormModel, OkamCoverImage } from "@/app/types";
+import {
+  Category,
+  Dataset,
+  FormModel,
+  OkamCoverImage,
+  OkamFile,
+} from "@/app/types";
 import { useLayoutEffect } from "react";
 import LoadingIndicator from "@/app/_components/LoadingIndicator";
 import {
@@ -37,23 +43,13 @@ export default function Create() {
 
     const tokenId = await mintOwnershipToken(cid);
 
-    // const { ciphertext, dataToEncryptHash, accessControlConditions } =
-    //   await lit.encryptForOwnershipToken(new Blob([model.file!]), tokenId);
-
-    const formData = new FormData();
-
-    formData.append("file", model.file!);
-
-    const uploadedFile = await uploadFileToIpfs(formData);
-    // TODO: upload encrypted file
-
-    await assignOwnershipTokenFile(tokenId, uploadedFile.cid);
+    await assignOwnershipTokenFile(tokenId, model.file.cid);
 
     const dataset = {
       name: model.name,
       cover_image: model.coverImage,
       description: model.description,
-      file_cid: uploadedFile.cid,
+      file_cid: model.file.cid,
       author: address,
       quadratic_param: 1,
       linear_param: 1,
@@ -62,8 +58,6 @@ export default function Create() {
         ?.filter((category) => category.checked)
         .map((category) => category.id),
       token_id: tokenId,
-      // data_to_encrypt_hash: dataToEncryptHash,
-      data_to_encrypt_hash: "asdf",
     } as Dataset;
 
     const { data, error } = await create<Dataset>("datasets", [dataset]);
@@ -111,7 +105,11 @@ export default function Create() {
               checked: false,
             };
           }),
-      file: undefined,
+      file: {
+        name: "",
+        mimeType: "",
+        cid: "",
+      },
     },
     onSubmit: (event) => createDataset(event.value),
   });
@@ -258,7 +256,7 @@ export default function Create() {
             name="file"
             validators={{
               onChange: ({ value: file }) =>
-                !file ? "File is required." : undefined,
+                !file.cid.length ? "File is required." : undefined,
             }}
           >
             {(field) => (
@@ -266,8 +264,10 @@ export default function Create() {
                 label="File"
                 name={field.name}
                 value={field.state.value}
-                handleOnChange={(file: File) => field.handleChange(file)}
-                handleClear={() => field.setValue(undefined)}
+                handleOnChange={(file: OkamFile) => field.handleChange(file)}
+                handleClear={() =>
+                  field.setValue({ name: "", mimeType: "", cid: "" })
+                }
                 errors={field.state.meta.errors}
                 disabled={false}
               />
