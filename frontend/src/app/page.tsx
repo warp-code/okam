@@ -107,7 +107,7 @@ export default function Home() {
         ) : (
           <>
             <h1 className="text-green-400 font-semibold text-4xl/11 pb-6">
-              Find ML training data
+              Find AI models
             </h1>
 
             <form
