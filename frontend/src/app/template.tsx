@@ -1,5 +1,6 @@
 "use client";
 
+import Logo from "@/app/_components/Logo";
 import { useRouter } from "next/navigation";
 import { useConnect, useAccount, useDisconnect } from "wagmi";
 
@@ -13,17 +14,23 @@ export default function Template({ children }: { children: React.ReactNode }) {
   return (
     <>
       <header className="flex h-18 w-full sm:px-16 px-8 gap-4 items-center justify-between">
-        <span
-          className="text-lg font-bold text-green-500 cursor-pointer"
-          onClick={() => push("/")}
-        >
-          OKAM
-        </span>
+        <div className="flex flex-row gap-2">
+          <span className="h-6 w-6 my-auto">
+            <Logo />
+          </span>
+          <span
+            className="text-lg font-bold text-green-500 cursor-pointer"
+            onClick={() => push("/")}
+          >
+            OKAM
+          </span>
+        </div>
 
         <span className="flex flex-row gap-4 items-center">
           {isConnected ? (
             <>
               <button
+                type="button"
                 className="btn btn-md btn-secondary"
                 onClick={() => push("/create")}
               >
@@ -31,6 +38,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
               </button>
 
               <button
+                type="button"
                 className="btn btn-md btn-secondary"
                 onClick={() => disconnect()}
               >
@@ -38,7 +46,6 @@ export default function Template({ children }: { children: React.ReactNode }) {
               </button>
 
               <span className="flex items-center gap-2">
-                <span className="text-white">{address}</span>
                 <svg
                   width="40"
                   height="40"
@@ -70,6 +77,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
             </>
           ) : (
             <button
+              type="button"
               className="btn btn-md btn-secondary"
               onClick={() => connect({ connector: connectors[0] })}
             >

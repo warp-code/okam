@@ -135,7 +135,7 @@ export default function Create() {
           }}
         >
           <h2 className="text-gray-50 font-semibold text-3xl/9.5 pb-6 text-left">
-            Create dataset
+            Create model
           </h2>
 
           {form.state.isSubmitting && (
@@ -279,18 +279,19 @@ export default function Create() {
               type="button"
               className="btn btn-sm btn-secondary"
               onClick={() => push("/")}
+              disabled={form.state.isSubmitting}
             >
               Cancel
             </button>
 
             <form.Subscribe>
-              {(formState) => (
+              {({ canSubmit, isSubmitting }) => (
                 <button
                   type="submit"
                   className="btn btn-sm btn-primary"
-                  disabled={!formState.canSubmit}
+                  disabled={!canSubmit}
                 >
-                  Create
+                  {isSubmitting ? "Creating..." : "Create"}
                 </button>
               )}
             </form.Subscribe>

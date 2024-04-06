@@ -22,12 +22,13 @@ import {
   mintUsageToken,
 } from "@/contracts/actions";
 import { formatEther } from "viem";
-import TextInput from "@/app/_components/TextInput";
 import { useForm } from "@tanstack/react-form";
+import { useState } from "react";
 
 export default function Details() {
   const params = useParams();
   const { address, isDisconnected } = useAccount();
+  const [token, setToken] = useState("");
 
   const {
     isFetching: isDatasetQueryFetching,
@@ -126,7 +127,9 @@ export default function Details() {
         BigInt(tokenHolderQueryData[0].token_id)
       );
 
-      console.log(accessTokenId);
+      setToken(accessTokenId);
+
+      form.reset();
     }
   };
 
@@ -358,56 +361,79 @@ export default function Details() {
                   </div>
 
                   {!!tokenHolderQueryData?.length && (
-                    <form
-                      className="flex flex-row gap-x-4"
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
+                    <>
+                      <form
+                        className="flex flex-row gap-x-4"
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
 
-                        void form.handleSubmit();
-                      }}
-                    >
-                      <div className="flex flex-grow">
-                        <form.Field
-                          name="address"
-                          validators={{
-                            onChange: ({ value: address }) =>
-                              !address.length
-                                ? "Address is required."
-                                : undefined,
-                          }}
-                        >
-                          {(field) => (
-                            <TextInput
-                              name={field.name}
-                              value={field.state.value}
-                              handleOnChange={(event) =>
-                                field.handleChange(
-                                  event.target.value as `0x${string}`
-                                )
-                              }
-                              disabled={form.state.isSubmitting}
-                              errors={field.state.meta.errors}
-                              label="Address"
-                            />
-                          )}
-                        </form.Field>
-                      </div>
-
-                      <form.Subscribe>
-                        {(formState) => (
-                          <button
-                            type="submit"
-                            className="btn btn-sm btn-primary mt-auto"
-                            disabled={!formState.canSubmit}
+                          void form.handleSubmit();
+                        }}
+                      >
+                        <div className="flex flex-grow">
+                          <form.Field
+                            name="address"
+                            validators={{
+                              onChange: ({ value: address }) =>
+                                !address.length
+                                  ? "Address is required."
+                                  : undefined,
+                            }}
                           >
-                            Mint usage token
-                          </button>
-                        )}
-                      </form.Subscribe>
-                    </form>
+                            {(field) => (
+                              <div className="flex flex-col gap-y-4 min-w-full mt-auto">
+                                <label
+                                  htmlFor={field.name}
+                                  className="text-gray-50 font-medium text-left cursor-pointer mr-auto"
+                                >
+                                  Address
+                                </label>
+
+                                <input
+                                  type="text"
+                                  id={field.name}
+                                  name={field.name}
+                                  value={field.state.value}
+                                  onChange={(event) => {
+                                    field.handleChange(
+                                      event.target.value as `0x${string}`
+                                    );
+
+                                    if (token) {
+                                      setToken("");
+                                    }
+                                  }}
+                                  disabled={form.state.isSubmitting}
+                                  className="block w-full border border-green-700 focus:border-green-400 focus:outline-none rounded-2xl px-6 py-3 bg-okam-dark-green placeholder:text-gray-400 text-gray-50 text-sm"
+                                />
+                              </div>
+                            )}
+                          </form.Field>
+                        </div>
+
+                        <form.Subscribe>
+                          {({ canSubmit, isSubmitting }) => (
+                            <button
+                              type="submit"
+                              className="btn btn-primary mt-auto min-w-25 py-2 px-4 text-lg font-semibold rounded-lg"
+                              disabled={!canSubmit}
+                            >
+                              {isSubmitting ? "Minting..." : "Mint usage token"}
+                            </button>
+                          )}
+                        </form.Subscribe>
+                      </form>
+                    </>
                   )}
                 </div>
+
+                {token && form.state.isPristine && (
+                  <div className="max-w-131 mt-8 px-6 text-gray-50">
+                    Successfully minted usage token {token} to address {address}
+                    .
+                  </div>
+                )}
               </div>
             </div>
           </>
