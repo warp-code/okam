@@ -211,9 +211,7 @@ export default function Details() {
   return (
     <div className="h-full max-w-270 flex flex-col gap-y-12 mx-auto">
       <div className="min-w-full">
-        {(isDatasetQueryFetching ||
-          !datasetQueryData ||
-          isDatasetTradingInfoFetching) && (
+        {(isDatasetQueryFetching || !datasetQueryData) && (
           <div className="h-24 w-24 mx-auto mt-40">
             <LoadingIndicator />
           </div>
