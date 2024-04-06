@@ -47,9 +47,9 @@ export default function Create() {
       description: model.description,
       file_cid: model.file.cid,
       author: address,
-      quadratic_param: 1,
-      linear_param: 1,
-      constant_param: 10,
+      quadratic_param: 1e9,
+      linear_param: 1e14,
+      constant_param: 1e14,
       categories: model.categories
         ?.filter((category) => category.checked)
         .map((category) => category.id),
