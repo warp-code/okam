@@ -36,17 +36,27 @@ export default function FileUploader({
       } as OkamFile;
     }
 
-    setIsLoading(true);
+    try {
+      setIsLoading(true);
 
-    const formData = new FormData();
+      const formData = new FormData();
 
-    formData.append("file", file);
+      formData.append("file", file);
 
-    const uploadedFile = await uploadFileToIpfs(formData);
+      const uploadedFile = await uploadFileToIpfs(formData);
 
-    setIsLoading(false);
+      setIsLoading(false);
 
-    return uploadedFile;
+      return uploadedFile;
+    } catch (error) {
+      setIsLoading(false);
+
+      return {
+        name: "",
+        mimeType: "",
+        cid: "",
+      } as OkamFile;
+    }
   };
 
   return (

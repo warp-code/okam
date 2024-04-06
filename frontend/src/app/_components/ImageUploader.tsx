@@ -41,17 +41,27 @@ export default function ImageUploader({
       console.error("File size is greater than 10 MB");
     }
 
-    setIsLoading(true);
+    try {
+      setIsLoading(true);
 
-    const formData = new FormData();
+      const formData = new FormData();
 
-    formData.append("file", file as File);
+      formData.append("file", file);
 
-    const coverImage = await uploadFileToSupabase(formData);
+      const coverImage = await uploadFileToSupabase(formData);
 
-    setIsLoading(false);
+      setIsLoading(false);
 
-    return coverImage;
+      return coverImage;
+    } catch (error) {
+      setIsLoading(false);
+
+      return {
+        name: "",
+        mimeType: "",
+        url: "",
+      } as OkamCoverImage;
+    }
   };
 
   return (
