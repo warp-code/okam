@@ -30,6 +30,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
           {isConnected ? (
             <>
               <button
+                type="button"
                 className="btn btn-md btn-secondary"
                 onClick={() => push("/create")}
               >
@@ -37,6 +38,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
               </button>
 
               <button
+                type="button"
                 className="btn btn-md btn-secondary"
                 onClick={() => disconnect()}
               >
@@ -75,6 +77,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
             </>
           ) : (
             <button
+              type="button"
               className="btn btn-md btn-secondary"
               onClick={() => connect({ connector: connectors[0] })}
             >

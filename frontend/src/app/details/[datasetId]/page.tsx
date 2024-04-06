@@ -409,20 +409,6 @@ export default function Details() {
                                 />
                               </div>
                             )}
-                            {/* {(field) => (
-                            <TextInput
-                              name={field.name}
-                              value={field.state.value}
-                              handleOnChange={(event) =>
-                                field.handleChange(
-                                  event.target.value as `0x${string}`
-                                )
-                              }
-                              disabled={form.state.isSubmitting}
-                              errors={field.state.meta.errors}
-                              label="Address"
-                            />
-                          )} */}
                           </form.Field>
                         </div>
 
