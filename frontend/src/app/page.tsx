@@ -174,10 +174,6 @@ export default function Home() {
                 })
               )}
             </div>
-
-            {/* <div className="py-8">
-              <Pagination elementsNum={90} setPage={setPage} />
-            </div> */}
           </>
         )}
       </div>
