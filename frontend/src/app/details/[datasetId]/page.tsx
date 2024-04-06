@@ -426,7 +426,7 @@ export default function Details() {
                             <button
                               type="submit"
                               className="btn btn-primary mt-auto min-w-25 py-2 px-4 text-lg font-semibold rounded-lg"
-                              disabled={!canSubmit}
+                              disabled={!canSubmit || isBuying || isSelling}
                             >
                               {isSubmitting
                                 ? "Minting..."
