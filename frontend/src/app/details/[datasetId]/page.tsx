@@ -29,6 +29,8 @@ export default function Details() {
   const params = useParams();
   const { address, isDisconnected } = useAccount();
   const [token, setToken] = useState("");
+  const [isBuying, setIsBuying] = useState(false);
+  const [isSelling, setIsSelling] = useState(false);
 
   const {
     isFetching: isDatasetQueryFetching,
@@ -156,6 +158,7 @@ export default function Details() {
 
   const buy = async () => {
     let usageTokenId;
+    setIsBuying(true);
 
     try {
       usageTokenId = await mintUsageToken(
@@ -164,6 +167,7 @@ export default function Details() {
       );
     } catch (error) {
       console.error("An error occured while minting access token: ", error);
+      setIsBuying(false);
       return;
     }
 
@@ -177,21 +181,26 @@ export default function Details() {
 
     if (error) {
       console.error("An error occured while saving token holder: ", error);
+      setIsBuying(false);
       return;
     }
 
     await refetchDataTradingInfo();
     await tokenHolderQueryRefetch();
+
+    setIsBuying(false);
   };
 
   const sell = async () => {
     if (!!tokenHolderQueryData?.length) {
+      setIsSelling(true);
       const tokenHolder = tokenHolderQueryData[tokenHolderQueryData.length - 1];
 
       try {
         await burnUsageToken(BigInt(tokenHolder.token_id));
       } catch (error) {
         console.error("An error occured while burning access token: ", error);
+        setIsSelling(false);
         return;
       }
 
@@ -199,11 +208,14 @@ export default function Details() {
 
       if (error) {
         console.error("An error occured while deleting token holder: ", error);
+        setIsSelling(false);
         return;
       }
 
       await refetchDataTradingInfo();
       await tokenHolderQueryRefetch();
+
+      setIsSelling(false);
     }
   };
 
@@ -323,11 +335,11 @@ export default function Details() {
 
                     <button
                       type="button"
-                      className="btn btn-primary my-auto min-w-25 py-2 text-lg font-semibold rounded-lg"
-                      disabled={isDisconnected}
-                      onClick={async () => buy()}
+                      className="btn btn-primary my-auto min-w-25 py-2 px-4 text-lg font-semibold rounded-lg"
+                      disabled={isDisconnected || isBuying || isSelling}
+                      onClick={async () => await buy()}
                     >
-                      Buy
+                      {isBuying ? "Buying..." : "Buy"}
                     </button>
                   </div>
 
@@ -342,16 +354,18 @@ export default function Details() {
 
                     <button
                       type="button"
-                      className="btn btn-tertiary my-auto min-w-25 py-2 text-lg font-semibold rounded-lg"
+                      className="btn btn-tertiary my-auto min-w-25 py-2 px-4 text-lg font-semibold rounded-lg"
                       disabled={
                         isDisconnected ||
                         !!tokenHolderQueryError ||
                         isTokenHolderQueryFetching ||
-                        !tokenHolderQueryData?.length
+                        !tokenHolderQueryData?.length ||
+                        isBuying ||
+                        isSelling
                       }
                       onClick={async () => await sell()}
                     >
-                      Sell
+                      {isSelling ? "Selling..." : "Sell"}
                     </button>
                   </div>
 
