@@ -22,12 +22,13 @@ import {
   mintUsageToken,
 } from "@/contracts/actions";
 import { formatEther } from "viem";
-import TextInput from "@/app/_components/TextInput";
 import { useForm } from "@tanstack/react-form";
+import { useState } from "react";
 
 export default function Details() {
   const params = useParams();
   const { address, isDisconnected } = useAccount();
+  const [token, setToken] = useState("");
 
   const {
     isFetching: isDatasetQueryFetching,
@@ -126,7 +127,7 @@ export default function Details() {
         BigInt(tokenHolderQueryData[0].token_id)
       );
 
-      console.log(accessTokenId);
+      setToken(accessTokenId);
 
       form.reset();
     }
@@ -394,11 +395,15 @@ export default function Details() {
                                   id={field.name}
                                   name={field.name}
                                   value={field.state.value}
-                                  onChange={(event) =>
+                                  onChange={(event) => {
                                     field.handleChange(
                                       event.target.value as `0x${string}`
-                                    )
-                                  }
+                                    );
+
+                                    if (token) {
+                                      setToken("");
+                                    }
+                                  }}
                                   disabled={form.state.isSubmitting}
                                   className="block w-full border border-green-700 focus:border-green-400 focus:outline-none rounded-2xl px-6 py-3 bg-okam-dark-green placeholder:text-gray-400 text-gray-50 text-sm"
                                 />
@@ -422,13 +427,13 @@ export default function Details() {
                         </div>
 
                         <form.Subscribe>
-                          {(formState) => (
+                          {({ canSubmit, isSubmitting }) => (
                             <button
                               type="submit"
                               className="btn btn-primary mt-auto min-w-25 py-2 px-4 text-lg font-semibold rounded-lg"
-                              disabled={!formState.canSubmit}
+                              disabled={!canSubmit}
                             >
-                              Mint usage token
+                              {isSubmitting ? "Minting..." : "Mint usage token"}
                             </button>
                           )}
                         </form.Subscribe>
@@ -436,6 +441,13 @@ export default function Details() {
                     </>
                   )}
                 </div>
+
+                {token && form.state.isPristine && (
+                  <div className="max-w-131 mt-8 px-6 text-gray-50">
+                    Successfully minted usage token {token} to address {address}
+                    .
+                  </div>
+                )}
               </div>
             </div>
           </>
