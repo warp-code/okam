@@ -335,7 +335,7 @@ export default function Details() {
 
                     <button
                       type="button"
-                      className="btn btn-primary my-auto min-w-25 py-2 text-lg font-semibold rounded-lg"
+                      className="btn btn-primary my-auto min-w-25 py-2 px-4 text-lg font-semibold rounded-lg"
                       disabled={isDisconnected || isBuying || isSelling}
                       onClick={async () => await buy()}
                     >
@@ -354,7 +354,7 @@ export default function Details() {
 
                     <button
                       type="button"
-                      className="btn btn-tertiary my-auto min-w-25 py-2 text-lg font-semibold rounded-lg"
+                      className="btn btn-tertiary my-auto min-w-25 py-2 px-4 text-lg font-semibold rounded-lg"
                       disabled={
                         isDisconnected ||
                         !!tokenHolderQueryError ||
