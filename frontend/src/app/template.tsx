@@ -18,11 +18,8 @@ export default function Template({ children }: { children: React.ReactNode }) {
           className="flex flex-row gap-2 cursor-pointer"
           onClick={() => push("/")}
         >
-          <span className="h-6 w-6 my-auto">
+          <span className="h-25 w-25 mt-auto">
             <Logo />
-          </span>
-          <span className="text-lg font-bold text-green-500 cursor-pointer">
-            OKAM
           </span>
         </div>
 
