@@ -244,7 +244,7 @@ export default function Details() {
                     height="0"
                     sizes="100vw"
                     priority={true}
-                    className="block mx-auto rounded-lg h-full w-auto"
+                    className="block rounded-lg h-full w-full object-cover"
                   />
                 </div>
 

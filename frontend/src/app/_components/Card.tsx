@@ -30,7 +30,7 @@ export default function Card({
           height="0"
           sizes="100vw"
           priority={true}
-          className="block mx-auto rounded-t-lg h-full w-auto"
+          className="block rounded-t-lg h-full w-full object-cover"
         />
       </div>
       <div className="max-h-58 max-w-88 rounded-b-lg p-6 flex flex-col gap-y-4 bg-okam-dark-green">
