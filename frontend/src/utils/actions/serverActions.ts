@@ -59,7 +59,10 @@ export async function uploadFileToIpfs(formData: FormData): Promise<OkamFile> {
 export async function getAll<T>(
   tableName: string
 ): Promise<PostgrestSingleResponse<T[]>> {
-  return await supabase.from(tableName).select<"*", T>("*");
+  return await supabase
+    .from(tableName)
+    .select<"*", T>("*")
+    .order("id", { ascending: true });
 }
 
 export async function getOne<T>(
@@ -91,5 +94,6 @@ export async function getTokensForAddress(
     .from("token_holders")
     .select<"*", TokenHolder>("*")
     .eq("address", address)
-    .eq("dataset_id", datasetId);
+    .eq("dataset_id", datasetId)
+    .order("id", { ascending: true });
 }
