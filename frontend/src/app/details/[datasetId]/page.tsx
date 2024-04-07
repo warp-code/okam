@@ -28,7 +28,8 @@ import { useState } from "react";
 export default function Details() {
   const params = useParams();
   const { address, isDisconnected } = useAccount();
-  const [token, setToken] = useState("");
+  const [accessToken, setAccessToken] = useState("");
+  const [accessTokenAddress, setAccessTokenAddress] = useState("");
   const [isBuying, setIsBuying] = useState(false);
   const [isSelling, setIsSelling] = useState(false);
 
@@ -128,7 +129,8 @@ export default function Details() {
         BigInt(tokenHolderQueryData[0].token_id)
       );
 
-      setToken(accessTokenId);
+      setAccessToken(accessTokenId);
+      setAccessTokenAddress(address);
 
       form.reset();
     }
@@ -409,8 +411,9 @@ export default function Details() {
                                       event.target.value as `0x${string}`
                                     );
 
-                                    if (token) {
-                                      setToken("");
+                                    if (accessToken) {
+                                      setAccessToken("");
+                                      setAccessTokenAddress("");
                                     }
                                   }}
                                   disabled={form.state.isSubmitting}
@@ -439,10 +442,10 @@ export default function Details() {
                   )}
                 </div>
 
-                {token && form.state.isPristine && (
+                {accessToken && form.state.isPristine && (
                   <div className="max-w-131 mt-8 px-6 text-gray-50">
-                    Successfully minted access token {token} to address{" "}
-                    {address}.
+                    Successfully minted access token {accessToken} to address{" "}
+                    {accessTokenAddress}.
                   </div>
                 )}
               </div>
