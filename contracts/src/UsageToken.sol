@@ -51,13 +51,12 @@ contract UsageToken is ERC721 {
         uint256 price = sellPrice(ownershipTokenId);
         uint256 saleEarnings = buyPrice(ownershipTokenId) - price;
 
-        // Contract will always have enough money
-        payable(msg.sender).transfer(price);
-
         _earningsPerOwnershipToken[ownershipTokenId] += saleEarnings;
         _supplyPerOwnershipToken[ownershipTokenId]--;
 
         _burn(tokenId);
+
+        payable(msg.sender).transfer(price);
     }
 
     function getBalance() external view returns (uint256) {
